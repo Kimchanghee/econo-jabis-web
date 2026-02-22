@@ -125,7 +125,10 @@ export const useTheNewsApi = (language: Language) => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = await res.json();
-      const items: TheNewsAPIArticle[] = data.data || [];
+      const BLOCKED_DOMAINS = ['blog.naver.com', 'blog.daum.net', 'tistory.com', 'blogspot.com', 'medium.com', 'cafe.naver.com'];
+      const items: TheNewsAPIArticle[] = (data.data || []).filter(
+        (item: TheNewsAPIArticle) => !BLOCKED_DOMAINS.some(d => item.url?.includes(d))
+      );
 
       if (items.length > 0) {
         const mapped = items.map((item, idx) => mapToNewsArticle(item, idx));
