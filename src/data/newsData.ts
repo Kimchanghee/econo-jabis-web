@@ -9,7 +9,7 @@ export type Language = 'ko' | 'en' | 'es' | 'ja' | 'zh';
 export interface NewsArticle {
   id: string;
   title: string;
-  summary: string;
+    summary?: string;
   description?: string;
   category: Category;
   source: string;

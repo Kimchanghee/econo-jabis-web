@@ -27,10 +27,11 @@ const parseRSS = (xmlText: string, source: string, category: Category, language:
       return {
         id: `${source}-${language}-${idx}-${Date.now()}`,
         title,
-        summary: cleanDesc,
+              description: cleanDesc,
         category,
         source,
         date,
+      publishedAt: date,
         imageUrl,
         url: link,
         isBreaking: idx === 0,
@@ -140,5 +141,4 @@ export const useRssFeed = (language: Language) => {
 
   const refresh = useCallback(() => fetchFeeds(language), [language, fetchFeeds]);
 
-  return { articles, isLoading, error, lastFetched, refresh };
-};}}}}
+  return { articles, isLoading,}}}}
