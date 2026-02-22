@@ -125,7 +125,8 @@ export const useRssFeed = (language: Language) => {
       setArticles(withImages);
       setLastFetched(new Date());
     } else {
-      // Keep fallback data
+      // Show fallback data when all feeds fail
+      setArticles(fallbackArticles);
       setError('실시간 뉴스를 불러오지 못했습니다. 샘플 데이터를 표시합니다.');
     }
 
