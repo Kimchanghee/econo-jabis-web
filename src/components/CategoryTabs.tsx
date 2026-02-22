@@ -43,4 +43,4 @@ const CategoryTabs = ({ selectedCategory, onCategoryChange, categories }: Catego
   );
 };
 
-export default CategoryTabs;)}
+export default CategoryTabs;

@@ -138,4 +138,4 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
   );
 };
 
-export default FeaturedNews;}
+export default FeaturedNews;
