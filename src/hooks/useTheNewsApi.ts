@@ -116,15 +116,9 @@ export const useTheNewsApi = (language: Language) => {
     setError(null);
 
     try {
-      const params = new URLSearchParams({
-        api_token: THENEWSAPI_TOKEN,
-        language: langMap[lang] || 'en',
-        categories: 'business',
-        search: lang === 'ko' ? '경제 OR 주식 OR 부동산 OR 환율 OR 암호화폐' : 'economy OR finance OR market',
-        limit: '50',
-      });
+      const url = `${THENEWSAPI_BASE}?api_token=${THENEWSAPI_TOKEN}&categories=business&language=${langMap[lang] || 'en'}&limit=10`;
 
-      const res = await fetch(`${THENEWSAPI_BASE}?${params}`, {
+      const res = await fetch(url, {
         signal: AbortSignal.timeout(10000),
       });
 
