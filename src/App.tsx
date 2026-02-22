@@ -1,20 +1,18 @@
-import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LanguageContext } from "./hooks/useLanguage";
-import { useLanguageState } from "./hooks/useLanguage";
+import { LanguageContext, useLanguageState } from "./hooks/useLanguage";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  const languageState = useLanguageState();
+  const state = useLanguageState();
   return (
-    <LanguageContext.Provider value={languageState}>
+    <LanguageContext.Provider value={state}>
       {children}
     </LanguageContext.Provider>
   );

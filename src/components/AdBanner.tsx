@@ -32,7 +32,8 @@ const AdBanner = ({ slotType, className = '', adSlotId }: AdBannerProps) => {
   useEffect(() => {
     if (!USE_PLACEHOLDER && adRef.current) {
       try {
-        const win = window as Record<string, unknown>;
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const win = window as any;
         const adArr = win['adsbygoogle'];
         if (Array.isArray(adArr)) {
           adArr.push({});

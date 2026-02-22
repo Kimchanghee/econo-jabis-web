@@ -142,4 +142,4 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
   );
 };
 
-export default NewsList;}
+export default NewsList;
