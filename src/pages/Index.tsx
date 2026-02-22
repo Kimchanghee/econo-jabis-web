@@ -6,7 +6,7 @@ import NewsList from '../components/NewsList';
 import CategoryTabs from '../components/CategoryTabs';
 import MarketTicker from '../components/MarketTicker';
 import AdBanner from '../components/AdBanner';
-import { useRssFeed } from '../hooks/useRssFeed';
+import { useTheNewsApi } from '../hooks/useTheNewsApi';
 import { useLanguage } from '../hooks/useLanguage';
 
 const Index = () => {
@@ -14,7 +14,7 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const { language, t } = useLanguage();
 
-  const { articles, isLoading, error, lastFetched, refresh } = useRssFeed(language);
+  const { articles, isLoading, error, lastFetched, refresh } = useTheNewsApi(language);
 
   // Get unique categories from articles
   const categories = useMemo(() => {
