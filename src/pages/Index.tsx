@@ -1,3 +1,4 @@
+// EconoJabis - Main page component
 import { useState, useMemo } from 'react';
 import Header from '../components/Header';
 import FeaturedNews from '../components/FeaturedNews';
