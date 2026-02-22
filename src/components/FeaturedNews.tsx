@@ -1,4 +1,5 @@
-import { Clock, ExternalLink } from 'lucide-react';
+import { Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import AdBanner from './AdBanner';
 import type { NewsArticle } from '../data/newsData';
@@ -36,10 +37,8 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Main featured article */}
         <div className="lg:col-span-2">
-          <a
-            href={mainArticle.url}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to={`/article/${mainArticle.id}`}
             className="group block relative overflow-hidden rounded-xl bg-gray-900 aspect-video"
           >
             <img
@@ -78,10 +77,9 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
                 <Clock className="h-3 w-3" />
                 <span>{formatDate(dateStr)}</span>
                 <span>{mainArticle.source}</span>
-                <ExternalLink className="h-3 w-3 ml-auto" />
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         {/* Secondary articles + Ad */}
@@ -90,11 +88,9 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
             const articleDate = article.publishedAt || article.date;
             const articleDesc = article.description || article.summary || '';
             return (
-              <a
+              <Link
                 key={article.id}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                to={`/article/${article.id}`}
                 className="group flex gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <div className="flex-shrink-0 w-20 h-16 overflow-hidden rounded-md">
@@ -121,7 +117,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
                     <span>{formatDate(articleDate)}</span>
                   </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
 
