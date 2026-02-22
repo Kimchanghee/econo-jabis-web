@@ -10,9 +10,11 @@ export interface NewsArticle {
   id: string;
   title: string;
   summary: string;
+  description?: string;
   category: Category;
   source: string;
   date: string;
+  publishedAt?: string;
   imageUrl: string;
   url: string;
   isBreaking?: boolean;

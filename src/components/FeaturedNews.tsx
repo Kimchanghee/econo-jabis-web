@@ -7,6 +7,11 @@ interface FeaturedNewsProps {
   articles: NewsArticle[];
 }
 
+const getDate = (article: NewsArticle): string =>
+  (article as NewsArticle & { publishedAt?: string; date?: string }).publishedAt ||
+  (article as NewsArticle & { date?: string }).date ||
+  '';
+
 const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
   const { t } = useLanguage();
   const featuredArticles = articles.filter(a => a.isFeatured).slice(0, 3);
@@ -17,6 +22,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
   const secondaryArticles = featuredArticles.slice(1, 3);
 
   const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
     try {
       const date = new Date(dateStr);
       const now = new Date();
@@ -77,15 +83,15 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
                 <h3 className="text-white font-bold text-lg leading-tight mb-2 group-hover:text-primary-foreground line-clamp-2">
                   {mainArticle.title}
                 </h3>
-                {mainArticle.description && (
+                {(mainArticle as NewsArticle & { description?: string; summary?: string }).description || (mainArticle as NewsArticle & { summary?: string }).summary ? (
                   <p className="text-white/70 text-sm line-clamp-2 hidden sm:block">
-                    {mainArticle.description}
+                    {(mainArticle as NewsArticle & { description?: string; summary?: string }).description || (mainArticle as NewsArticle & { summary?: string }).summary}
                   </p>
-                )}
+                ) : null}
                 <div className="flex items-center gap-3 mt-2 text-white/60 text-xs">
                   <span className="flex items-center gap-1">
                     <Clock className="h-3 w-3" />
-                    {formatDate(mainArticle.publishedAt)}
+                    {formatDate(getDate(mainArticle))}
                   </span>
                   {mainArticle.source && <span>{mainArticle.source}</span>}
                   <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -106,7 +112,8 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
               className="group flex gap-3 p-3 rounded-xl border border-border bg-card hover:shadow-md transition-all duration-200 hover:border-primary/30"
             >
               <div className="relative h-20 w-28 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
-                <img                  src={article.imageUrl}
+                <img
+                  src={article.imageUrl}
                   alt={article.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
@@ -122,7 +129,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
                 </h3>
                 <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                   <Clock className="h-3 w-3" />
-                  <span>{formatDate(article.publishedAt)}</span>
+                  <span>{formatDate(getDate(article))}</span>
                 </div>
               </div>
             </a>
@@ -141,4 +148,4 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
   );
 };
 
-export default FeaturedNews;)
+export default FeaturedNews;}

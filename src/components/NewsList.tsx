@@ -11,8 +11,22 @@ interface NewsListProps {
   lastFetched?: Date | null;
 }
 
-const NewsCard = ({ article }: { article: NewsArticle }) => {
+type ArticleWithExtras = NewsArticle & {
+  publishedAt?: string;
+  date?: string;
+  description?: string;
+  summary?: string;
+};
+
+const getDate = (article: ArticleWithExtras): string =>
+  article.publishedAt || article.date || '';
+
+const getDescription = (article: ArticleWithExtras): string =>
+  article.description || article.summary || '';
+
+const NewsCard = ({ article }: { article: ArticleWithExtras }) => {
   const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
     try {
       const date = new Date(dateStr);
       const now = new Date();
@@ -65,14 +79,14 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
         <h3 className="text-sm font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors mt-1.5 leading-snug">
           {article.title}
         </h3>
-        {article.description && (
+        {getDescription(article) && (
           <p className="text-xs text-muted-foreground line-clamp-1 mt-1 hidden sm:block">
-            {article.description}
+            {getDescription(article)}
           </p>
         )}
         <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
-          <span>{formatDate(article.publishedAt)}</span>
+          <span>{formatDate(getDate(article))}</span>
           {article.source && (
             <>
               <span>·</span>
@@ -88,7 +102,7 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
 const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsListProps) => {
   const { t } = useLanguage();
 
-  const nonFeaturedArticles = articles.filter(a => !a.isFeatured);
+  const nonFeaturedArticles = (articles as ArticleWithExtras[]).filter(a => !a.isFeatured);
 
   if (isLoading && articles.length === 0) {
     return (
@@ -107,9 +121,8 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
             </div>
           </div>
         ))}
-      </div>
-    );
-  }
+      </div>    );
+}
 
   if (error && articles.length === 0) {
     return (
@@ -178,4 +191,4 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
   );
 };
 
-export default NewsList;))))
+export default NewsList;))}}}
