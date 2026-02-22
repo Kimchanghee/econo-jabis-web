@@ -1,64 +1,144 @@
-import type { NewsArticle } from '@/data/newsData';
-import CategoryBadge from './CategoryBadge';
+import { Clock, TrendingUp, ExternalLink } from 'lucide-react';
+import type { NewsArticle } from '../data/newsData';
+import { useLanguage } from '../hooks/useLanguage';
+import AdBanner from './AdBanner';
 
 interface FeaturedNewsProps {
   articles: NewsArticle[];
 }
 
 const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
-  if (articles.length === 0) return null;
-  const [main, ...side] = articles.slice(0, 3);
+  const { t } = useLanguage();
+  const featuredArticles = articles.filter(a => a.isFeatured).slice(0, 3);
+
+  if (featuredArticles.length === 0) return null;
+
+  const mainArticle = featuredArticles[0];
+  const secondaryArticles = featuredArticles.slice(1, 3);
+
+  const formatDate = (dateStr: string) => {
+    try {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMins / 60);
+
+      if (diffMins < 60) return `${diffMins}분 전`;
+      if (diffHours < 24) return `${diffHours}시간 전`;
+      return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
+    } catch {
+      return dateStr;
+    }
+  };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-      {/* Main featured */}
-      <div className="lg:col-span-3 group relative overflow-hidden rounded-2xl bg-primary p-6 sm:p-8 flex flex-col justify-end min-h-[280px] cursor-pointer transition-shadow hover:shadow-xl">
-        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/80 to-primary/40" />
-        <div className="relative z-10">
-          {main.isBreaking && (
-            <span className="inline-block mb-3 rounded-full bg-accent px-3 py-0.5 text-xs font-bold text-accent-foreground uppercase tracking-wider animate-pulse">
-              속보
-            </span>
-          )}
-          <CategoryBadge category={main.category} />
-          <h2 className="mt-2 text-xl sm:text-2xl font-extrabold text-primary-foreground leading-tight">
-            {main.title}
-          </h2>
-          <p className="mt-2 text-sm text-primary-foreground/70 line-clamp-2">
-            {main.summary}
-          </p>
-          <div className="mt-3 flex items-center gap-2 text-xs text-primary-foreground/50">
-            <span>{main.source}</span>
-            <span>·</span>
-            <span>{main.date}</span>
-          </div>
+    <section className="w-full">
+      <div className="flex items-center gap-2 mb-4">
+        <TrendingUp className="h-4 w-4 text-primary" />
+        <h2 className="text-base font-bold text-foreground">{t('featured')}</h2>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Main featured article */}
+        <div className="lg:col-span-2">
+          <a
+            href={mainArticle.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block relative overflow-hidden rounded-xl border border-border bg-card hover:shadow-lg transition-all duration-300"
+          >
+            <div className="relative h-56 sm:h-72 overflow-hidden bg-muted">
+              <img
+                src={mainArticle.imageUrl}
+                alt={mainArticle.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://source.unsplash.com/800x450/?finance,economy';
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+              {/* Badges */}
+              <div className="absolute top-3 left-3 flex gap-2">
+                {mainArticle.isBreaking && (
+                  <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded animate-pulse">
+                    {t('breaking')}
+                  </span>
+                )}
+                <span className="bg-primary/90 text-primary-foreground text-xs font-medium px-2 py-0.5 rounded">
+                  {mainArticle.category}
+                </span>
+              </div>
+
+              {/* Title overlay */}
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <h3 className="text-white font-bold text-lg leading-tight mb-2 group-hover:text-primary-foreground line-clamp-2">
+                  {mainArticle.title}
+                </h3>
+                {mainArticle.description && (
+                  <p className="text-white/70 text-sm line-clamp-2 hidden sm:block">
+                    {mainArticle.description}
+                  </p>
+                )}
+                <div className="flex items-center gap-3 mt-2 text-white/60 text-xs">
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {formatDate(mainArticle.publishedAt)}
+                  </span>
+                  {mainArticle.source && <span>{mainArticle.source}</span>}
+                  <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        {/* Secondary featured articles */}
+        <div className="flex flex-col gap-4">
+          {secondaryArticles.map((article) => (
+            <a
+              key={article.id}
+              href={article.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex gap-3 p-3 rounded-xl border border-border bg-card hover:shadow-md transition-all duration-200 hover:border-primary/30"
+            >
+              <div className="relative h-20 w-28 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
+                <img                  src={article.imageUrl}
+                  alt={article.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = 'https://source.unsplash.com/400x300/?economy';
+                  }}
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="text-xs text-primary font-medium">{article.category}</span>
+                <h3 className="text-sm font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors mt-0.5">
+                  {article.title}
+                </h3>
+                <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  <span>{formatDate(article.publishedAt)}</span>
+                </div>
+              </div>
+            </a>
+          ))}
+
+          {/* Ad below featured secondary articles */}
+          <AdBanner slotType="sidebar" className="mt-2" />
         </div>
       </div>
 
-      {/* Side featured */}
-      <div className="lg:col-span-2 flex flex-col gap-4">
-        {side.map((article) => (
-          <div
-            key={article.id}
-            className="group flex-1 rounded-2xl border border-border bg-card p-5 cursor-pointer transition-all hover:shadow-lg hover:border-primary/20"
-          >
-            <CategoryBadge category={article.category} />
-            <h3 className="mt-2 text-base font-bold text-card-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-              {article.title}
-            </h3>
-            <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">
-              {article.summary}
-            </p>
-            <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-              <span>{article.source}</span>
-              <span>·</span>
-              <span>{article.date}</span>
-            </div>
-          </div>
-        ))}
+      {/* Ad banner below featured section */}
+      <div className="mt-4 flex justify-center">
+        <AdBanner slotType="footer" />
       </div>
-    </div>
+    </section>
   );
 };
 
-export default FeaturedNews;
+export default FeaturedNews;)

@@ -1,4 +1,7 @@
-import { Search, TrendingUp } from 'lucide-react';
+import { useState } from 'react';
+import { Search, TrendingUp, Menu, X } from 'lucide-react';
+import { useLanguage } from '../hooks/useLanguage';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface HeaderProps {
   searchQuery: string;
@@ -6,63 +9,108 @@ interface HeaderProps {
 }
 
 const Header = ({ searchQuery, onSearchChange }: HeaderProps) => {
+  const { t } = useLanguage();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navItems = [
+    { key: 'home', label: t('home') },
+    { key: 'economy', label: t('economy') },
+    { key: 'markets', label: t('markets') },
+    { key: 'finance', label: t('finance') },
+    { key: 'crypto', label: t('crypto') },
+  ];
+
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-card/80 backdrop-blur-xl">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="flex items-center justify-between h-16">
+    <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-xl shadow-sm">
+      {/* Main header */}
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex items-center justify-between h-14 gap-3">
           {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-              <TrendingUp className="h-5 w-5 text-primary-foreground" />
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
+              <TrendingUp className="h-4 w-4 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-lg font-extrabold tracking-tight text-foreground leading-none">
+              <h1 className="text-base font-extrabold tracking-tight text-foreground leading-none">
                 EconoJabis
               </h1>
-              <span className="text-[10px] font-medium text-muted-foreground tracking-widest uppercase">
-                경제뉴스 포털
+              <span className="text-[9px] font-medium text-muted-foreground tracking-widest uppercase hidden sm:block">
+                {t('siteTagline')}
               </span>
             </div>
           </div>
 
-          {/* Search */}
-          <div className="relative w-full max-w-xs">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map(item => (
+              <button
+                key={item.key}
+                className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Right side controls */}
+          <div className="flex items-center gap-2">
+            {/* Search */}
+            <div className="relative hidden sm:block">
+              <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder={`${t('search')}...`}
+                value={searchQuery}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="h-8 w-44 rounded-full border border-border bg-secondary pl-8 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary focus:w-56 transition-all"
+              />
+            </div>
+
+            {/* Language Switcher */}
+            <LanguageSwitcher />
+
+            {/* Mobile menu button */}
+            <button
+              className="md:hidden p-1.5 rounded-md hover:bg-accent transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Search */}
+        <div className="sm:hidden pb-2">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <input
               type="text"
-              placeholder="뉴스 검색..."
+              placeholder={`${t('search')}...`}
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="h-9 w-full rounded-full border border-border bg-secondary pl-9 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+              className="h-8 w-full rounded-full border border-border bg-secondary pl-8 pr-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
         </div>
       </div>
 
-      {/* Ticker bar */}
-      <div className="border-t border-border bg-primary/[0.03]">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="flex items-center gap-6 py-1.5 text-xs font-medium overflow-x-auto">
-            <TickerItem label="코스피" value="2,712.45" change="+1.23%" positive />
-            <TickerItem label="코스닥" value="891.32" change="+0.87%" positive />
-            <TickerItem label="원/달러" value="1,352.50" change="-0.15%" positive={false} />
-            <TickerItem label="BTC" value="$101,234" change="+2.45%" positive />
-            <TickerItem label="금" value="$2,945" change="+0.32%" positive />
-          </div>
+      {/* Mobile Navigation */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-border bg-card px-4 py-2">
+          {navItems.map(item => (
+            <button
+              key={item.key}
+              className="block w-full text-left px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-md transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
-      </div>
+      )}
     </header>
   );
 };
-
-const TickerItem = ({ label, value, change, positive }: { label: string; value: string; change: string; positive: boolean }) => (
-  <div className="flex items-center gap-2 whitespace-nowrap">
-    <span className="text-muted-foreground">{label}</span>
-    <span className="font-semibold text-foreground">{value}</span>
-    <span className={positive ? 'text-realestate' : 'text-accent'}>
-      {change}
-    </span>
-  </div>
-);
 
 export default Header;

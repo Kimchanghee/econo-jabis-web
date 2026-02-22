@@ -1,70 +1,136 @@
 import { useState, useMemo } from 'react';
-import Header from '@/components/Header';
-import CategoryTabs from '@/components/CategoryTabs';
-import FeaturedNews from '@/components/FeaturedNews';
-import NewsList from '@/components/NewsList';
-import { newsArticles, type Category } from '@/data/newsData';
-import { TrendingUp } from 'lucide-react';
+import Header from '../components/Header';
+import FeaturedNews from '../components/FeaturedNews';
+import NewsList from '../components/NewsList';
+import CategoryTabs from '../components/CategoryTabs';
+import MarketTicker from '../components/MarketTicker';
+import AdBanner from '../components/AdBanner';
+import { useRssFeed } from '../hooks/useRssFeed';
+import { useLanguage } from '../hooks/useLanguage';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<Category>('전체');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const { language, t } = useLanguage();
 
+  const { articles, isLoading, error, lastFetched, refresh } = useRssFeed(language);
+
+  // Get unique categories from articles
+  const categories = useMemo(() => {
+    const cats = new Set(articles.map(a => a.category));
+    return Array.from(cats).filter(Boolean);
+  }, [articles]);
+
+  // Filter articles by search and category
   const filteredArticles = useMemo(() => {
-    return newsArticles.filter((article) => {
-      const matchesCategory = activeCategory === '전체' || article.category === activeCategory;
-      const matchesSearch =
-        !searchQuery ||
+    return articles.filter(article => {
+      const matchesSearch = !searchQuery ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.summary.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+        (article.description || '').toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
+      return matchesSearch && matchesCategory;
     });
-  }, [activeCategory, searchQuery]);
-
-  const featuredArticles = useMemo(
-    () => filteredArticles.filter((a) => a.isFeatured),
-    [filteredArticles]
-  );
-
-  const regularArticles = useMemo(
-    () => filteredArticles.filter((a) => !a.isFeatured),
-    [filteredArticles]
-  );
-
-  const showFeatured = !searchQuery && activeCategory === '전체';
+  }, [articles, searchQuery, selectedCategory]);
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Header with language switcher */}
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
-      <main className="mx-auto max-w-6xl px-4 py-6 space-y-6">
-        {/* Category Tabs */}
-        <CategoryTabs activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
+      {/* Header Ad Banner */}
+      <div className="bg-muted/30 border-b border-border py-2">
+        <div className="mx-auto max-w-7xl px-4 flex justify-center">
+          <AdBanner slotType="header" />
+        </div>
+      </div>
 
-        {/* Featured Section */}
-        {showFeatured && featuredArticles.length > 0 && (
-          <FeaturedNews articles={featuredArticles} />
-        )}
+      {/* Real-time Market Ticker */}
+      <MarketTicker />
 
-        {/* News List */}
-        <NewsList
-          articles={showFeatured ? regularArticles : filteredArticles}
-          title={activeCategory === '전체' ? '최신 뉴스' : `${activeCategory} 뉴스`}
-        />
+      <main className="mx-auto max-w-7xl px-4 py-6">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Main content */}
+          <div className="flex-1 min-w-0 space-y-6">
+            {/* Featured News */}
+            <FeaturedNews articles={filteredArticles} />
+
+            {/* Category Tabs */}
+            <div className="sticky top-14 z-30 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4 border-b border-border">
+              <CategoryTabs
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+                categories={categories}
+              />
+            </div>
+
+            {/* News List with inline ads */}
+            <NewsList
+              articles={filteredArticles}
+              isLoading={isLoading}
+              error={error}
+              onRefresh={refresh}
+              lastFetched={lastFetched}
+            />
+          </div>
+
+          {/* Sidebar */}
+          <aside className="hidden lg:block w-80 flex-shrink-0">
+            <div className="sticky top-20 space-y-4">
+              {/* Sidebar Ad Top */}
+              <AdBanner slotType="sidebar" />
+
+              {/* Market Summary Widget */}
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
+                  {t('markets')}
+                </h3>
+                <p className="text-xs text-muted-foreground">{t('loading')}</p>
+              </div>
+
+              {/* Trending Keywords */}
+              <div className="rounded-xl border border-border bg-card p-4">
+                <h3 className="text-sm font-bold text-foreground mb-3">{t('trending')}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {['Fed', 'Bitcoin', 'KOSPI', 'USD/KRW', 'Oil', 'Gold', 'S&P500'].map(kw => (
+                    <button
+                      key={kw}
+                      onClick={() => setSearchQuery(kw)}
+                      className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
+                    >
+                      #{kw}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sidebar Ad Middle */}
+              <AdBanner slotType="sidebar" />
+            </div>
+          </aside>
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-12">
-        <div className="mx-auto max-w-6xl px-4 py-8">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary">
-              <TrendingUp className="h-4 w-4 text-primary-foreground" />
+      <footer className="mt-12 border-t border-border bg-card">
+        {/* Footer Ad */}
+        <div className="py-3 flex justify-center border-b border-border">
+          <AdBanner slotType="footer" />
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold text-foreground">EconoJabis</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {t('siteTagline')}
+              </p>
             </div>
-            <span className="text-sm font-bold text-foreground">EconoJabis</span>
+            <div className="text-xs text-muted-foreground text-center sm:text-right">
+              <p>© 2025 EconoJabis. Powered by free RSS feeds & open APIs.</p>
+              <p className="mt-0.5">News: RSS | Market Data: Binance, Yahoo Finance | FX: open.er-api.com</p>
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground">
-            © 2026 EconoJabis. 한국 경제 뉴스를 한눈에.
-          </p>
         </div>
       </footer>
     </div>
