@@ -30,7 +30,7 @@ const NewsCard = ({ article }: NewsCardProps) => {
 
   return (
     <Link
-      to={`/article/${article.id}`}
+      to={`/article/${encodeURIComponent(article.id)}`}
       className="group flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
     >
       <div className="flex-shrink-0 w-24 h-18 overflow-hidden rounded-md">

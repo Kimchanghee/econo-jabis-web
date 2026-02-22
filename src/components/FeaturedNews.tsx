@@ -38,7 +38,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
         {/* Main featured article */}
         <div className="lg:col-span-2">
           <Link
-            to={`/article/${mainArticle.id}`}
+            to={`/article/${encodeURIComponent(mainArticle.id)}`}
             className="group block relative overflow-hidden rounded-xl bg-gray-900 aspect-video"
           >
             <img
@@ -90,7 +90,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
             return (
               <Link
                 key={article.id}
-                to={`/article/${article.id}`}
+                to={`/article/${encodeURIComponent(article.id)}`}
                 className="group flex gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <div className="flex-shrink-0 w-20 h-16 overflow-hidden rounded-md">
