@@ -116,7 +116,7 @@ export const useTheNewsApi = (language: Language) => {
     setError(null);
 
     try {
-      const url = `${THENEWSAPI_BASE}?api_token=${THENEWSAPI_TOKEN}&categories=business&language=${langMap[lang] || 'en'}&limit=10`;
+      const url = `${THENEWSAPI_BASE}?api_token=${THENEWSAPI_TOKEN}&categories=business&language=en&limit=10`;
 
       const res = await fetch(url, {
         signal: AbortSignal.timeout(10000),
