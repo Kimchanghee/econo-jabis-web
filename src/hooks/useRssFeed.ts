@@ -87,7 +87,7 @@ export const useRssFeed = (language: Language) => {
       const params = new URLSearchParams({
         api_token: THENEWSAPI_TOKEN,
         language: langMap[lang] || 'en',
-        search: categoryKeywords['전체'],
+        categories: 'business',
         limit: '50',
       });
 
