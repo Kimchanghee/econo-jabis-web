@@ -126,8 +126,11 @@ export const useTheNewsApi = (language: Language) => {
 
       const data = await res.json();
       const BLOCKED_DOMAINS = ['blog.naver.com', 'blog.daum.net', 'tistory.com', 'blogspot.com', 'medium.com', 'cafe.naver.com'];
+      const BLOCKED_KEYWORDS = ['패션', '뷰티', '맛집', '요리', '여행', '게임', '연예', '드라마', '포엣', '리파', '포카라', '블로그', '인테리어', '육아', '반려', '레시피'];
       const items: TheNewsAPIArticle[] = (data.data || []).filter(
-        (item: TheNewsAPIArticle) => !BLOCKED_DOMAINS.some(d => item.url?.includes(d))
+        (item: TheNewsAPIArticle) =>
+          !BLOCKED_DOMAINS.some(d => item.url?.includes(d)) &&
+          !BLOCKED_KEYWORDS.some(kw => item.title?.includes(kw))
       );
 
       if (items.length > 0) {
