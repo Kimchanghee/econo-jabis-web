@@ -27,7 +27,7 @@ const ArticleDetail = () => {
   const { language, t } = useLanguage();
   const { articles } = useTheNewsApi(language);
 
-  const article = articles.find(a => a.id === id);
+  const article = articles.find(a => a.id === decodeURIComponent(id || ''));
 
   if (!article) {
     return (
