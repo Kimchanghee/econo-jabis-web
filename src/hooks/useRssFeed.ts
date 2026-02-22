@@ -140,5 +140,5 @@ export const useRssFeed = (language: Language) => {
   }, [language, fetchFeeds]);
 
   const refresh = useCallback(() => fetchFeeds(language), [language, fetchFeeds]);
-
-  return { articles, isLoading,}}}}
+  return { articles, isLoading, error, refresh, lastFetched };
+};

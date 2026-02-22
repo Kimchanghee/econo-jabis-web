@@ -1,98 +1,69 @@
-import { Clock, ExternalLink, RefreshCw } from 'lucide-react';
-import type { NewsArticle } from '../data/newsData';
+import { Clock, RefreshCw, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
 import AdBanner from './AdBanner';
+import type { NewsArticle } from '../data/newsData';
 
 interface NewsListProps {
   articles: NewsArticle[];
-  isLoading: boolean;
-  error: string | null;
+  isLoading?: boolean;
+  error?: string | null;
   onRefresh?: () => void;
   lastFetched?: Date | null;
 }
 
-type ArticleWithExtras = NewsArticle & {
-  publishedAt?: string;
-  date?: string;
-  description?: string;
-  summary?: string;
+const formatDate = (dateStr: string): string => {
+  try {
+    return new Date(dateStr).toLocaleDateString();
+  } catch {
+    return dateStr;
+  }
 };
 
-const getDate = (article: ArticleWithExtras): string =>
-  article.publishedAt || article.date || '';
+interface NewsCardProps {
+  article: NewsArticle;
+}
 
-const getDescription = (article: ArticleWithExtras): string =>
-  article.description || article.summary || '';
-
-const NewsCard = ({ article }: { article: ArticleWithExtras }) => {
-  const formatDate = (dateStr: string) => {
-    if (!dateStr) return '';
-    try {
-      const date = new Date(dateStr);
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-      const diffMins = Math.floor(diffMs / 60000);
-      const diffHours = Math.floor(diffMins / 60);
-
-      if (diffMins < 60) return `${diffMins}분 전`;
-      if (diffHours < 24) return `${diffHours}시간 전`;
-      return date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
-    } catch {
-      return dateStr;
-    }
-  };
+const NewsCard = ({ article }: NewsCardProps) => {
+  const dateStr = article.publishedAt || article.date;
+  const descStr = article.description || article.summary || '';
 
   return (
     <a
       href={article.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex gap-3 p-3 rounded-lg border border-border bg-card hover:shadow-md hover:border-primary/30 transition-all duration-200"
+      className="group flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
     >
-      <div className="relative h-20 w-28 flex-shrink-0 overflow-hidden rounded-md bg-muted">
+      <div className="flex-shrink-0 w-24 h-18 overflow-hidden rounded-md">
         <img
           src={article.imageUrl}
           alt={article.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
+          className="w-24 h-18 object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = 'https://source.unsplash.com/400x300/?business,economy';
+            target.src = 'https://source.unsplash.com/200x150/?finance';
           }}
         />
-        {article.isBreaking && (
-          <div className="absolute top-1 left-1">
-            <span className="bg-red-500 text-white text-[9px] font-bold px-1 py-0.5 rounded leading-none">
-              속보
-            </span>
-          </div>
-        )}
       </div>
-
       <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-1">
-          <span className="text-xs text-primary font-medium bg-primary/10 px-1.5 py-0.5 rounded">
-            {article.category}
-          </span>
-          <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5" />
+        <div className="flex items-center gap-2 mb-1">
+          {article.isBreaking && (
+            <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded font-bold">LIVE</span>
+          )}
+          <span className="text-xs text-primary font-medium">{article.category}</span>
         </div>
-        <h3 className="text-sm font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors mt-1.5 leading-snug">
+        <h3 className="text-sm font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
           {article.title}
         </h3>
-        {getDescription(article) && (
-          <p className="text-xs text-muted-foreground line-clamp-1 mt-1 hidden sm:block">
-            {getDescription(article)}
-          </p>
+        {descStr && (
+          <p className="text-xs text-gray-500 line-clamp-1 mt-1">{descStr}</p>
         )}
         <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
-          <span>{formatDate(getDate(article))}</span>
-          {article.source && (
-            <>
-              <span>·</span>
-              <span className="truncate max-w-[100px]">{article.source}</span>
-            </>
-          )}
+          <span>{formatDate(dateStr)}</span>
+          <span className="text-gray-400">|</span>
+          <span>{article.source}</span>
+          <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
     </a>
@@ -102,66 +73,52 @@ const NewsCard = ({ article }: { article: ArticleWithExtras }) => {
 const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsListProps) => {
   const { t } = useLanguage();
 
-  const nonFeaturedArticles = (articles as ArticleWithExtras[]).filter(a => !a.isFeatured);
-
-  if (isLoading && articles.length === 0) {
-    return (
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-foreground">{t('latest')}</h2>
-        </div>
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex gap-3 p-3 rounded-lg border border-border bg-card animate-pulse">
-            <div className="h-20 w-28 flex-shrink-0 rounded-md bg-muted" />
-            <div className="flex-1 space-y-2">
-              <div className="h-3 bg-muted rounded w-16" />
-              <div className="h-4 bg-muted rounded w-full" />
-              <div className="h-4 bg-muted rounded w-4/5" />
-              <div className="h-3 bg-muted rounded w-24" />
-            </div>
-          </div>
-        ))}
-      </div>    );
-}
-
-  if (error && articles.length === 0) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground text-sm mb-3">{error}</p>
-        {onRefresh && (
-          <button
-            onClick={onRefresh}
-            className="flex items-center gap-2 mx-auto text-sm text-primary hover:text-primary/80 transition-colors"
-          >
-            <RefreshCw className="h-3.5 w-3.5" />
-            {t('refresh')}
-          </button>
-        )}
-      </div>
-    );
-  }
+  const nonFeaturedArticles = articles.filter((a) => !a.isFeatured);
 
   return (
-    <section>
+    <div>
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-base font-bold text-foreground">{t('latest')}</h2>
+        <h2 className="text-xl font-bold text-foreground">{t('latestNews')}</h2>
         <div className="flex items-center gap-2">
           {lastFetched && (
-            <span className="text-xs text-muted-foreground hidden sm:block">
-              {t('lastUpdated')}: {lastFetched.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}
+            <span className="text-xs text-gray-400">
+              {t('updated')}: {lastFetched.toLocaleTimeString()}
             </span>
           )}
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-1.5 rounded-md hover:bg-accent transition-colors"
-              title={t('refresh')}
+              className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-primary rounded hover:bg-gray-100 transition-colors"
+              disabled={isLoading}
             >
-              <RefreshCw className={`h-3.5 w-3.5 text-muted-foreground ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
+              {t('refresh')}
             </button>
           )}
         </div>
       </div>
+
+      {/* Error state */}
+      {error && (
+        <div className="text-center py-4 text-red-500 text-sm">{error}</div>
+      )}
+
+      {/* Loading state */}
+      {isLoading && articles.length === 0 && (
+        <div className="space-y-3">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="flex gap-4 p-3 animate-pulse">
+              <div className="w-24 h-16 bg-gray-200 rounded-md" />
+              <div className="flex-1 space-y-2">
+                <div className="h-3 bg-gray-200 rounded w-1/4" />
+                <div className="h-4 bg-gray-200 rounded w-3/4" />
+                <div className="h-3 bg-gray-200 rounded w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Top in-article ad */}
       <div className="mb-4 flex justify-center">
@@ -181,14 +138,8 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
           </div>
         ))}
       </div>
-
-      {nonFeaturedArticles.length === 0 && !isLoading && (
-        <div className="text-center py-8 text-muted-foreground text-sm">
-          {t('error')}
-        </div>
-      )}
-    </section>
+    </div>
   );
 };
 
-export default NewsList;))}}}
+export default NewsList;}

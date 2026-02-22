@@ -1,41 +1,44 @@
 import { useEffect, useRef } from 'react';
-import { useLanguage } from '../hooks/useLanguage';
 
-type AdSlotType = 'header' | 'sidebar' | 'in-article' | 'footer' | 'mobile-banner';
+const USE_PLACEHOLDER = true;
+const ADSENSE_PUB_ID = 'ca-pub-XXXXXXXXXX';
+
+type SlotType = 'header' | 'sidebar' | 'in-article' | 'footer' | 'mobile-banner';
+
+interface AdDimensions {
+  width: string;
+  height: string;
+  label: string;
+}
+
+const slotDimensions: Record<SlotType, AdDimensions> = {
+  'header': { width: '728px', height: '90px', label: 'Header Ad' },
+  'sidebar': { width: '300px', height: '250px', label: 'Sidebar Ad' },
+  'in-article': { width: '300px', height: '250px', label: 'In-Article Ad' },
+  'footer': { width: '728px', height: '90px', label: 'Footer Ad' },
+  'mobile-banner': { width: '320px', height: '50px', label: 'Mobile Banner' },
+};
 
 interface AdBannerProps {
-  slotType: AdSlotType;
+  slotType: SlotType;
   className?: string;
   adSlotId?: string;
 }
 
-const AD_DIMENSIONS: Record<AdSlotType, { width: number; height: number; label: string }> = {
-  'header': { width: 728, height: 90, label: 'Leaderboard' },
-  'sidebar': { width: 300, height: 250, label: 'Medium Rectangle' },
-  'in-article': { width: 300, height: 250, label: 'In-Article' },
-  'footer': { width: 728, height: 90, label: 'Footer Banner' },
-  'mobile-banner': { width: 320, height: 50, label: 'Mobile Banner' },
-};
-
-// Google AdSense publisher ID - replace with actual ID
-const ADSENSE_PUB_ID = 'ca-pub-XXXXXXXXXXXXXXXXX';
-const USE_PLACEHOLDER = true; // Set to false when AdSense is approved
-
 const AdBanner = ({ slotType, className = '', adSlotId }: AdBannerProps) => {
-  const { t } = useLanguage();
   const adRef = useRef<HTMLDivElement>(null);
-  const dims = AD_DIMENSIONS[slotType];
+  const dims = slotDimensions[slotType];
 
   useEffect(() => {
     if (!USE_PLACEHOLDER && adRef.current) {
       try {
-        // Push AdSense ad when not using placeholder
-        const adsbygoogle = (window as Record<string, unknown>).adsbygoogle as unknown[];
-        if (adsbygoogle) {
-          adsbygoogle.push({});
-}
+        const win = window as Record<string, unknown>;
+        const adArr = win['adsbygoogle'];
+        if (Array.isArray(adArr)) {
+          adArr.push({});
+      }
       } catch (e) {
-        console.warn('AdSense load error:', e);
+        console.error('AdSense error:', e);
       }
     }
   }, []);
@@ -43,12 +46,12 @@ const AdBanner = ({ slotType, className = '', adSlotId }: AdBannerProps) => {
   if (USE_PLACEHOLDER) {
     return (
       <div
-        className={`ad-banner-placeholder flex items-center justify-center bg-gray-100 dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500 text-xs rounded ${className}`}
+        className={`flex items-center justify-center bg-gray-100 border border-dashed border-gray-300 text-gray-400 ${className}`}
         style={{ minHeight: dims.height, maxWidth: dims.width, width: '100%', margin: '0 auto' }}
       >
         <div className="text-center p-2">
-          <div className="text-xs text-gray-400 mb-1">{t('advertisement')}</div>
-          <div className="text-xs text-gray-300">{dims.width}×{dims.height} {dims.label}</div>
+          <div className="text-xs mb-1">Advertisement</div>
+          <div className="text-xs">{dims.width}x{dims.height} {dims.label}</div>
         </div>
       </div>
     );
@@ -68,4 +71,4 @@ const AdBanner = ({ slotType, className = '', adSlotId }: AdBannerProps) => {
   );
 };
 
-export default AdBanner;))}}}}}})}
+export default AdBanner;
