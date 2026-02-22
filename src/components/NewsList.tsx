@@ -1,4 +1,5 @@
-import { Clock, RefreshCw, ExternalLink } from 'lucide-react';
+import { Clock, RefreshCw } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import AdBanner from './AdBanner';
 import type { NewsArticle } from '../data/newsData';
@@ -28,10 +29,8 @@ const NewsCard = ({ article }: NewsCardProps) => {
   const descStr = article.description || article.summary || '';
 
   return (
-    <a
-      href={article.url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <Link
+      to={`/article/${article.id}`}
       className="group flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
     >
       <div className="flex-shrink-0 w-24 h-18 overflow-hidden rounded-md">
@@ -63,10 +62,9 @@ const NewsCard = ({ article }: NewsCardProps) => {
           <span>{formatDate(dateStr)}</span>
           <span className="text-gray-400">|</span>
           <span>{article.source}</span>
-          <ExternalLink className="h-3 w-3 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
-    </a>
+    </Link>
   );
 };
 
