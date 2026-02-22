@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"Noto Sans KR"', 'sans-serif'],
+        display: ['"Playfair Display"', 'serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,6 +61,10 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        stocks: "hsl(var(--chart-stocks))",
+        realestate: "hsl(var(--chart-realestate))",
+        exchange: "hsl(var(--chart-exchange))",
+        crypto: "hsl(var(--chart-crypto))",
       },
       borderRadius: {
         lg: "var(--radius)",
