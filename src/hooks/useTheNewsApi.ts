@@ -33,7 +33,7 @@ const REQUIRED_KEYWORDS = [
     "실적", "매출", "영업이익", "순이익", "기업", "분기", "인수합병",
     "bitcoin", "crypto", "cryptocurrency", "blockchain", "ethereum",
     "btc", "eth", "defi", "nft", "coin", "binance", "upbit",
-    "비트코인", "암호화폐", "블록체인", "이더리움", "코인", "업비트", "빗썸",
+    "비트코인", "암호화폐", "블록체인", "이더리움", "코인", "업비트", "빗썸", "ton",
     "bank", "banking", "insurance", "fintech", "은행", "보험", "핀테크",
   ];
 
@@ -188,30 +188,3 @@ export const useTheNewsApi = (language: Language = "ko") => {
 
     return { articles, isLoading, error, lastFetched, refresh: () => fetchNews(true) };
 };
-          }
-          }
-                  }
-                  }
-                  })
-                  })
-          }
-                  }
-          }
-    })
-}
-}
-                  }
-          }
-    }
-}
-}
-    }
-}
-}
-    }
-    }
-}
-}
-]
-]
-]
