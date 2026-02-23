@@ -41,7 +41,7 @@ const REQUIRED_KEYWORDS = [
   "central bank", "monetary", "fiscal", "recession", "growth", "trade",
   "tariff", "bond", "treasury", "yield", "credit", "debt", "deficit",
   "employment", "unemployment", "cpi", "ppi", "금리", "경제", "인플레이션",
-  "기준금리", "한은", "연준", "무역", "수출", "수입", "GDP", "고용",
+  "기준금리", "한은", "연준", "무역", "수출", "수입", "GDP", "고용", "물가",
   // 기업분석
   "revenue", "profit", "loss", "quarterly", "annual", "ceo", "merger",
   "acquisition", "m&a", "startup", "venture", "corporate", "business",

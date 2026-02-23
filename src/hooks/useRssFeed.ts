@@ -29,7 +29,7 @@ const REQUIRED_KEYWORDS = [
   "trading", "investor", "주식", "증시", "투자", "펀드", "코스피",
   "economy", "economic", "gdp", "inflation", "interest rate", "fed",
   "central bank", "recession", "bond", "treasury", "yield", "금리", "경제",
-  "인플레이션", "한은", "연준", "무역", "수출", "GDP",
+  "인플레이션", "한은", "연준", "무역", "수출", "GDP", "물가",
   "revenue", "profit", "earnings", "ceo", "merger", "acquisition", "m&a",
   "corporate", "business", "실적", "매출", "영업이익", "기업",
   "real estate", "housing", "property", "mortgage", "부동산", "아파트",
