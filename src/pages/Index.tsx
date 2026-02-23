@@ -1,34 +1,40 @@
 // EconoJabis - Main page component
-import { useState, useMemo } from 'react';
-import Header from '../components/Header';
-import FeaturedNews from '../components/FeaturedNews';
-import NewsList from '../components/NewsList';
-import CategoryTabs from '../components/CategoryTabs';
-import MarketTicker from '../components/MarketTicker';
-import AdBanner from '../components/AdBanner';
-import { useTheNewsApi } from '../hooks/useTheNewsApi';
-import { useLanguage } from '../hooks/useLanguage';
+import { useState, useMemo, useEffect } from "react";
+import Header from "../components/Header";
+import FeaturedNews from "../components/FeaturedNews";
+import NewsList from "../components/NewsList";
+import CategoryTabs from "../components/CategoryTabs";
+import MarketTicker from "../components/MarketTicker";
+import AdBanner from "../components/AdBanner";
+import { useTheNewsApi } from "../hooks/useTheNewsApi";
+import { useLanguage } from "../hooks/useLanguage";
+import { saveArticlesToStore } from "./ArticleDetail";
 
 const Index = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const { language, t } = useLanguage();
 
   const { articles, isLoading, error, lastFetched, refresh } = useTheNewsApi(language);
 
+  useEffect(() => {
+    if (articles.length > 0) saveArticlesToStore(articles);
+  }, [articles]);
+
   // Get unique categories from articles
   const categories = useMemo(() => {
-    const cats = new Set(articles.map(a => a.category));
+    const cats = new Set(articles.map((a) => a.category));
     return Array.from(cats).filter(Boolean);
   }, [articles]);
 
   // Filter articles by search and category
   const filteredArticles = useMemo(() => {
-    return articles.filter(article => {
-      const matchesSearch = !searchQuery ||
+    return articles.filter((article) => {
+      const matchesSearch =
+        !searchQuery ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (article.description || '').toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
+        (article.description || "").toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === "all" || article.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
   }, [articles, searchQuery, selectedCategory]);
@@ -84,16 +90,16 @@ const Index = () => {
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
-                  {t('markets')}
+                  {t("markets")}
                 </h3>
-                <p className="text-xs text-muted-foreground">{t('loading')}</p>
+                <p className="text-xs text-muted-foreground">{t("loading")}</p>
               </div>
 
               {/* Trending Keywords */}
               <div className="rounded-xl border border-border bg-card p-4">
-                <h3 className="text-sm font-bold text-foreground mb-3">{t('trending')}</h3>
+                <h3 className="text-sm font-bold text-foreground mb-3">{t("trending")}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {['Fed', 'Bitcoin', 'KOSPI', 'USD/KRW', 'Oil', 'Gold', 'S&P500'].map(kw => (
+                  {["Fed", "Bitcoin", "KOSPI", "USD/KRW", "Oil", "Gold", "S&P500"].map((kw) => (
                     <button
                       key={kw}
                       onClick={() => setSearchQuery(kw)}
@@ -123,9 +129,7 @@ const Index = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <p className="text-sm font-bold text-foreground">EconoJabis</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {t('siteTagline')}
-              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">{t("siteTagline")}</p>
             </div>
             <div className="text-xs text-muted-foreground text-center sm:text-right">
               <p>© 2025 EconoJabis. Powered by free RSS feeds & open APIs.</p>
