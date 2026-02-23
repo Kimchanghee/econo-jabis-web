@@ -81,11 +81,4 @@ const ArticleDetail = () => {
         );
 };
 
-export default ArticleDetail;</div>
-          )
-    }
-}
-}
-    }
-}
-}
+export default ArticleDetail;
