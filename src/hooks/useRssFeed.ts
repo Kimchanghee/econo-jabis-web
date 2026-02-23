@@ -22,6 +22,35 @@ const categoryKeywords: Record<Category, string> = {
   '암호화폐': 'bitcoin OR cryptocurrency OR blockchain OR ethereum',
 };
 
+// 경제/금융 관련 필수 키워드
+const REQUIRED_KEYWORDS = [
+  "stock", "equity", "shares", "nasdaq", "s&p", "dow", "kospi", "kosdaq",
+  "ipo", "earnings", "dividend", "wall street", "index", "fund", "etf",
+  "trading", "investor", "주식", "증시", "투자", "펀드", "코스피",
+  "economy", "economic", "gdp", "inflation", "interest rate", "fed",
+  "central bank", "recession", "bond", "treasury", "yield", "금리", "경제",
+  "인플레이션", "한은", "연준", "무역", "수출", "GDP",
+  "revenue", "profit", "earnings", "ceo", "merger", "acquisition", "m&a",
+  "corporate", "business", "실적", "매출", "영업이익", "기업",
+  "real estate", "housing", "property", "mortgage", "부동산", "아파트",
+  "forex", "exchange rate", "currency", "dollar", "환율", "달러",
+  "bitcoin", "crypto", "blockchain", "ethereum", "btc", "defi", "nft",
+  "coin", "web3", "비트코인", "암호화폐", "이더리움", "블록체인", "코인",
+  "bank", "banking", "finance", "financial", "fintech", "은행", "금융",
+];
+
+const BLOCKED_KEYWORDS = [
+  "패션", "뷰티", "맛집", "요리", "여행", "게임", "연예", "드라마",
+  "스포츠", "sports", "entertainment", "movie", "music", "health",
+  "fitness", "weather", "날씨", "운세", "gossip", "celebrity",
+];
+
+const isRelevantArticle = (title: string, description: string): boolean => {
+  const text = (title + " " + (description || "")).toLowerCase();
+  if (BLOCKED_KEYWORDS.some(k => text.includes(k.toLowerCase()))) return false;
+  return REQUIRED_KEYWORDS.some(k => text.includes(k.toLowerCase()));
+};
+
 // Detect category from article content
 const detectCategory = (title: string, description: string): Category => {
   const text = (title + ' ' + description).toLowerCase();
@@ -101,7 +130,8 @@ export const useRssFeed = (language: Language) => {
       const items: TheNewsAPIArticle[] = data.data || [];
 
       if (items.length > 0) {
-        const mapped = items.map((item, idx) => mapToNewsArticle(item, idx));
+        const filtered = items.filter(item => isRelevantArticle(item.title, item.description || item.snippet || ''));
+        const mapped = filtered.map((item, idx) => mapToNewsArticle(item, idx));
         // Sort by date
         mapped.sort((a, b) => new Date(b.publishedAt || b.date).getTime() - new Date(a.publishedAt || a.date).getTime());
         // Re-mark featured

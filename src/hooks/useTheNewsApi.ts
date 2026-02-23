@@ -20,29 +20,46 @@ const BLOCKED_DOMAINS = [
 
 // 경제 무관 제목 키워드 필터
 const BLOCKED_KEYWORDS = [
-  "패션",
-  "뷰티",
-  "맛집",
-  "요리",
-  "여행",
-  "게임",
-  "연예",
-  "드라마",
-  "포엣",
-  "리파",
-  "포카라",
-  "블로그",
-  "인테리어",
-  "육아",
-  "반려",
-  "레시피",
-  "poetcore",
-  "fashion",
-  "beauty",
-  "recipe",
-  "travel",
-  "gaming",
-  "celebrity",
+  "패션", "뷰티", "맛집", "요리", "여행", "게임", "연예", "드라마",
+  "포엣", "리파", "포카라", "블로그", "인테리어", "육아", "반려", "레시피",
+  "poetcore", "fashion", "beauty", "recipe", "travel", "gaming", "celebrity",
+  "sports", "스포츠", "entertainment", "movie", "film", "music", "health",
+  "fitness", "diet", "weather", "날씨", "운세", "horoscope", "lottery",
+  "comedy", "viral", "tiktok", "instagram", "youtube", "influencer",
+  "wedding", "결혼", "divorce", "이혼", "scandal", "gossip",
+];
+
+// 경제/금융 관련 필수 키워드 - 이 중 하나라도 포함해야 통과
+const REQUIRED_KEYWORDS = [
+  // 주식/증시
+  "stock", "equity", "shares", "nasdaq", "s&p", "dow", "kospi", "kosdaq",
+  "ipo", "earnings", "dividend", "wall street", "bull", "bear", "rally",
+  "index", "fund", "etf", "portfolio", "trading", "investor", "valuation",
+  "주식", "증시", "상장", "배당", "투자", "펀드", "코스피", "코스닥",
+  // 경제/금융
+  "economy", "economic", "gdp", "inflation", "interest rate", "fed",
+  "central bank", "monetary", "fiscal", "recession", "growth", "trade",
+  "tariff", "bond", "treasury", "yield", "credit", "debt", "deficit",
+  "employment", "unemployment", "cpi", "ppi", "금리", "경제", "인플레이션",
+  "기준금리", "한은", "연준", "무역", "수출", "수입", "GDP", "고용",
+  // 기업분석
+  "revenue", "profit", "loss", "quarterly", "annual", "ceo", "merger",
+  "acquisition", "m&a", "startup", "venture", "corporate", "business",
+  "company", "enterprise", "실적", "매출", "영업이익", "순이익", "인수",
+  "합병", "기업", "스타트업",
+  // 부동산
+  "real estate", "housing", "property", "mortgage", "rent", "부동산",
+  "아파트", "주택", "분양", "전세", "월세",
+  // 환율
+  "forex", "exchange rate", "currency", "dollar", "euro", "yen", "won",
+  "환율", "달러", "원화", "엔화", "위안",
+  // 암호화폐/크립토
+  "bitcoin", "crypto", "blockchain", "ethereum", "btc", "eth", "defi",
+  "nft", "token", "coin", "web3", "altcoin", "stablecoin", "mining",
+  "비트코인", "암호화폐", "이더리움", "블록체인", "코인", "토큰", "디파이",
+  // 금융
+  "bank", "banking", "finance", "financial", "fintech", "insurance",
+  "은행", "금융", "보험", "핀테크",
 ];
 
 const detectCategory = (title: string, description: string): Category => {
@@ -126,6 +143,11 @@ const isBlockedTitle = (title: string): boolean => {
   return BLOCKED_KEYWORDS.some((k) => lower.includes(k.toLowerCase()));
 };
 
+const isRelevantArticle = (title: string, description: string): boolean => {
+  const text = (title + " " + (description || "")).toLowerCase();
+  return REQUIRED_KEYWORDS.some((k) => text.includes(k.toLowerCase()));
+};
+
 const getCachedData = (lang: string): NewsArticle[] | null => {
   try {
     if (memoryCache[lang] && Date.now() - memoryCache[lang].timestamp < CACHE_DURATION) {
@@ -192,7 +214,11 @@ export const useTheNewsApi = (language: Language = "ko") => {
       const items: TheNewsAPIArticle[] = data.data || [];
 
       if (items.length > 0) {
-        const filtered = items.filter((item) => !isBlockedSource(item.url, item.source) && !isBlockedTitle(item.title));
+const filtered = items.filter((item) =>
+          !isBlockedSource(item.url, item.source) &&
+          !isBlockedTitle(item.title) &&
+          isRelevantArticle(item.title, item.description || item.snippet || "")
+        );
 
         const mapped = filtered.map((item, idx) => mapToNewsArticle(item, idx));
         mapped.sort(
