@@ -105,6 +105,7 @@ const REQUIRED_KEYWORDS = [
   "이더리움",
   "블록체인",
   "코인",
+  "ton",
   "bank",
   "banking",
   "finance",
