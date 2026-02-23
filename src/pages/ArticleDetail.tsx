@@ -1,4 +1,49 @@
-import { useParams, useNavigate } from "react-router-dom";
+eturn dateStr;
+}
+};
+
+const ArticleDetail = () => {
+    const { id } = useParams<{ id: string }>();
+    const navigate = useNavigate();
+  
+    const article = id ? getArticleFromStore(id) : null;
+  
+    if (!article) {
+          return (
+                  <div className="min-h-screen bg-background">
+                          <Header searchQuery="" onSearchChange={() => {}} />
+                          <div className="mx-auto max-w-3xl px-4 py-20 text-center">
+                                    <p className="text-muted-foreground text-lg mb-4">기사를 찾을 수 없습니다.</p>p>
+                                    <button
+                                                  onClick={() => navigate("/")}
+                                               xl px-4 py-6   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+                                                >
+                                                <ArrowLeft className="h-4 w-4" />
+                                                홈으로 돌아가기
+                                    </button>button>
+                          </div>div>
+                  </div>div>
+                );
+    }
+  
+    const dateStr = article.publishedAt || article.date;
+    const bodyText = [article.description, article.summary]
+          .filter(Boolean)
+          .filter((v, i, arr) => arr.indexOf(v) === i)
+          .join("\n\n");
+  
+    const handleShare = () => {
+          if (navigator.share) {
+                  navigator.share({ title: article.title, text: article.description || "" });
+          } else {
+                  navigator.clipboard?.writeText(window.location.href);
+          }
+    };
+  
+    return (
+          <div className="min-h-screen bg-background">
+                <Header searchQuery="" onSearchChange={() => {}} />
+                <main className="mx-auto max-w-3"</div>import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, ExternalLink, Clock, Share2 } from "lucide-react";
 import Header from "../components/Header";
 import AdBanner from "../components/AdBanner";
