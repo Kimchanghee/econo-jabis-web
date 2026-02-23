@@ -1,193 +1,91 @@
-eturn dateStr;
-}
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft, Clock, Share2 } from "lucide-react";
+import Header from "../components/Header";
+import { NewsArticle } from "../data/newsData";
+
+const ARTICLE_STORE_KEY = "econojabis_articles_v1";
+
+export const saveArticlesToStore = (articles: NewsArticle[]) => {
+    try { localStorage.setItem(ARTICLE_STORE_KEY, JSON.stringify(articles)); } catch {}
+};
+
+const getArticleFromStore = (id: string): NewsArticle | null => {
+    try {
+          const raw = localStorage.getItem(ARTICLE_STORE_KEY);
+          if (!raw) return null;
+          const all: NewsArticle[] = JSON.parse(raw);
+          return all.find((a) => a.id === decodeURIComponent(id)) || null;
+    } catch { return null; }
+};
+
+const fmt = (s: string) => {
+    try { return new Date(s).toLocaleDateString("ko-KR", { year:"numeric", month:"long", day:"numeric", hour:"2-digit", minute:"2-digit" }); }
+    catch { return s; }
 };
 
 const ArticleDetail = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-  
     const article = id ? getArticleFromStore(id) : null;
-  
+
     if (!article) {
           return (
                   <div className="min-h-screen bg-background">
                           <Header searchQuery="" onSearchChange={() => {}} />
                           <div className="mx-auto max-w-3xl px-4 py-20 text-center">
                                     <p className="text-muted-foreground text-lg mb-4">기사를 찾을 수 없습니다.</p>p>
-                                    <button
-                                                  onClick={() => navigate("/")}
-                                               xl px-4 py-6   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
-                                                >
-                                                <ArrowLeft className="h-4 w-4" />
-                                                홈으로 돌아가기
+                                    <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground">
+                                                <ArrowLeft className="h-4 w-4" /> 홈으로
                                     </button>button>
                           </div>div>
                   </div>div>
                 );
     }
   
-    const dateStr = article.publishedAt || article.date;
-    const bodyText = [article.description, article.summary]
+    const body = [article.description, article.summary]
           .filter(Boolean)
-          .filter((v, i, arr) => arr.indexOf(v) === i)
+          .filter((v, i, a) => a.indexOf(v) === i)
           .join("\n\n");
-  
-    const handleShare = () => {
-          if (navigator.share) {
-                  navigator.share({ title: article.title, text: article.description || "" });
-          } else {
-                  navigator.clipboard?.writeText(window.location.href);
-          }
-    };
   
     return (
           <div className="min-h-screen bg-background">
                 <Header searchQuery="" onSearchChange={() => {}} />
-                <main className="mx-auto max-w-3"</div>import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, ExternalLink, Clock, Share2 } from "lucide-react";
-import Header from "../components/Header";
-import AdBanner from "../components/AdBanner";
-import { useTheNewsApi } from "../hooks/useTheNewsApi";
-import { FALLBACK_IMAGES } from "../data/newsData";
-
-const formatDate = (dateStr: string): string => {
-  try {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return dateStr;
-  }
+                <main className="mx-auto max-w-3xl px-4 py-6">
+                        <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6">
+                                  <ArrowLeft className="h-4 w-4" /> 뒤로가기
+                        </button>button>
+                        <article>
+                                  <div className="mb-3 flex items-center gap-2 flex-wrap">
+                                              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary text-primary-foreground">{article.category}</span>span>
+                                    {article.isBreaking && <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-500 text-white">속보</span>span>}
+                                  </div>div>
+                                  <h1 className="text-2xl sm:text-3xl font-bold leading-tight mb-4 text-foreground">{article.title}</h1>h1>
+                                  <div className="flex items-center justify-between mb-6 text-sm text-muted-foreground flex-wrap gap-2">
+                                              <div className="flex items-center gap-3">
+                                                            <span className="font-medium text-foreground">{article.source}</span>span>
+                                                            <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{fmt(article.publishedAt || article.date)}</span>span>
+                                              </div>div>
+                                              <button onClick={() => navigator.share ? navigator.share({ title: article.title }) : navigator.clipboard?.writeText(window.location.href)} className="inline-flex items-center gap-1 hover:text-foreground">
+                                                            <Share2 className="h-4 w-4" /> 공유
+                                              </button>button>
+                                  </div>div>
+                          {article.imageUrl && (
+                        <img src={article.imageUrl} alt={article.title} className="w-full rounded-xl object-cover mb-6 max-h-96" onError={(e) => { (e.target as HTMLImageElement).style.display="none"; }} />
+                      )}
+                                  <div className="text-base leading-relaxed text-foreground space-y-4">
+                                    {body.split("\n\n").map((p, i) => <p key={i}>{p}</p>p>)}
+                                  </div>div>
+                        </article>article>
+                </main>main>
+          </div>div>
+        );
 };
 
-const ArticleDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { articles } = useTheNewsApi("en");
-
-  const article = articles.find((a) => a.id === decodeURIComponent(id || ""));
-
-  if (!article) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header searchQuery="" onSearchChange={() => {}} />
-        <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-          <p className="text-muted-foreground text-lg mb-4">기사를 찾을 수 없습니다.</p>
-          <button
-            onClick={() => navigate("/")}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            홈으로 돌아가기
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  const dateStr = article.publishedAt || article.date;
-  const descStr = article.description || article.summary || "";
-
-  return (
-    <div className="min-h-screen bg-background">
-      <Header searchQuery="" onSearchChange={() => {}} />
-
-      <main className="mx-auto max-w-4xl px-4 py-6">
-        {/* Back button */}
-        <button
-          onClick={() => navigate(-1)}
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          뒤로가기
-        </button>
-
-        <article>
-          {/* Category & Breaking badge */}
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary/10 text-primary">
-              {article.category}
-            </span>
-            {article.isBreaking && (
-              <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">속보</span>
-            )}
-          </div>
-
-          {/* Title */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground leading-tight mb-4">{article.title}</h1>
-
-          {/* Meta */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
-            <div className="flex items-center gap-1.5">
-              <Clock className="h-4 w-4" />
-              <span>{formatDate(dateStr)}</span>
-            </div>
-            <span className="font-medium text-foreground">{article.source}</span>
-            <div className="ml-auto flex items-center gap-3">
-              <a
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground"
-              >
-                <Share2 className="h-4 w-4" />
-                공유
-              </a>
-            </div>
-          </div>
-
-          {/* Hero image */}
-          <div className="rounded-xl overflow-hidden mb-6">
-            <img
-              src={article.imageUrl}
-              alt={article.title}
-              className="w-full aspect-video object-cover"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = FALLBACK_IMAGES[article.category] || FALLBACK_IMAGES["전체"];
-              }}
-            />
-          </div>
-
-          {/* Ad */}
-          <div className="mb-6 flex justify-center">
-            <AdBanner slotType="in-article" />
-          </div>
-
-          {/* Article body */}
-          <div className="prose prose-neutral max-w-none">
-            <p className="text-base sm:text-lg leading-relaxed text-foreground/90">{descStr}</p>
-            {article.summary && article.summary !== descStr && (
-              <p className="text-base leading-relaxed text-foreground/80 mt-4">{article.summary}</p>
-            )}
-          </div>
-
-          {/* Original link CTA */}
-          <div className="mt-8 p-4 rounded-xl border border-border bg-muted/30 text-center">
-            <p className="text-sm text-muted-foreground mb-3">전체 기사를 원문에서 읽어보세요</p>
-            <a
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium"
-            >
-              원문 기사 보기 <ExternalLink className="h-4 w-4" />
-            </a>
-          </div>
-
-          {/* Bottom Ad */}
-          <div className="mt-8 flex justify-center">
-            <AdBanner slotType="footer" />
-          </div>
-        </article>
-      </main>
-    </div>
-  );
-};
-
-export default ArticleDetail;
+export default ArticleDetail;</div>
+          )
+    }
+}
+}
+    }
+}
+}
