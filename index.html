@@ -1,28 +1,51 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>EconoJabis 경제뉴스 포털</title>
-    <meta name="description" content="한국 경제뉴스 포털 - 주식, 부동산, 환율, 암호화폐 최신 뉴스를 제공합니다.">
-    <meta name="author" content="Lovable" />
+    <meta name="description" content="한국 경제 뉴스 포털 - 주식, 부동산, 환율, 암호화폐, 금리 등 실시간 경제 뉴스와 시장 분석을 제공합니다." />
+    <meta name="keywords" content="경제뉴스,주식,코스피,코스닥,환율,비트코인,부동산,금리,투자,AI,반도체" />
+    <meta name="author" content="EconoJabis" />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <meta name="googlebot" content="index,follow" />
+    <meta name="theme-color" content="#1a1a2e" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="content-language" content="ko" />
+    <meta name="geo.region" content="KR" />
+    <meta name="geo.placename" content="South Korea" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    
-    
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bdd2e2fe-30e3-4e3b-83fd-0862281d7659/id-preview-56f5e71f--43d72f3d-bb5e-461a-b128-224e9a97d05f.lovable.app-1771730515393.png">
+    <meta property="og:title" content="EconoJabis - 실시간 경제뉴스 포털" />
+    <meta property="og:description" content="한국 경제 뉴스 포털 - 주식, 부동산, 환율, 암호화폐 등 실시간 경제 뉴스" />
+    <meta property="og:site_name" content="EconoJabis" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
-    <meta name="twitter:image" content="https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bdd2e2fe-30e3-4e3b-83fd-0862281d7659/id-preview-56f5e71f--43d72f3d-bb5e-461a-b128-224e9a97d05f.lovable.app-1771730515393.png">
-    <meta property="og:title" content="EconoJabis 경제뉴스 포털">
-  <meta name="twitter:title" content="EconoJabis 경제뉴스 포털">
-  <meta property="og:description" content="한국 경제뉴스 포털 - 주식, 부동산, 환율, 암호화폐 최신 뉴스를 제공합니다.">
-  <meta name="twitter:description" content="한국 경제뉴스 포털 - 주식, 부동산, 환율, 암호화폐 최신 뉴스를 제공합니다.">
-</head>
+    <meta name="twitter:title" content="EconoJabis - 실시간 경제뉴스 포털" />
+    <meta name="twitter:description" content="한국 경제 뉴스 포털 - 주식, 부동산, 환율, 암호화폐 등 실시간 경제 뉴스" />
+    <meta name="twitter:image" content="/og-image.png" />
 
+    <!-- GEO/hreflang -->
+    <link rel="alternate" hreflang="ko" href="https://econojabis.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://econojabis.com/" />
+
+    <!-- Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.thenewsapi.com" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
