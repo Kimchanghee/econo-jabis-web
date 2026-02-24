@@ -7,6 +7,7 @@ import CategoryTabs from "../components/CategoryTabs";
 import MarketTicker from "../components/MarketTicker";
 import AdBanner from "../components/AdBanner";
 import RisingKeywords from "../components/RisingKeywords";
+import SEOHead from "../components/SEOHead";
 import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
@@ -47,6 +48,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+            <SEOHead />
       {/* Header with language switcher */}
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
