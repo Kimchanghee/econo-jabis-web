@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+          <loc>https://econojabis.com/</loc>
+          <lastmod>2025-02-25</lastmod>
+          <changefreq>hourly</changefreq>
+          <priority>1.0</priority>
+    </url>
+    <url>
+          <loc>https://econojabis.com/about</loc>
+          <lastmod>2025-02-25</lastmod>
+          <changefreq>monthly</changefreq>
+          <priority>0.8</priority>
+    </url>
+    <url>
+          <loc>https://econojabis.com/contact</loc>
+          <lastmod>2025-02-25</lastmod>
+          <changefreq>monthly</changefreq>
+          <priority>0.7</priority>
+    </url>
+    <url>
+          <loc>https://econojabis.com/privacy-policy</loc>
+          <lastmod>2025-02-25</lastmod>
+          <changefreq>yearly</changefreq>
+          <priority>0.5</priority>
+    </url>
+</urlset>
