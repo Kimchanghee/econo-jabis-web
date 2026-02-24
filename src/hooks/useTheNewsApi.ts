@@ -150,20 +150,22 @@ const setCachedData = (key: string, articles: NewsArticle[]) => {
 
 const mapToNewsArticle = (a: TheNewsAPIArticle, idx: number): NewsArticle => {
   const categoryMap: Record<string, Category> = {
-    business: "economy", tech: "stock", politics: "economy",
-    finance: "stock", science: "tech", general: "economy",
+    business: "주식", tech: "주식", politics: "전체",
+    finance: "주식", science: "주식", general: "전체",
   };
   const cat = a.categories?.[0] || "general";
-  const mapped = categoryMap[cat] || "economy";
+  const mapped: Category = categoryMap[cat] || "전체";
+  const fallbackKeys = Object.keys(FALLBACK_IMAGES) as Category[];
+  const fallbackKey = fallbackKeys[idx % fallbackKeys.length];
   return {
     id: a.uuid || `news-${Date.now()}-${idx}`,
     title: a.title,
     description: a.description || a.snippet || "",
-    content: a.description || a.snippet || a.title,
     source: a.source || "뉴스",
-    sourceUrl: a.url,
-    imageUrl: a.image_url || FALLBACK_IMAGES[idx % FALLBACK_IMAGES.length],
-    category: mapped as Category,
+    url: a.url,
+    date: a.published_at || new Date().toISOString(),
+    imageUrl: a.image_url || FALLBACK_IMAGES[fallbackKey],
+    category: mapped,
     publishedAt: a.published_at || new Date().toISOString(),
     isBreaking: false,
     isFeatured: false,

@@ -158,7 +158,7 @@ const AdminPanel = () => {
                       className="px-3 py-1.5 rounded border border-border bg-background text-foreground text-sm"
                       placeholder="\ucd9c\ucc98" />
                     <input type="text" value={editForm.category || ""}
-                      onChange={(e) => setEditForm((p) => ({ ...p, category: e.target.value }))}
+                      onChange={(e) => setEditForm((p) => ({ ...p, category: e.target.value as any }))}
                       className="px-3 py-1.5 rounded border border-border bg-background text-foreground text-sm"
                       placeholder="\uce74\ud14c\uace0\ub9ac" />
                   </div>
