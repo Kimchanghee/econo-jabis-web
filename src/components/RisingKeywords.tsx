@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { TrendingUp, Flame, ArrowUp, RefreshCw } from "lucide-react";
-import { NewsArticle } from "@/data/newsData";
+import { NewsArticle } frhom "../data/newsData";
 
 interface RisingKeyword {
   rank: number;
