@@ -6,6 +6,7 @@ import NewsList from "../components/NewsList";
 import CategoryTabs from "../components/CategoryTabs";
 import MarketTicker from "../components/MarketTicker";
 import AdBanner from "../components/AdBanner";
+import RisingKeywords from "../components/RisingKeywords";
 import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
@@ -90,6 +91,12 @@ const Index = () => {
             <div className="sticky top-20 space-y-4">
               {/* Sidebar Ad Top */}
               <AdBanner slotType="sidebar" />
+
+                            {/* Rising Search Keywords - 급상승 검색어 */}
+              <RisingKeywords
+                articles={articles}
+                onKeywordClick={(kw) => setSearchQuery(kw)}
+              />
 
               {/* Market Summary Widget */}
               <div className="rounded-xl border border-border bg-card p-4">
