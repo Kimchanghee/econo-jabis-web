@@ -15,7 +15,12 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { language, t } = useLanguage();
 
-  const { articles, isLoading, error, lastFetched, refresh } = useTheNewsApi(language);
+  const { articles, isLoading, error, lastFetched, refresh, extractTrendingKeywords } = useTheNewsApi(language);
+
+  // Dynamic trending keywords from article content
+  const trendingKeywords = useMemo(() => {
+    return extractTrendingKeywords();
+  }, [articles, extractTrendingKeywords]);
 
   useEffect(() => {
     if (articles.length > 0) saveArticlesToStore(articles);
@@ -95,19 +100,36 @@ const Index = () => {
                 <p className="text-xs text-muted-foreground">{t("loading")}</p>
               </div>
 
-              {/* Trending Keywords */}
+              {/* Trending Keywords - Dynamic from article analysis */}
               <div className="rounded-xl border border-border bg-card p-4">
-                <h3 className="text-sm font-bold text-foreground mb-3">{t("trending")}</h3>
+                <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
+                  <span className="text-orange-500">🔥</span>
+                  {t("trending")}
+                </h3>
                 <div className="flex flex-wrap gap-2">
-                  {["Fed", "Bitcoin", "KOSPI", "USD/KRW", "Oil", "Gold", "S&P500"].map((kw) => (
-                    <button
-                      key={kw}
-                      onClick={() => setSearchQuery(kw)}
-                      className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
-                    >
-                      #{kw}
-                    </button>
-                  ))}
+                  {trendingKeywords.length > 0 ? (
+                    trendingKeywords.map((item, idx) => (
+                      <button
+                        key={item.keyword}
+                        onClick={() => setSearchQuery(item.keyword)}
+                        className="text-xs px-2.5 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground flex items-center gap-1"
+                      >
+                        <span className="text-orange-500 font-bold">{idx + 1}</span>
+                        #{item.keyword}
+                        <span className="text-muted-foreground text-[10px]">({item.count})</span>
+                      </button>
+                    ))
+                  ) : (
+                    ["Fed", "Bitcoin", "KOSPI", "USD/KRW", "Oil", "Gold", "S&P500"].map((kw) => (
+                      <button
+                        key={kw}
+                        onClick={() => setSearchQuery(kw)}
+                        className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
+                      >
+                        #{kw}
+                      </button>
+                    ))
+                  )}
                 </div>
               </div>
 
