@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock, Share2, ExternalLink } from "lucide-react";
 import Header from "../components/Header";
 import { NewsArticle } from "../data/newsData";
+import SEOHead from "../components/SEOHead";
 
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
 
@@ -68,6 +69,19 @@ const ArticleDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+            <SEOHead
+        title={article.title}
+        description={article.description || article.summary || ""}
+        ogImage={article.imageUrl}
+        article={{
+          title: article.title,
+          description: article.description || article.summary || "",
+          publishedAt: article.publishedAt || new Date().toISOString(),
+          category: article.category || "",
+          source: article.source || "EconoJabis",
+          image: article.imageUrl,
+        }}
+      />
       <Header searchQuery="" onSearchChange={() => {}} />
       <main className="mx-auto max-w-3xl px-4 py-6">
         <button
