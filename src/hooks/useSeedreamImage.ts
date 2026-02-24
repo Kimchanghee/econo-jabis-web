@@ -166,4 +166,3 @@ export function getCategoryPlaceholder(title: string): string {
 }
 
 export { detectCategory, generatePrompt };
-export { detectCategory, generatePrompt };
