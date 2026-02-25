@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
-const USE_PLACEHOLDER = true;
-const ADSENSE_PUB_ID = 'ca-pub-XXXXXXXXXX';
+const USE_PLACEHOLDER = false;
+const ADSENSE_PUB_ID = 'ca-pub-5884595045902078';
 
 type SlotType = 'header' | 'sidebar' | 'in-article' | 'footer' | 'mobile-banner';
 
@@ -71,5 +71,6 @@ const AdBanner = ({ slotType, className = '', adSlotId }: AdBannerProps) => {
     </div>
   );
 };
+
 
 export default AdBanner;
