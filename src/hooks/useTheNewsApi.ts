@@ -207,7 +207,7 @@ async function fetchNewsFromAPI(language: Language, category: Category): Promise
 
   const params = new URLSearchParams({
     api_token: THENEWSAPI_TOKEN,
-    language: langMap[language] || "ko",
+    language: langMap[language] || "en",
     categories: "business,tech,general",
     search: searchQuery,
     limit: "25",
