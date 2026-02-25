@@ -1,0 +1,19 @@
+{
+  "name": "EconoJabis - 경제뉴스 포털",
+  "short_name": "EconoJabis",
+  "description": "실시간 경제뉴스, 주식, 암호화폐 정보를 한눈에 - EconoJabis 경제뉴스 포털",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a365d",
+  "orientation": "portrait-primary",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["news", "finance", "business"]
+}
