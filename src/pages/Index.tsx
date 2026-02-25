@@ -5,8 +5,10 @@ import FeaturedNews from "../components/FeaturedNews";
 import NewsList from "../components/NewsList";
 import CategoryTabs from "../components/CategoryTabs";
 import MarketTicker from "../components/MarketTicker";
+import MarketWidget from "../components/MarketWidget";
 import AdBanner from "../components/AdBanner";
 import RisingKeywords from "../components/RisingKeywords";
+import Footer from "../components/Footer";
 import SEOHead from "../components/SEOHead";
 import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
@@ -48,9 +50,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-            <SEOHead />
-      {/* Header with language switcher */}
-      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <SEOHead />
+      <Header
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        onCategoryChange={setSelectedCategory}
+      />
 
       {/* Header Ad Banner */}
       <div className="bg-muted/30 border-b border-border py-2">
@@ -94,22 +99,16 @@ const Index = () => {
               {/* Sidebar Ad Top */}
               <AdBanner slotType="sidebar" />
 
-                            {/* Rising Search Keywords - 급상승 검색어 */}
+              {/* Rising Search Keywords */}
               <RisingKeywords
                 articles={articles}
                 onKeywordClick={(kw) => setSearchQuery(kw)}
               />
 
-              {/* Market Summary Widget */}
-              <div className="rounded-xl border border-border bg-card p-4">
-                <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block" />
-                  {t("markets")}
-                </h3>
-                <p className="text-xs text-muted-foreground">{t("loading")}</p>
-              </div>
+              {/* Market Summary Widget - Real data */}
+              <MarketWidget />
 
-              {/* Trending Keywords - Dynamic from article analysis */}
+              {/* Trending Keywords */}
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
                   <span className="text-orange-500">🔥</span>
@@ -150,25 +149,7 @@ const Index = () => {
       </main>
 
       {/* Footer */}
-      <footer className="mt-12 border-t border-border bg-card">
-        {/* Footer Ad */}
-        <div className="py-3 flex justify-center border-b border-border">
-          <AdBanner slotType="footer" />
-        </div>
-
-        <div className="mx-auto max-w-7xl px-4 py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold text-foreground">EconoJabis</p>
-              <p className="text-xs text-muted-foreground mt-0.5">{t("siteTagline")}</p>
-            </div>
-            <div className="text-xs text-muted-foreground text-center sm:text-right">
-              <p>© 2025 EconoJabis. Powered by free RSS feeds & open APIs.</p>
-              <p className="mt-0.5">News: RSS | Market Data: Binance, Yahoo Finance | FX: open.er-api.com</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

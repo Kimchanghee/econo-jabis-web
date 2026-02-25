@@ -22,7 +22,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
   if (!articles || articles.length === 0) {
     return (
       <section className="mb-8">
-        <div className="text-center py-12 text-gray-500">{t('loading')}</div>
+        <div className="text-center py-12 text-muted-foreground">{t('loading')}</div>
       </section>
     );
   }
@@ -39,7 +39,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
         <div className="lg:col-span-2">
           <Link
             to={`/article/${encodeURIComponent(mainArticle.id)}`}
-            className="group block relative overflow-hidden rounded-xl bg-gray-900 aspect-video"
+            className="group block relative overflow-hidden rounded-xl bg-foreground/90 aspect-video"
           >
             <img
               src={mainArticle.imageUrl}
@@ -47,14 +47,12 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
               className="w-full h-full object-cover opacity-70 group-hover:opacity-80 transition-opacity"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.src = 'https://source.unsplash.com/800x450/?economy';
+                target.src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop';
               }}
             />
-
-            {/* Badges */}
             <div className="absolute top-3 left-3 flex gap-2">
               {mainArticle.isBreaking && (
-                <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded animate-pulse">
+                <span className="bg-destructive text-destructive-foreground text-xs font-bold px-2 py-0.5 rounded animate-pulse">
                   {t('breaking')}
                 </span>
               )}
@@ -62,10 +60,8 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
                 {mainArticle.category}
               </span>
             </div>
-
-            {/* Title overlay */}
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              <h3 className="text-white font-bold text-lg leading-tight mb-2 group-hover:text-primary-foreground line-clamp-2">
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+              <h3 className="text-white font-bold text-lg leading-tight mb-2 line-clamp-2">
                 {mainArticle.title}
               </h3>
               {descStr && (
@@ -91,7 +87,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
               <Link
                 key={article.id}
                 to={`/article/${encodeURIComponent(article.id)}`}
-                className="group flex gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                className="group flex gap-3 p-2 rounded-lg hover:bg-muted transition-colors"
               >
                 <div className="flex-shrink-0 w-20 h-16 overflow-hidden rounded-md">
                   <img
@@ -100,7 +96,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = 'https://source.unsplash.com/400x300/?economy';
+                      target.src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&auto=format&fit=crop';
                     }}
                   />
                 </div>
@@ -110,7 +106,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
                     {article.title}
                   </h3>
                   {articleDesc && (
-                    <p className="text-xs text-gray-500 line-clamp-1 mt-0.5">{articleDesc}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{articleDesc}</p>
                   )}
                   <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                     <Clock className="h-3 w-3" />
@@ -120,13 +116,10 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
               </Link>
             );
           })}
-
-          {/* Ad below featured secondary articles */}
           <AdBanner slotType="sidebar" className="mt-2" />
         </div>
       </div>
 
-      {/* Ad banner below featured section */}
       <div className="mt-4 flex justify-center">
         <AdBanner slotType="footer" />
       </div>
