@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { TrendingUp, Flame, ArrowUp, RefreshCw } from "lucide-react";
+import { Flame, ArrowUp, RefreshCw } from "lucide-react";
 import { NewsArticle } from "../data/newsData";
 
 interface RisingKeyword {
@@ -110,46 +110,46 @@ const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
   }, [refresh]);
 
   const getRankColor = (rank: number) => {
-    if (rank === 1) return "text-red-500 font-bold";
+    if (rank === 1) return "text-destructive font-bold";
     if (rank === 2) return "text-orange-500 font-bold";
     if (rank === 3) return "text-yellow-600 font-bold";
-    return "text-gray-500";
+    return "text-muted-foreground";
   };
 
   const getChangeIcon = (change: string) => {
     if (change === "new") {
-      return <span className="text-xs bg-red-100 text-red-600 px-1 rounded font-bold">NEW</span>;
+      return <span className="text-xs bg-destructive/10 text-destructive px-1 rounded font-bold">NEW</span>;
     }
     if (change === "up") {
-      return <ArrowUp className="w-3 h-3 text-red-500" />;
+      return <ArrowUp className="w-3 h-3 text-destructive" />;
     }
-    return <span className="text-xs text-gray-400">—</span>;
+    return <span className="text-xs text-muted-foreground">—</span>;
   };
 
   if (keywords.length === 0) return null;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <div className="bg-card rounded-xl shadow-sm border border-border p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Flame className="w-5 h-5 text-red-500" />
-          <h3 className="font-bold text-gray-900">급상승 검색어</h3>
+          <Flame className="w-5 h-5 text-destructive" />
+          <h3 className="font-bold text-foreground">급상승 검색어</h3>
         </div>
-        <button onClick={refresh} className="p-1 hover:bg-gray-100 rounded-full transition-colors" title="새로고침">
-          <RefreshCw className={`w-4 h-4 text-gray-400 ${isRefreshing ? "animate-spin" : ""}`} />
+        <button onClick={refresh} className="p-1 hover:bg-muted rounded-full transition-colors" title="새로고침">
+          <RefreshCw className={`w-4 h-4 text-muted-foreground ${isRefreshing ? "animate-spin" : ""}`} />
         </button>
       </div>
       <div className="space-y-1">
         {keywords.map((kw) => (
-          <div key={kw.rank} className="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors" onClick={() => onKeywordClick?.(kw.keyword)}>
+          <div key={kw.rank} className="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-muted cursor-pointer transition-colors" onClick={() => onKeywordClick?.(kw.keyword)}>
             <span className={`w-6 text-center text-sm ${getRankColor(kw.rank)}`}>{kw.rank}</span>
-            <span className="flex-1 text-sm text-gray-800 truncate">{kw.keyword}</span>
+            <span className="flex-1 text-sm text-foreground truncate">{kw.keyword}</span>
             <div className="flex items-center w-8 justify-end">{getChangeIcon(kw.change)}</div>
           </div>
         ))}
       </div>
-      <div className="mt-3 pt-2 border-t border-gray-100">
-        <p className="text-xs text-gray-400 text-right">
+      <div className="mt-3 pt-2 border-t border-border">
+        <p className="text-xs text-muted-foreground text-right">
           {lastUpdated.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })} 기준
         </p>
       </div>

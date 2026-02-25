@@ -20,18 +20,14 @@ const formatDate = (dateStr: string): string => {
   }
 };
 
-interface NewsCardProps {
-  article: NewsArticle;
-}
-
-const NewsCard = ({ article }: NewsCardProps) => {
+const NewsCard = ({ article }: { article: NewsArticle }) => {
   const dateStr = article.publishedAt || article.date;
   const descStr = article.description || article.summary || '';
 
   return (
     <Link
       to={`/article/${encodeURIComponent(article.id)}`}
-      className="group flex gap-4 p-3 rounded-lg hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-0"
+      className="group flex gap-4 p-3 rounded-lg hover:bg-muted transition-colors border-b border-border last:border-0"
     >
       <div className="flex-shrink-0 w-24 h-18 overflow-hidden rounded-md">
         <img
@@ -40,14 +36,14 @@ const NewsCard = ({ article }: NewsCardProps) => {
           className="w-24 h-18 object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = 'https://source.unsplash.com/200x150/?finance';
+            target.src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=200&auto=format&fit=crop';
           }}
         />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           {article.isBreaking && (
-            <span className="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded font-bold">LIVE</span>
+            <span className="bg-destructive text-destructive-foreground text-xs px-1.5 py-0.5 rounded font-bold">LIVE</span>
           )}
           <span className="text-xs text-primary font-medium">{article.category}</span>
         </div>
@@ -55,12 +51,12 @@ const NewsCard = ({ article }: NewsCardProps) => {
           {article.title}
         </h3>
         {descStr && (
-          <p className="text-xs text-gray-500 line-clamp-1 mt-1">{descStr}</p>
+          <p className="text-xs text-muted-foreground line-clamp-1 mt-1">{descStr}</p>
         )}
         <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
           <span>{formatDate(dateStr)}</span>
-          <span className="text-gray-400">|</span>
+          <span className="text-border">|</span>
           <span>{article.source}</span>
         </div>
       </div>
@@ -70,24 +66,22 @@ const NewsCard = ({ article }: NewsCardProps) => {
 
 const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsListProps) => {
   const { t } = useLanguage();
-
   const nonFeaturedArticles = articles.filter((a) => !a.isFeatured);
 
   return (
     <div>
-      {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-foreground">{t('latestNews')}</h2>
         <div className="flex items-center gap-2">
           {lastFetched && (
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-muted-foreground">
               {t('updated')}: {lastFetched.toLocaleTimeString()}
             </span>
           )}
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="flex items-center gap-1 px-2 py-1 text-xs text-gray-600 hover:text-primary rounded hover:bg-gray-100 transition-colors"
+              className="flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground hover:text-primary rounded hover:bg-muted transition-colors"
               disabled={isLoading}
             >
               <RefreshCw className={`h-3 w-3 ${isLoading ? 'animate-spin' : ''}`} />
@@ -97,28 +91,25 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
         </div>
       </div>
 
-      {/* Error state */}
       {error && (
-        <div className="text-center py-4 text-red-500 text-sm">{error}</div>
+        <div className="text-center py-4 text-destructive text-sm">{error}</div>
       )}
 
-      {/* Loading state */}
       {isLoading && articles.length === 0 && (
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="flex gap-4 p-3 animate-pulse">
-              <div className="w-24 h-16 bg-gray-200 rounded-md" />
+              <div className="w-24 h-16 bg-muted rounded-md" />
               <div className="flex-1 space-y-2">
-                <div className="h-3 bg-gray-200 rounded w-1/4" />
-                <div className="h-4 bg-gray-200 rounded w-3/4" />
-                <div className="h-3 bg-gray-200 rounded w-1/2" />
+                <div className="h-3 bg-muted rounded w-1/4" />
+                <div className="h-4 bg-muted rounded w-3/4" />
+                <div className="h-3 bg-muted rounded w-1/2" />
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Top in-article ad */}
       <div className="mb-4 flex justify-center">
         <AdBanner slotType="in-article" />
       </div>
@@ -127,7 +118,6 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
         {nonFeaturedArticles.map((article, index) => (
           <div key={article.id}>
             <NewsCard article={article} />
-            {/* Insert ad after every 5th article */}
             {(index + 1) % 5 === 0 && (
               <div className="my-4 flex justify-center">
                 <AdBanner slotType="in-article" />
