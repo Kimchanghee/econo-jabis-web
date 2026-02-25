@@ -51,11 +51,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead />
-      <Header
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onCategoryChange={setSelectedCategory}
-      />
+      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onCategoryChange={setSelectedCategory} />
 
       {/* Header Ad Banner */}
       <div className="bg-muted/30 border-b border-border py-2">
@@ -100,10 +96,7 @@ const Index = () => {
               <AdBanner slotType="sidebar" />
 
               {/* Rising Search Keywords */}
-              <RisingKeywords
-                articles={articles}
-                onKeywordClick={(kw) => setSearchQuery(kw)}
-              />
+              <RisingKeywords articles={articles} onKeywordClick={(kw) => setSearchQuery(kw)} />
 
               {/* Market Summary Widget - Real data */}
               <MarketWidget />
@@ -115,29 +108,26 @@ const Index = () => {
                   {t("trending")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {trendingKeywords.length > 0 ? (
-                    trendingKeywords.map((item, idx) => (
-                      <button
-                        key={item.keyword}
-                        onClick={() => setSearchQuery(item.keyword)}
-                        className="text-xs px-2.5 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground flex items-center gap-1"
-                      >
-                        <span className="text-orange-500 font-bold">{idx + 1}</span>
-                        #{item.keyword}
-                        <span className="text-muted-foreground text-[10px]">({item.count})</span>
-                      </button>
-                    ))
-                  ) : (
-                    ["Fed", "Bitcoin", "KOSPI", "USD/KRW", "Oil", "Gold", "S&P500"].map((kw) => (
-                      <button
-                        key={kw}
-                        onClick={() => setSearchQuery(kw)}
-                        className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
-                      >
-                        #{kw}
-                      </button>
-                    ))
-                  )}
+                  {trendingKeywords.length > 0
+                    ? trendingKeywords.map((item, idx) => (
+                        <button
+                          key={item}
+                          onClick={() => setSearchQuery(item)}
+                          className="text-xs px-2.5 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground flex items-center gap-1"
+                        >
+                          <span className="text-orange-500 font-bold">{idx + 1}</span>#{item}
+                          <span className="text-muted-foreground text-[10px]">)</span>
+                        </button>
+                      ))
+                    : ["Fed", "Bitcoin", "KOSPI", "USD/KRW", "Oil", "Gold", "S&P500"].map((kw) => (
+                        <button
+                          key={kw}
+                          onClick={() => setSearchQuery(kw)}
+                          className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
+                        >
+                          #{kw}
+                        </button>
+                      ))}
                 </div>
               </div>
 

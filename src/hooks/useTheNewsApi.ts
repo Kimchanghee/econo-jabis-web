@@ -171,7 +171,7 @@ function mapToNewsArticle(a: TheNewsAPIArticle, index: number): NewsArticle {
     id: a.uuid || `api_${index}`,
     title: a.title,
     summary: a.description || a.snippet || "",
-    content: a.description || a.snippet || "",
+
     category: cat,
     source: a.source || "해외뉴스",
     date: a.published_at ? a.published_at.split("T")[0].replace(/-/g, ". ") + "." : "",
