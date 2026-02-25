@@ -113,6 +113,10 @@ const SEOHead = ({
         publisher: { "@type": "Organization", name: SITE_NAME, logo: { "@type": "ImageObject", url: SITE_URL + "/logo.png" } },
         mainEntityOfPage: { "@type": "WebPage", "@id": url },
         isAccessibleForFree: true, inLanguage: "ko", keywords: allKw.join(", "),
+        speakable: {
+          "@type": "SpeakableSpecification",
+          cssSelector: ["h1", ".article-summary", ".article-content p:first-of-type"]
+        }
       };
       injectJsonLd("article-jsonld", aSchema);
       const bcSchema = {
@@ -141,6 +145,50 @@ const SEOHead = ({
         contactPoint: { "@type": "ContactPoint", contactType: "customer service", availableLanguage: ["Korean","English"] },
       };
       injectJsonLd("org-jsonld", orgSchema);
+
+      // FAQ Schema for AEO
+      const faqSchema = {
+        "@context": "https://schema.org", "@type": "FAQPage",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: "EconoJabis는 어떤 서비스인가요?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "EconoJabis는 실시간 한국 경제뉴스를 제공하는 뉴스 포털입니다. 주식, 부동산, 환율, 암호화폐, 금리 등 다양한 경제 분야의 최신 뉴스를 자동으로 수집하여 10분마다 업데이트합니다."
+            }
+          },
+          {
+            "@type": "Question",
+            name: "경제뉴스는 얼마나 자주 업데이트되나요?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "모든 경제뉴스는 10분마다 자동으로 업데이트됩니다. 새로고침 없이도 최신 경제 뉴스를 실시간으로 확인할 수 있습니다."
+            }
+          },
+          {
+            "@type": "Question",
+            name: "어떤 카테고리의 뉴스를 볼 수 있나요?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "경제, 주식, 암호화폐 카테고리의 뉴스를 제공합니다. 코스피, 코스닥, 환율, 비트코인, 부동산, 금리 관련 한국 경제 뉴스를 한눈에 확인할 수 있습니다."
+            }
+          }
+        ]
+      };
+      injectJsonLd("faq-jsonld", faqSchema);
+
+      // Speakable Schema for AEO
+      const speakableSchema = {
+        "@context": "https://schema.org", "@type": "WebPage",
+        name: fullTitle,
+        speakable: {
+          "@type": "SpeakableSpecification",
+          cssSelector: ["h1", ".news-headline", ".category-title", ".featured-news-title"]
+        },
+        url: url
+      };
+      injectJsonLd("speakable-jsonld", speakableSchema);
     }
 
     // GEO Tags
@@ -151,7 +199,7 @@ const SEOHead = ({
     setLink("alternate", url, { hreflang: "x-default" });
 
     return () => {
-      ["article-jsonld","website-jsonld","org-jsonld","breadcrumb-jsonld"].forEach((id) => {
+      ["article-jsonld","website-jsonld","org-jsonld","breadcrumb-jsonld","faq-jsonld","speakable-jsonld"].forEach((id) => {
         const el = document.getElementById(id);
         if (el) el.remove();
       });
