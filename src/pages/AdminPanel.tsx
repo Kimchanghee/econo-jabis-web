@@ -115,7 +115,28 @@ const AdminPanel = () => {
             <span className="text-sm text-muted-foreground">{"\ucd1d " + filtered.length + "\uac74"}</span>
           </div>
         </div>
-        {/* Seedream API Key Settings */}
+        {/* Adsterra Ad Settings */}
+          <div className="rounded-lg border border-border bg-card p-4 mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              <h2 className="font-semibold text-sm">📢 Adsterra 광고 설정</h2>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              <a href="https://publishers.adsterra.com" target="_blank" rel="noopener noreferrer" className="text-primary underline">publishers.adsterra.com</a>에서 각 광고 유닛의 Zone Key를 입력하세요. (즉시 승인)
+            </p>
+            {[{slot:'header',label:'헤더 배너 728x90'},{slot:'sidebar',label:'사이드바 300x250'},{slot:'in-article',label:'본문 중간 300x250'},{slot:'footer',label:'하단 배너 728x90'}].map(({slot,label}) => (
+              <div key={slot} className="flex gap-2 mb-2 items-center">
+                <span className="text-xs text-muted-foreground w-40 flex-shrink-0">{label}</span>
+                <input
+                  type="text"
+                  defaultValue={localStorage.getItem('adsterra_' + slot + '_key') || ''}
+                  placeholder={'Zone Key (' + slot + ')'}
+                  className="flex-1 px-3 py-1.5 rounded border border-border bg-background text-foreground text-sm"
+                  onBlur={(e: React.FocusEvent<HTMLInputElement>) => { localStorage.setItem('adsterra_' + slot + '_key', e.target.value); }}
+                />
+              </div>
+            ))}
+            <p className="text-[11px] text-muted-foreground/60 mt-2">입력 후 포커스 아웃 시 자동 저장됩니다.</p>
+          </div>
         <div className="rounded-lg border border-border bg-card p-4 mb-6">
           <div className="flex items-center gap-2 mb-3">
             <Key className="h-4 w-4 text-primary" />

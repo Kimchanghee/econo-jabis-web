@@ -1,76 +1,63 @@
 import { useEffect, useRef } from 'react';
 
-const USE_PLACEHOLDER = false;
-const ADSENSE_PUB_ID = 'ca-pub-5884595045902078';
+// Adsterra Network Ad Component
+// Setup: Go to https://publishers.adsterra.com/ -> Ad Units -> Get zone keys
+// Enter keys in Admin Panel -> Adsterra Settings
+// or: localStorage.setItem('adsterra_header_key', 'YOUR_ZONE_KEY')
+
+const AD_SIZES: Record<string, { width: number; height: number; label: string }> = {
+  header: { width: 728, height: 90, label: 'Leaderboard 728x90' },
+  sidebar: { width: 300, height: 250, label: 'Rectangle 300x250' },
+  'in-article': { width: 300, height: 250, label: 'Rectangle 300x250' },
+  footer: { width: 728, height: 90, label: 'Leaderboard 728x90' },
+  'mobile-banner': { width: 320, height: 50, label: 'Mobile 320x50' },
+};
 
 type SlotType = 'header' | 'sidebar' | 'in-article' | 'footer' | 'mobile-banner';
-
-interface AdDimensions {
-  width: string;
-  height: string;
-  label: string;
-}
-
-const slotDimensions: Record<SlotType, AdDimensions> = {
-  'header': { width: '728px', height: '90px', label: 'Header Ad' },
-  'sidebar': { width: '300px', height: '250px', label: 'Sidebar Ad' },
-  'in-article': { width: '300px', height: '250px', label: 'In-Article Ad' },
-  'footer': { width: '728px', height: '90px', label: 'Footer Ad' },
-  'mobile-banner': { width: '320px', height: '50px', label: 'Mobile Banner' },
-};
 
 interface AdBannerProps {
   slotType: SlotType;
   className?: string;
-  adSlotId?: string;
 }
 
-const AdBanner = ({ slotType, className = '', adSlotId }: AdBannerProps) => {
+const AdBanner = ({ slotType, className = '' }: AdBannerProps) => {
   const adRef = useRef<HTMLDivElement>(null);
-  const dims = slotDimensions[slotType];
+  const size = AD_SIZES[slotType] || AD_SIZES.sidebar;
+  const zoneKey = localStorage.getItem('adsterra_' + slotType + '_key') || '';
+  const isActive = zoneKey.length > 5;
 
   useEffect(() => {
-    if (!USE_PLACEHOLDER && adRef.current) {
-      try {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-        const adArr = win['adsbygoogle'];
-        if (Array.isArray(adArr)) {
-          adArr.push({});
-      }
-      } catch (e) {
-        console.error('AdSense error:', e);
-      }
-    }
-  }, []);
+    if (!adRef.current) return;
+    adRef.current.innerHTML = '';
+    if (!isActive) return;
 
-  if (USE_PLACEHOLDER) {
+    const script = document.createElement('script');
+    script.async = true;
+    script.setAttribute('data-cfasync', 'false');
+    script.src = '//' + 'pl' + zoneKey + '.effectivegatecpm.com/' + zoneKey + '/invoke.js';
+    adRef.current.appendChild(script);
+  }, [zoneKey, isActive]);
+
+  if (!isActive) {
     return (
       <div
-        className={`flex items-center justify-center bg-gray-100 border border-dashed border-gray-300 text-gray-400 ${className}`}
-        style={{ minHeight: dims.height, maxWidth: dims.width, width: '100%', margin: '0 auto' }}
+        className={'flex flex-col items-center justify-center bg-muted/20 border border-dashed border-border/40 rounded-md ' + className}
+        style={{ width: '100%', maxWidth: size.width + 'px', height: size.height + 'px' }}
       >
-        <div className="text-center p-2">
-          <div className="text-xs mb-1">Advertisement</div>
-          <div className="text-xs">{dims.width}x{dims.height} {dims.label}</div>
-        </div>
+        <p className="text-xs font-medium text-muted-foreground">Adsterra 광고</p>
+        <p className="text-[10px] text-muted-foreground/60 mt-0.5">{size.label}</p>
+        <p className="text-[9px] text-muted-foreground/40 mt-1">관리자 패널 -&gt; Adsterra 키 입력</p>
       </div>
     );
   }
 
   return (
-    <div ref={adRef} className={`ad-banner ${className}`} style={{ display: 'flex', justifyContent: 'center' }}>
-      <ins
-        className="adsbygoogle"
-        style={{ display: 'block', width: dims.width, height: dims.height }}
-        data-ad-client={ADSENSE_PUB_ID}
-        data-ad-slot={adSlotId || ''}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      />
-    </div>
+    <div
+      ref={adRef}
+      className={'adsterra-zone ' + className}
+      style={{ width: '100%', maxWidth: size.width + 'px', height: size.height + 'px', overflow: 'hidden' }}
+    />
   );
 };
-
 
 export default AdBanner;
