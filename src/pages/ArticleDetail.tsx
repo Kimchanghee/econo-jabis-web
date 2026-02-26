@@ -57,9 +57,7 @@ const buildArticleBody = (article: NewsArticle): string[] => {
   if (geminiParagraphs && geminiParagraphs.length >= 3) return geminiParagraphs;
   const fullBody = (article as any).fullBody as string | undefined;
   if (fullBody && fullBody.length > 300) {
-    const paragraphs = fullBody.split(/
-
-+/).map((p: string) => p.trim()).filter((p: string) => p.length > 20);
+    const paragraphs = fullBody.split(/\n\n+/).map((p: string) => p.trim()).filter((p: string) => p.length > 20);
     if (paragraphs.length >= 3) return paragraphs;
   }
   const rawDesc = article.description || "";
