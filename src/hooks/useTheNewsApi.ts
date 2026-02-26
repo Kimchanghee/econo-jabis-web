@@ -204,14 +204,13 @@ async function fetchNewsFromAPI(language: Language, category: Category): Promise
     zh: "zh",
   };
 
-  const searchQuery = categorySearchMap[category] || categorySearchMap["전체"];
+  const categoryMap: Record<string, string> = { "주식": "business", "부동산": "business", "환율": "business", "암호화폐": "tech", "전체": "business,tech,general" };
 
   const params = new URLSearchParams({
     api_token: THENEWSAPI_TOKEN,
     language: langMap[language] || "en",
-    categories: "business,tech,general",
-    search: searchQuery,
-    limit: "25",
+        categories: categoryMap[category] || "business,tech,general",
+    limit: "30",
     sort: "published_at",
   });
 
