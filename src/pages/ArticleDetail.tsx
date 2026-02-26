@@ -193,7 +193,7 @@ const ArticleDetail = () => {
         title={article.title}
         description={(article.description || (article as any).summary || "").slice(0, 160)}
         ogImage={imageUrl}
-        article={{ title: article.title, description: article.description || "", publishedAt: article.publishedAt || new Date().toISOString(), category: article.category || "" "EconoJabis", image: imageUrl }}
+          article={{ title: article.title, description: article.description || "", publishedAt: article.publishedAt || new Date().toISOString(), category: article.category || "", source: "EconoJabis", image: imageUrl }}
       />
       <Header searchQuery="" onSearchChange={() => {}} />
       <div className="w-full flex justify-center py-2 bg-muted/30 border-b border-border">

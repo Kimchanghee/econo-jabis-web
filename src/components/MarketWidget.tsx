@@ -119,4 +119,4 @@ const MarketWidget = () => {
   );
 };
 
-export default MarketWidget;}}
+export default MarketWidget;
