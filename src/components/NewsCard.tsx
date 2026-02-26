@@ -20,8 +20,8 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
         </h3>
         <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{article.summary}</p>
         <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="font-medium">{article.source}</span>
-          <span>·</span>
+          
+          
           <span>{article.date}</span>
         </div>
       </div>

@@ -178,7 +178,7 @@ const AdminPanel = () => {
                     </div>
                     <h3 className="font-medium text-sm cursor-pointer hover:text-primary truncate"
                       onClick={() => navigate("/article/" + encodeURIComponent(article.id))}>{article.title}</h3>
-                    <p className="text-xs text-muted-foreground mt-1">{article.source + " \u00b7 " + article.date}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{article.date}</p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <button onClick={() => handleEdit(article)} className="p-1.5 rounded hover:bg-accent text-muted-foreground hover:text-foreground" title="\uc218\uc815">
