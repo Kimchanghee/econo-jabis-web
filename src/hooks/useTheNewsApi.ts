@@ -178,6 +178,7 @@ function mapToNewsArticle(a: TheNewsAPIArticle, index: number): NewsArticle {
     imageUrl: a.image_url || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length],
     url: a.url,
     isBreaking: index === 0,
+    snippet: a.snippet || a.description || "",
   };
 }
 
