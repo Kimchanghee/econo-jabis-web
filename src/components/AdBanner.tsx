@@ -1,62 +1,33 @@
 import { useEffect, useRef } from 'react';
 
-// Adsterra Network Ad Component
-// Setup: Go to https://publishers.adsterra.com/ -> Ad Units -> Get zone keys
-// Enter keys in Admin Panel -> Adsterra Settings
-// or: localStorage.setItem('adsterra_header_key', 'YOUR_ZONE_KEY')
-
-const AD_SIZES: Record<string, { width: number; height: number; label: string }> = {
-  header: { width: 728, height: 90, label: 'Leaderboard 728x90' },
-  sidebar: { width: 300, height: 250, label: 'Rectangle 300x250' },
-  'in-article': { width: 300, height: 250, label: 'Rectangle 300x250' },
-  footer: { width: 728, height: 90, label: 'Leaderboard 728x90' },
-  'mobile-banner': { width: 320, height: 50, label: 'Mobile 320x50' },
-};
-
-type SlotType = 'header' | 'sidebar' | 'in-article' | 'footer' | 'mobile-banner';
+const ADSTERRA_SCRIPT = 'https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js';
+const ADSTERRA_CONTAINER = 'container-ea5bbfe829e07e03a26eddac6389273b';
 
 interface AdBannerProps {
-  slotType: SlotType;
+  slotType?: string;
   className?: string;
 }
 
-const AdBanner = ({ slotType, className = '' }: AdBannerProps) => {
-  const adRef = useRef<HTMLDivElement>(null);
-  const size = AD_SIZES[slotType] || AD_SIZES.sidebar;
-  const zoneKey = localStorage.getItem('adsterra_' + slotType + '_key') || '';
-  const isActive = zoneKey.length > 5;
+const AdBanner = ({ className = '' }: AdBannerProps) => {
+  const loaded = useRef(false);
 
   useEffect(() => {
-    if (!adRef.current) return;
-    adRef.current.innerHTML = '';
-    if (!isActive) return;
-
+    if (loaded.current) return;
+    loaded.current = true;
+    const existing = document.getElementById('adsterra-native-script');
+    if (existing) return;
     const script = document.createElement('script');
+    script.id = 'adsterra-native-script';
     script.async = true;
     script.setAttribute('data-cfasync', 'false');
-    script.src = '//' + 'pl' + zoneKey + '.effectivegatecpm.com/' + zoneKey + '/invoke.js';
-    adRef.current.appendChild(script);
-  }, [zoneKey, isActive]);
-
-  if (!isActive) {
-    return (
-      <div
-        className={'flex flex-col items-center justify-center bg-muted/20 border border-dashed border-border/40 rounded-md ' + className}
-        style={{ width: '100%', maxWidth: size.width + 'px', height: size.height + 'px' }}
-      >
-        <p className="text-xs font-medium text-muted-foreground">Adsterra 광고</p>
-        <p className="text-[10px] text-muted-foreground/60 mt-0.5">{size.label}</p>
-        <p className="text-[9px] text-muted-foreground/40 mt-1">관리자 패널 -&gt; Adsterra 키 입력</p>
-      </div>
-    );
-  }
+    script.src = ADSTERRA_SCRIPT;
+    document.body.appendChild(script);
+  }, []);
 
   return (
-    <div
-      ref={adRef}
-      className={'adsterra-zone ' + className}
-      style={{ width: '100%', maxWidth: size.width + 'px', height: size.height + 'px', overflow: 'hidden' }}
-    />
+    <div className={`adsterra-wrapper ${className}`}>
+      <div id={ADSTERRA_CONTAINER} />
+    </div>
   );
 };
 
