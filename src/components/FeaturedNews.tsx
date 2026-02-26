@@ -72,7 +72,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
               <div className="flex items-center gap-3 mt-2 text-white/60 text-xs">
                 <Clock className="h-3 w-3" />
                 <span>{formatDate(dateStr)}</span>
-                <span>{mainArticle.source}</span>
+                
               </div>
             </div>
           </Link>
