@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { NewsArticle } from "@/data/newsData";
+import type { NewsArticle } from '../hooks/useTheNewsApi';
 import CategoryBadge from "./CategoryBadge";
 
 const NewsCard = ({ article }: { article: NewsArticle }) => {
