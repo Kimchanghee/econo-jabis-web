@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { fallbackArticles } from '@/data/newsData';
 
 export interface NewsArticle {
   id: string;
@@ -51,30 +52,19 @@ const REQUIRED_KEYWORDS = [
 function isEconomicNews(article: Partial<NewsArticle>): boolean {
   const title = (article.title || '');
   const text = (title + ' ' + (article.description || '') + ' ' + (article.snippet || '')).toLowerCase();
-
   for (const blocked of BLOCKED_KEYWORDS) {
-    if (title.toLowerCase().includes(blocked.toLowerCase())) {
-      return false;
-    }
+    if (title.toLowerCase().includes(blocked.toLowerCase())) return false;
   }
-
   for (const required of REQUIRED_KEYWORDS) {
-    if (text.includes(required.toLowerCase())) {
-      return true;
-    }
+    if (text.includes(required.toLowerCase())) return true;
   }
-
   const cats = article.categories || [];
-  if (cats.some(c => ['business', 'finance', 'economics', 'markets', 'technology', 'crypto'].includes(c.toLowerCase()))) {
-    return true;
-  }
-
+  if (cats.some(c => ['business', 'finance', 'economics', 'markets', 'technology', 'crypto'].includes(c.toLowerCase()))) return true;
   return false;
 }
 
 function mapArticle(raw: Record<string, unknown>): NewsArticle {
   const cats = (raw.categories as string[]) || [];
-  const catLabel = cats[0] || '전체';
   return {
     id: (raw.uuid as string) || String(Math.random()),
     uuid: (raw.uuid as string) || '',
@@ -89,7 +79,7 @@ function mapArticle(raw: Record<string, unknown>): NewsArticle {
     published_at: (raw.published_at as string) || '',
     source: (raw.source as string) || '',
     categories: cats,
-    category: catLabel,
+    category: cats[0] || '전체',
     date: (raw.published_at as string) || '',
     relevance_score: (raw.relevance_score as number) || null,
     locale: (raw.locale as string) || '',
@@ -98,7 +88,7 @@ function mapArticle(raw: Record<string, unknown>): NewsArticle {
   };
 }
 
-const API_KEY = 'BVlhq4TG29ylhFWB2VIb8GBjHnNVTaYU0lYl9AMI';
+const API_KEY = 's0V715Sqrsg661ZSgkpYxUPxxggdvPXmeTVtBlEW';
 
 export const useTheNewsApi = (language = 'ko') => {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -114,14 +104,21 @@ export const useTheNewsApi = (language = 'ko') => {
       const url = `https://api.thenewsapi.com/v1/news/top?api_token=${API_KEY}&language=${lang}&categories=business,finance,economics,markets,technology&limit=50`;
       const res = await fetch(url);
       const data = await res.json();
-      const raw: Record<string, unknown>[] = data.data || [];
-      const mapped = raw.map(mapArticle);
-      const filtered = mapped.filter(isEconomicNews);
-      setArticles(filtered);
+      if (data.error) {
+        console.warn('TheNewsAPI error:', data.error.message);
+        setArticles(fallbackArticles as unknown as NewsArticle[]);
+        setError('실시간 뉴스를 불러오지 못했습니다. 샘플 데이터를 표시합니다.');
+      } else {
+        const raw: Record<string, unknown>[] = data.data || [];
+        const mapped = raw.map(mapArticle);
+        const filtered = mapped.filter(isEconomicNews);
+        setArticles(filtered.length > 0 ? filtered : fallbackArticles as unknown as NewsArticle[]);
+      }
       setLastFetched(new Date());
     } catch (e) {
-      setError(e instanceof Error ? e.message : '오류 발생');
-      setArticles([]);
+      console.warn('Fetch error:', e);
+      setArticles(fallbackArticles as unknown as NewsArticle[]);
+      setError('실시간 뉴스를 불러오지 못했습니다. 샘플 데이터를 표시합니다.');
     } finally {
       setIsLoading(false);
     }
@@ -139,15 +136,10 @@ export const useTheNewsApi = (language = 'ko') => {
       const words = (article.title + ' ' + article.keywords).split(/\s+/);
       for (const w of words) {
         const cleaned = w.replace(/[^\w가-힣]/g, '');
-        if (cleaned.length > 1) {
-          freq[cleaned] = (freq[cleaned] || 0) + 1;
-        }
+        if (cleaned.length > 1) freq[cleaned] = (freq[cleaned] || 0) + 1;
       }
     }
-    return Object.entries(freq)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([word]) => word);
+    return Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([word]) => word);
   }, [articles]);
 
   return { articles, isLoading, error, lastFetched, refresh: fetchNews, extractTrendingKeywords };
