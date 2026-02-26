@@ -2,7 +2,7 @@ import { Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import AdBanner from './AdBanner';
-import type { NewsArticle } from '../data/newsData';
+import type { NewsArticle } from '../hooks/useTheNewsApi';
 
 interface FeaturedNewsProps {
   articles: NewsArticle[];
