@@ -2,7 +2,7 @@ import { Clock, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import AdBanner from './AdBanner';
-import type { NewsArticle } from '../data/newsData';
+import type { NewsArticle } from '../hooks/useTheNewsApi';
 
 interface NewsListProps {
   articles: NewsArticle[];
@@ -14,15 +14,16 @@ interface NewsListProps {
 
 const formatDate = (dateStr: string): string => {
   try {
-    return new Date(dateStr).toLocaleDateString();
+    return new Date(dateStr).toLocaleeDateString();
   } catch {
     return dateStr;
   }
 };
 
 const NewsCard = ({ article }: { article: NewsArticle }) => {
-  const dateStr = article.publishedAt || article.date;
+  const dateStr = article.publishedAt || article.published_at || article.date;
   const descStr = article.description || article.summary || '';
+  const imgSrc = article.imageUrl || article.image_url || '';
 
   return (
     <Link
@@ -31,7 +32,7 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
     >
       <div className="flex-shrink-0 w-24 h-18 overflow-hidden rounded-md">
         <img
-          src={article.imageUrl}
+          src={imgSrc}
           alt={article.title}
           className="w-24 h-18 object-cover"
           onError={(e) => {
@@ -55,9 +56,8 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
         )}
         <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
-          <span>{formatDate(dateStr)}</span>
-          
-          
+          <span>{dateStr ? new Date(dateStr).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</span>
+          {article.source && <span className="text-primary/70">· {article.source}</span>}
         </div>
       </div>
     </Link>
@@ -99,7 +99,7 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="flex gap-4 p-3 animate-pulse">
-              <div className="w-24 h-16 bg-muted rounded-md" />
+              <div className="w-24 h-18 bg-muted rounded-md" />
               <div className="flex-1 space-y-2">
                 <div className="h-3 bg-muted rounded w-1/4" />
                 <div className="h-4 bg-muted rounded w-3/4" />
@@ -126,6 +126,12 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
           </div>
         ))}
       </div>
+
+      {!isLoading && nonFeaturedArticles.length === 0 && !error && (
+        <div className="text-center py-8 text-muted-foreground text-sm">
+          {t('loading')}
+        </div>
+      )}
     </div>
   );
 };
