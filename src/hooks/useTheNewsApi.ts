@@ -175,7 +175,7 @@ function mapToNewsArticle(a: TheNewsAPIArticle, index: number): NewsArticle {
     category: cat,
     source: a.source || "해외뉴스",
     date: a.published_at ? a.published_at.split("T")[0].replace(/-/g, ". ") + "." : "",
-    imageUrl: a.image_url || FALLBACK_IMAGES[index % FALLBACK_IMAGES.length],
+    imageUrl: a.image_url || FALLBACK_IMAGES[cat] || FALLBACK_IMAGES["전체"],
     url: a.url,
     isBreaking: index === 0,
     snippet: a.snippet || a.description || "",
