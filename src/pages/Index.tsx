@@ -14,7 +14,7 @@ import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
 
 // ============================================================
-// Adsterra Native Banner (헤더 하단 / 페이지 하단)
+// Adsterra Native Banner
 // ============================================================
 const NativeBannerAd = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -36,7 +36,8 @@ const NativeBannerAd = () => {
 };
 
 // ============================================================
-// Adsterra Banner 728x90 - document.write override 방식
+// Adsterra Banner 728x90
+// invoke.js uses currentScript → must append to target element
 // ============================================================
 const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -45,14 +46,7 @@ const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
     if (done.current || !ref.current) return;
     done.current = true;
     const el = ref.current;
-    // document.write를 intercept해서 el에 삽입
-    const origWrite = document.write.bind(document);
-    const origWriteln = document.writeln.bind(document);
-    let captured = '';
-    document.write = (s: string) => { captured += s; };
-    document.writeln = (s: string) => { captured += s + '\n'; };
-    
-    // atOptions 설정
+    // window.atOptions must be set BEFORE script loads
     (window as any).atOptions = {
       key: 'cab28a3c8ec96edb306ab13e7af5944b',
       format: 'iframe',
@@ -60,29 +54,11 @@ const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
       width: 728,
       params: {}
     };
-    
+    // Append invoke.js to el so document.currentScript points inside el
     const s = document.createElement('script');
+    s.type = 'text/javascript';
     s.src = 'https://www.highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js';
-    s.onload = () => {
-      // restore
-      document.write = origWrite;
-      document.writeln = origWriteln;
-      if (captured) {
-        el.innerHTML = captured;
-        // el 내부 script 재실행
-        el.querySelectorAll('script').forEach(oldScript => {
-          const newScript = document.createElement('script');
-          if (oldScript.src) newScript.src = oldScript.src;
-          else newScript.text = oldScript.text;
-          oldScript.replaceWith(newScript);
-        });
-      }
-    };
-    s.onerror = () => {
-      document.write = origWrite;
-      document.writeln = origWriteln;
-    };
-    document.head.appendChild(s);
+    el.appendChild(s);
   }, []);
   return (
     <div
@@ -94,7 +70,7 @@ const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
 };
 
 // ============================================================
-// Adsterra Banner 300x250 - document.write override 방식
+// Adsterra Banner 300x250
 // ============================================================
 const Banner300x250Ad = ({ id }: { id: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -103,12 +79,6 @@ const Banner300x250Ad = ({ id }: { id: string }) => {
     if (done.current || !ref.current) return;
     done.current = true;
     const el = ref.current;
-    const origWrite = document.write.bind(document);
-    const origWriteln = document.writeln.bind(document);
-    let captured = '';
-    document.write = (s: string) => { captured += s; };
-    document.writeln = (s: string) => { captured += s + '\n'; };
-    
     (window as any).atOptions = {
       key: '333406d0aacce2e565463f8c1d21d1bd',
       format: 'iframe',
@@ -116,27 +86,10 @@ const Banner300x250Ad = ({ id }: { id: string }) => {
       width: 300,
       params: {}
     };
-    
     const s = document.createElement('script');
+    s.type = 'text/javascript';
     s.src = 'https://www.highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js';
-    s.onload = () => {
-      document.write = origWrite;
-      document.writeln = origWriteln;
-      if (captured) {
-        el.innerHTML = captured;
-        el.querySelectorAll('script').forEach(oldScript => {
-          const newScript = document.createElement('script');
-          if (oldScript.src) newScript.src = oldScript.src;
-          else newScript.text = oldScript.text;
-          oldScript.replaceWith(newScript);
-        });
-      }
-    };
-    s.onerror = () => {
-      document.write = origWrite;
-      document.writeln = origWriteln;
-    };
-    document.head.appendChild(s);
+    el.appendChild(s);
   }, []);
   return (
     <div
