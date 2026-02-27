@@ -6,7 +6,7 @@ import SEOHead from "../components/SEOHead";
 import type { NewsArticle } from "../hooks/useTheNewsApi";
 
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
-const ADSENSE_PUB = "ca-pub-5884595045902078";
+// Adsterra Native Banner ID: ea5bbfe829e07e03a26eddac6389273b
 
 export const saveArticlesToStore = (articles: NewsArticle[]) => {
   try { localStorage.setItem(ARTICLE_STORE_KEY, JSON.stringify(articles)); } catch {}
@@ -35,21 +35,21 @@ const formatDate = (s: string) => {
   } catch { return s; }
 };
 
-const AdBannerSense = ({ slot, format, style, className = "" }: { slot: string; format: string; style?: React.CSSProperties; className?: string; }) => {
+const AdsterraAd = ({ className = "" }: { className?: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    try {
-      if (ref.current && ref.current.querySelector('ins')?.innerHTML === "") {
-        (window as any).adsbygoogle = (window as any).adsbygoogle || [];
-        (window as any).adsbygoogle.push({});
-      }
-    } catch {}
+    if (!ref.current) return;
+    ref.current.innerHTML = "";
+    const script = document.createElement("script");
+    script.async = true;
+    script.setAttribute("data-cfasync", "false");
+    script.src = "https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js";
+    const div = document.createElement("div");
+    div.id = "container-ea5bbfe829e07e03a26eddac6389273b-" + Math.random().toString(36).substr(2,9);
+    ref.current.appendChild(script);
+    ref.current.appendChild(div);
   }, []);
-  return (
-    <div className={"overflow-hidden " + className} ref={ref}>
-      <ins className="adsbygoogle" style={{ display: "block", ...style }} data-ad-client={ADSENSE_PUB} data-ad-slot={slot} data-ad-format={format} data-full-width-responsive="true" />
-    </div>
-  );
+  return <div ref={ref} className={"w-full overflow-hidden " + className} />;
 };
 
 const buildArticleBody = (article: NewsArticle): string[] => {
@@ -177,7 +177,7 @@ const ArticleDetail = () => {
         <div className="h-full bg-primary transition-all duration-150" style={{ width: readProgress + "%" }} />
       </div>
       <div className="w-full flex justify-center py-2 bg-muted/30 border-b border-border">
-        <AdBannerSense slot="1234567890" format="horizontal" style={{ width: "728px", height: "90px" }} />
+        <AdsterraAd />
       </div>
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex gap-8 items-start">
@@ -222,12 +222,12 @@ const ArticleDetail = () => {
                     <p className="mb-5 text-base leading-relaxed text-foreground/90">{para}</p>
                     {i === 2 && (
                       <div className="my-6 flex justify-center">
-                        <AdBannerSense slot="9876543210" format="rectangle" style={{ display: "block", width: "336px", height: "280px" }} />
+                        <AdsterraAd />
                       </div>
                     )}
                     {i === 8 && (
                       <div className="my-6 flex justify-center">
-                        <AdBannerSense slot="1357924680" format="auto" style={{ display: "block" }} />
+                        <AdsterraAd />
                       </div>
                     )}
                   </div>
@@ -262,7 +262,7 @@ const ArticleDetail = () => {
               </div>
             </article>
             <div className="my-8 flex justify-center">
-              <AdBannerSense slot="6677889900" format="horizontal" style={{ display: "block", width: "728px", height: "90px" }} />
+              <AdsterraAd />
             </div>
             {relatedArticles.length > 0 && (
               <section className="mt-6 pt-6 border-t border-border">
@@ -294,7 +294,7 @@ const ArticleDetail = () => {
           </main>
           <aside className="hidden lg:block w-80 flex-shrink-0 space-y-5">
             <div className="bg-muted rounded-xl border border-border p-2 text-center">
-              <AdBannerSense slot="1122334455" format="rectangle" style={{ width: "300px", height: "250px" }} />
+              <AdsterraAd />
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/50">
@@ -335,7 +335,7 @@ const ArticleDetail = () => {
               </div>
             </div>
             <div className="bg-muted rounded-xl border border-border p-2 text-center">
-              <AdBannerSense slot="5544332211" format="auto" style={{ width: "300px", height: "250px" }} />
+              <AdsterraAd />
             </div>
           </aside>
         </div>
