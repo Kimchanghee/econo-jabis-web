@@ -10,7 +10,7 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <CategoryBadge category={article.category} />
+          <CategoryBadge category={article.category as any} />
           {article.isBreaking && (
             <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">속보</span>
           )}

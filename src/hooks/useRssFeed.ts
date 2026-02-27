@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { NewsArticle, Language, Category, FALLBACK_IMAGES, fallbackArticles } from "@/data/newsData";
+import { Language, Category, fallbackArticles } from "@/data/newsData";
+import type { NewsArticle } from "@/hooks/useTheNewsApi";
+import { getCategoryImage } from "@/hooks/useTheNewsApi";
 
 const THENEWSAPI_TOKEN = "s0V715Sqrsg661ZSgkpYxUPxxggdvPXmeTVtBiEW";
 const THENEWSAPI_BASE = "https://api.thenewsapi.com/v1/news/all";
@@ -177,21 +179,33 @@ interface TheNewsAPIArticle {
 const mapToNewsArticle = (item: TheNewsAPIArticle, idx: number): NewsArticle => {
   const category = detectCategory(item.title, item.description || item.snippet || "");
   const date = item.published_at ? item.published_at.split("T")[0] : new Date().toISOString().split("T")[0];
+  const publishedAt = item.published_at || date;
 
   return {
     id: item.uuid || `news-${idx}-${Date.now()}`,
+    uuid: item.uuid || `news-${idx}-${Date.now()}`,
     title: item.title,
     description: item.description || item.snippet || "",
-    summary: item.snippet || "",
-    category,
-    source: item.source || "TheNewsAPI",
-    date,
-    publishedAt: item.published_at || date,
-    imageUrl: item.image_url || FALLBACK_IMAGES[category],
+    keywords: "",
+    snippet: item.snippet || "",
     url: item.url,
+    image_url: item.image_url || getCategoryImage(category),
+    imageUrl: item.image_url || getCategoryImage(category),
+    language: item.language || "en",
+    published_at: publishedAt,
+    publishedAt,
+    source: item.source || "TheNewsAPI",
+    categories: [category],
+    category,
+    date,
+    relevance_score: null,
+    locale: item.language || "en",
     isBreaking: idx === 0,
     isFeatured: idx < 2,
-    language: item.language as Language,
+    summary: item.snippet || "",
+    fullBody: item.description || item.snippet || "",
+    bodyParagraphs: (item.description || item.snippet || "").split(/\n\n+/).filter(Boolean),
+    relatedKeywords: [],
   };
 };
 
