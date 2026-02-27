@@ -467,21 +467,21 @@ const FALLBACK_ARTICLES: NewsArticle[] = [
 // 경제 뉴스 키워드 쿼리 목록
 // ============================================================
 const NEWS_QUERIES = [
-  '오늘 코스피 코스닥 주식 시장 동향 2026',
-  '한국 경제 금리 환율 최신 뉴스',
-  '비트코인 이더리움 암호화폐 시세 오늘',
-  '서울 부동산 아파트 매매 전세 최신',
-  '삼성전자 SK하이닉스 반도체 실적 뉴스',
-  '미국 연준 Fed 금리 결정 경제',
-  '원달러 환율 외환 시장 오늘',
-  '글로벌 증시 나스닥 S&P500 다우 오늘',
-  '트럼프 관세 무역 경제 정책',
-  '국내 기업 실적 IPO 상장 최신',
-  '국제 유가 원자재 금 은 가격',
-  '한국은행 기준금리 통화정책',
-  '부동산 정책 청약 재개발 재건축',
-  '인공지능 AI 반도체 테크 기업 주가',
-  '카카오 네이버 국내 빅테크 주식',
+  'global stock markets S&P500 Nasdaq Dow Jones today 2026',
+  'Federal Reserve interest rate decision US economy',
+  'Bitcoin Ethereum cryptocurrency market prices today',
+  'global real estate housing market 2026',
+  'Samsung SK Hynix semiconductor AI chip earnings',
+  'USD KRW EUR GBP JPY forex exchange rates today',
+  'oil gold silver commodity prices global markets',
+  'China economy stimulus Hong Kong Hang Seng',
+  'Trump tariffs trade war global economy impact',
+  'tech companies earnings Apple Microsoft Google Meta',
+  'European Central Bank ECB rate decision Europe',
+  'emerging markets India Brazil Indonesia economy',
+  'Korea KOSPI KOSDAQ stock market today',
+  'Japan Nikkei yen Bank of Japan interest rate',
+  'global inflation CPI economic data 2026',
 ];
 
 // ============================================================
@@ -589,25 +589,28 @@ function getNewsImageUrl(title: string, category: string): string {
 // ============================================================
 async function fetchGeminiNews(query: string, apiKey: string): Promise<NewsArticle[]> {
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-  const prompt = `당신은 한국의 전문 경제/금융 저널리스트입니다. "${query}" 주제로 오늘 실시간 최신 뉴스 기사 3개를 작성해주세요.
-반드시 아래 JSON 배열 형식으로만 응답하세요. 다른 텍스트는 절대 포함하지 마세요:
+  const prompt = `You are a professional global economic and financial journalist. Write 3 latest real-time news articles on the topic: "${query}" for today (February 27, 2026).
+
+CRITICAL: Respond ONLY with a JSON array. No other text whatsoever:
+
 [
   {
-    "title": "뉴스 제목 (구체적이고 흥미로운 제목)",
-    "source": "출처 언론사명",
+    "title": "Compelling news headline (in the user's language based on query - Korean for Korean queries, English otherwise)",
+    "source": "Source media name (Reuters/Bloomberg/Financial Times etc.)",
     "published_at": "2026-02-27T18:00:00+09:00",
-    "category": "주식|부동산|환율|암호화폐|금융|테크|거시경제|경제 중 하나",
-    "keywords": "키워드1,키워드2,키워드3",
-    "body": "기사 본문 (최소 1500자 이상, 8~10개 문단, 각 문단은 빈줄로 구분)"
+    "category": "주식|부동산|환율|암호화폐|금융|테크|거시경제|경제 (one of these)",
+    "keywords": "keyword1,keyword2,keyword3",
+    "body": "Article body (minimum 1500 characters, 8-10 paragraphs, each separated by blank line)"
   }
 ]
-중요 조건:
-1. body는 반드시 최소 1500자 이상
-2. 각 문단은 3~5문장으로 구성
-3. 구체적인 수치, 퍼센트, 기업명, 인물명 반드시 포함
-4. 오늘 날짜(2026년 2월 27일) 기준 최신 실제 뉴스 기반으로 작성
-5. JSON 형식 외 다른 텍스트 절대 금지`;
 
+Requirements:
+1. body must be at least 1500 characters
+2. Each paragraph: 3-5 sentences
+3. Include specific numbers, percentages, company names, person names
+4. Based on REAL news from today (February 27, 2026) using Google Search
+5. ABSOLUTELY NO text outside JSON format
+6. For Korean-language queries: write in Korean; for English queries: write in English
   const requestBody = {
     contents: [{ parts: [{ text: prompt }] }],
     tools: [{ google_search: {} }],
