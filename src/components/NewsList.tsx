@@ -14,7 +14,7 @@ interface NewsListProps {
 
 const formatDate = (dateStr: string): string => {
   try {
-    return new Date(dateStr).toLocaleeDateString();
+    return new Date(dateStr).toLocaleDateString();
   } catch {
     return dateStr;
   }
