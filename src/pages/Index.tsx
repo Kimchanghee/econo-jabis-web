@@ -14,7 +14,7 @@ import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
 
 // ============================================================
-// Adsterra Native Banner (본문 상단 - 기존 유닛)
+// Adsterra Native Banner (헤더 하단 / 페이지 하단)
 // ============================================================
 const NativeBannerAd = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -23,22 +23,20 @@ const NativeBannerAd = () => {
     if (done.current || !ref.current) return;
     done.current = true;
     const el = ref.current;
-    // container div
     const container = document.createElement('div');
     container.id = 'container-ea5bbfe829e07e03a26eddac6389273b';
     el.appendChild(container);
-    // invoke script
     const s = document.createElement('script');
     s.async = true;
     s.setAttribute('data-cfasync','false');
     s.src = 'https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js';
     el.appendChild(s);
   }, []);
-  return <div ref={ref} className="w-full flex justify-center min-h-[100px]" />;
+  return <div ref={ref} className="w-full flex justify-center min-h-[90px]" />;
 };
 
 // ============================================================
-// Adsterra Banner 728x90 (리더보드)
+// Adsterra Banner 728x90
 // key: cab28a3c8ec96edb306ab13e7af5944b
 // ============================================================
 const Banner728x90Ad = () => {
@@ -54,11 +52,11 @@ const Banner728x90Ad = () => {
     el.appendChild(s1);
     const s2 = document.createElement('script');
     s2.type = 'text/javascript';
-    s2.src = '//www.topcreativeformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js';
+    s2.src = 'https://www.highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js';
     el.appendChild(s2);
   }, []);
   return (
-    <div ref={ref} className="flex justify-center items-center" style={{minHeight:'90px',width:'100%',maxWidth:'728px',margin:'0 auto'}} />
+    <div ref={ref} className="flex justify-center items-center" style={{minHeight:'90px',width:'728px',maxWidth:'100%',margin:'0 auto'}} />
   );
 };
 
@@ -79,11 +77,11 @@ const Banner300x250Ad = ({ id }: { id: string }) => {
     el.appendChild(s1);
     const s2 = document.createElement('script');
     s2.type = 'text/javascript';
-    s2.src = '//www.topcreativeformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js';
+    s2.src = 'https://www.highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js';
     el.appendChild(s2);
   }, []);
   return (
-    <div ref={ref} id={id} className="flex justify-center items-center rounded-xl overflow-hidden" style={{minHeight:'250px',width:'300px'}} />
+    <div ref={ref} id={id} className="flex justify-center items-center overflow-hidden rounded-xl" style={{minHeight:'250px',width:'300px',margin:'0 auto'}} />
   );
 };
 
@@ -124,7 +122,7 @@ const Index = () => {
         onCategoryChange={setSelectedCategory}
       />
 
-      {/* 헤더 하단 - Native Banner (Adsterra) */}
+      {/* 헤더 하단 - Native Banner */}
       <div className="bg-muted/30 border-b border-border py-2">
         <div className="mx-auto max-w-7xl px-4">
           <NativeBannerAd />
@@ -134,8 +132,8 @@ const Index = () => {
       {/* 실시간 마켓 티커 */}
       <MarketTicker />
 
-      {/* 티커 하단 - 728x90 Banner */}
-      <div className="bg-background py-3 border-b border-border/50 flex justify-center">
+      {/* 티커 하단 - 728x90 */}
+      <div className="bg-background py-3 border-b border-border/50">
         <Banner728x90Ad />
       </div>
 
@@ -167,7 +165,7 @@ const Index = () => {
             />
 
             {/* 뉴스 목록 하단 - 728x90 */}
-            <div className="flex justify-center py-2 border-t border-border pt-4">
+            <div className="flex justify-center py-4 border-t border-border">
               <Banner728x90Ad />
             </div>
           </div>
@@ -182,7 +180,6 @@ const Index = () => {
                 articles={articles}
                 onKeywordClick={(kw) => setSearchQuery(kw)}
               />
-
               <MarketWidget />
 
               {/* 트렌딩 키워드 */}
