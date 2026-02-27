@@ -42,10 +42,11 @@ function loadAdsterraBanner(el: HTMLElement, key: string, width: number, height:
   const inv = document.createElement("script");
   inv.src = `https://www.highperformanceformat.com/${key}/invoke.js`;
   inv.onload = () => {
-    try {
-      if (orig) Object.defineProperty(document, "currentScript", orig);
-    } catch (_) {}
-    fake.remove();
+    setTimeout(() => {
+      try {
+        if (orig) Object.defineProperty(document, "currentScript", orig);
+      } catch (_) {}
+    }, 500);
   };
   document.head.appendChild(inv);
 }
