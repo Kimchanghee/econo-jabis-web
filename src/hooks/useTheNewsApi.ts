@@ -159,7 +159,7 @@ function getNewsImageUrl(title: string, category: string): string {
 // 쿼리 하나당 뉴스 기사 3개를 JSON 배열로 반환받음
 // ============================================================
 async function fetchGeminiNews(query: string, apiKey: string): Promise<NewsArticle[]> {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
 
   const prompt = `당신은 한국의 전문 경제/금융 저널리스트입니다.
   "${query}" 주제로 오늘 실시간 최신 뉴스 기사 3개를 작성해주세요.
