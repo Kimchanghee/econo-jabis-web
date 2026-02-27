@@ -192,8 +192,8 @@ async function fetchGeminiNews(query: string, apiKey: string): Promise<NewsArtic
               keywords: String(item.keywords || ''),
               snippet: paragraphs[0] || '',
               url,
-              image_url: String(item.image_url || ''),
-              imageUrl: String(item.image_url || ''),
+              image_url: item.image_url && item.image_url.startsWith('http') ? item.image_url : getNewsImageUrl(item.title, item.category || (item.categories && item.categories[0]) || ''),
+              imageUrl: item.imageUrl && item.imageUrl.startsWith('http') ? item.imageUrl : getNewsImageUrl(item.title, item.category || (item.categories && item.categories[0]) || ''),
               language: 'ko',
               published_at: publishedAt,
               publishedAt,
@@ -246,6 +246,41 @@ export const useTheNewsApi = (_language = 'ko') => {
 
     // API 키는 환경변수에서만 로드 (절대 소스코드에 하드코딩 금지)
     const apiKey = import.meta.env.VITE_GEMINI_KEY || '';
+
+
+// 뉴스 제목 기반 이미지 URL 생성 (Unsplash)
+const CATEGORY_KEYWORDS: Record<string, string> = {
+  '주식': 'stock-market,trading,finance',
+  '경제': 'economy,business,finance',
+  '부동산': 'real-estate,buildings,property',
+  '암호화폐': 'cryptocurrency,bitcoin,blockchain',
+  '환율': 'currency,exchange,forex',
+  '시장': 'market,trading,business',
+};
+
+const getNewsImageUrl = (title: string, category: string): string => {
+  // 제목에서 핵심 한국어 키워드 추출 후 영어로 매핑
+  const catKeyword = CATEGORY_KEYWORDS[category] || 'finance,business,economy';
+  
+  // 제목 기반 추가 키워드
+  let titleKeyword = 'finance';
+  if (title.includes('삼성') || title.includes('반도체')) titleKeyword = 'semiconductor,technology';
+  else if (title.includes('금리') || title.includes('기준금리')) titleKeyword = 'interest-rate,federal-reserve';
+  else if (title.includes('코스피') || title.includes('증시')) titleKeyword = 'stock-exchange,trading';
+  else if (title.includes('달러') || title.includes('환율')) titleKeyword = 'dollar,currency,exchange';
+  else if (title.includes('비트코인') || title.includes('코인')) titleKeyword = 'bitcoin,cryptocurrency';
+  else if (title.includes('아파트') || title.includes('부동산')) titleKeyword = 'apartment,real-estate';
+  else if (title.includes('수출') || title.includes('무역')) titleKeyword = 'trade,export,shipping';
+  else if (title.includes('물가') || title.includes('인플레')) titleKeyword = 'inflation,economy';
+  else if (title.includes('AI') || title.includes('인공지능')) titleKeyword = 'artificial-intelligence,technology';
+  else if (title.includes('미국') || title.includes('연준')) titleKeyword = 'federal-reserve,usa,economy';
+  else if (title.includes('중국')) titleKeyword = 'china,economy,trade';
+  
+  // Unsplash Source API - 무작위하지 않도록 제목 해시 사용
+  const hash = title.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const seed = hash % 1000;
+  return `https://source.unsplash.com/800x450/?${titleKeyword}&sig=${seed}`;
+};
 
     const fetchNews = useCallback(async () => {
           if (fetchingRef.current) return;
