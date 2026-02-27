@@ -26,7 +26,9 @@ function loadAdsterraIframe(el: HTMLElement, key: string, width: number, height:
     Object.getOwnPropertyDescriptor(Document.prototype, "currentScript") ||
     Object.getOwnPropertyDescriptor(document, "currentScript");
   Object.defineProperty(document, "currentScript", {
-    get() { return fake; },
+    get() {
+      return fake;
+    },
     configurable: true,
   });
   const inv = document.createElement("script");
@@ -43,7 +45,6 @@ function loadAdsterraIframe(el: HTMLElement, key: string, width: number, height:
   el.appendChild(inv);
 }
 
-// Banner728x90 - hides container when no ad loaded
 const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -52,7 +53,6 @@ const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
     if (loaded.current || !ref.current) return;
     loaded.current = true;
     loadAdsterraIframe(ref.current, "cab28a3c8ec96edb306ab13e7af5944b", 728, 90);
-    // Check if iframe was inserted after 2s, hide wrapper if not
     setTimeout(() => {
       const el = ref.current;
       if (el && el.querySelectorAll("iframe").length === 0) {
@@ -71,7 +71,6 @@ const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
   );
 };
 
-// Banner300x250
 const Banner300x250Ad = ({ id }: { id: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -89,16 +88,11 @@ const Banner300x250Ad = ({ id }: { id: string }) => {
   }, []);
   return (
     <div ref={wrapRef}>
-      <div
-        ref={ref}
-        id={id}
-        style={{ width: "300px", margin: "0 auto", overflow: "hidden" }}
-      />
+      <div ref={ref} id={id} style={{ width: "300px", margin: "0 auto", overflow: "hidden" }} />
     </div>
   );
 };
 
-// Adsterra Native Banner
 const NativeBannerAd = () => {
   const ref = useRef<HTMLDivElement>(null);
   const loaded = useRef(false);
@@ -122,12 +116,8 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const { language, t } = useLanguage();
-  const { articles, isLoading, error, lastFetched, refresh, extractTrendingKeywords } =
-    useTheNewsApi(language);
-  const trendingKeywords = useMemo(
-    () => extractTrendingKeywords(),
-    [articles, extractTrendingKeywords]
-  );
+  const { articles, isLoading, error, lastFetched, refresh, extractTrendingKeywords } = useTheNewsApi(language);
+  const trendingKeywords = useMemo(() => extractTrendingKeywords(), [articles, extractTrendingKeywords]);
 
   useEffect(() => {
     if (articles.length > 0) saveArticlesToStore(articles);
@@ -144,8 +134,7 @@ const Index = () => {
         !searchQuery ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (article.description || "").toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "all" || article.category === selectedCategory;
+      const matchesCategory = selectedCategory === "all" || article.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
   }, [articles, searchQuery, selectedCategory]);
@@ -153,11 +142,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEOHead />
-      <Header
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onCategoryChange={setSelectedCategory}
-      />
+      <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onCategoryChange={setSelectedCategory} />
       <div className="bg-muted/30 border-b border-border py-2 flex justify-center">
         <Banner728x90Ad instanceId="header-728" />
       </div>
@@ -184,10 +169,7 @@ const Index = () => {
           <aside className="hidden lg:block w-80 flex-shrink-0">
             <div className="sticky top-20 space-y-4">
               <Banner300x250Ad id="ad-sidebar-top" />
-              <RisingKeywords
-                articles={articles}
-                onKeywordClick={(kw) => setSearchQuery(kw)}
-              />
+              <RisingKeywords articles={articles} onKeywordClick={(kw) => setSearchQuery(kw)} />
               <MarketWidget />
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
@@ -201,21 +183,18 @@ const Index = () => {
                           onClick={() => setSearchQuery(item)}
                           className="text-xs px-2.5 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground flex items-center gap-1"
                         >
-                          <span className="text-orange-500 font-bold">{idx + 1}</span>
-                          #{item}
+                          <span className="text-orange-500 font-bold">{idx + 1}</span>#{item}
                         </button>
                       ))
-                    : ["Fed", "Bitcoin", "KOSPI", "USD/KRW", "Oil", "Gold", "S&P500"].map(
-                        (kw) => (
-                          <button
-                            key={kw}
-                            onClick={() => setSearchQuery(kw)}
-                            className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
-                          >
-                            #{kw}
-                          </button>
-                        )
-                      )}
+                    : ["Fed", "Bitcoin", "KOSPI", "USD/KRW", "Oil", "Gold", "S&P500"].map((kw) => (
+                        <button
+                          key={kw}
+                          onClick={() => setSearchQuery(kw)}
+                          className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
+                        >
+                          #{kw}
+                        </button>
+                      ))}
                 </div>
               </div>
               <Banner300x250Ad id="ad-sidebar-bottom" />
