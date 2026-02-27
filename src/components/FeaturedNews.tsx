@@ -21,7 +21,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
 
   if (!articles || articles.length === 0) {
     return (
-      <section className="mb-8">
+      <section className="mb-2">
         <div className="text-center py-12 text-muted-foreground">{t('loading')}</div>
       </section>
     );
@@ -120,9 +120,6 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
         </div>
       </div>
 
-      <div className="mt-4 flex justify-center">
-        <AdBanner slotType="footer" />
-      </div>
     </section>
   );
 };
