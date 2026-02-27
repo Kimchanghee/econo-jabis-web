@@ -611,7 +611,8 @@ Requirements:
 4. Based on REAL news from today (February 27, 2026) using Google Search
 5. ABSOLUTELY NO text outside JSON format
 6. For Korean-language queries: write in Korean; for English queries: write in English
-  const requestBody = {
+`;
+    const requestBody = {
     contents: [{ parts: [{ text: prompt }] }],
     tools: [{ google_search: {} }],
     generationConfig: {
