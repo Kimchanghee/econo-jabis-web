@@ -124,8 +124,8 @@ const ArticleDetail = () => {
       const rect = el.getBoundingClientRect();
       const total = el.offsetHeight;
       const scrolled = Math.max(0, -rect.top + window.innerHeight * 0.5);
-      const progress = Math.min(100, Math.round((scrolled / total) * 100));
-      setReadProgress(progress);
+      const readPct = Math.min(100, Math.round((scrolled / total) * 100));
+      setReadProgress(readPct);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
