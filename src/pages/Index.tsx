@@ -131,9 +131,6 @@ const Index = () => {
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1 min-w-0 space-y-6">
             <FeaturedNews articles={filteredArticles} />
-            <div className="flex justify-center py-1">
-              <Banner728x90Ad instanceId="featured-bottom-728" />
-            </div>
             <div className="sticky top-14 z-30 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4 border-b border-border">
               <CategoryTabs
                 selectedCategory={selectedCategory}
