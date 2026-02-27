@@ -110,10 +110,15 @@ const ArticleDetail = () => {
   const [imgError, setImgError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [readProgress, setReadProgress] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
+    setScrollProgress(progress);
       if (!articleRef.current) return;
       const el = articleRef.current;
       const rect = el.getBoundingClientRect();
@@ -151,6 +156,13 @@ const ArticleDetail = () => {
   if (!article) {
     return (
       <div className="min-h-screen bg-background">
+      {/* 스크롤 진행률 표시바 */}
+      <div className="fixed top-0 left-0 z-50 w-full h-1 bg-gray-200">
+        <div
+          className="h-full bg-orange-500 transition-all duration-150"
+          style={{ width: scrollProgress + '%' }}
+        />
+      </div>
         <Header searchQuery="" onSearchChange={() => {}} />
         <div className="mx-auto max-w-3xl px-4 py-20 text-center">
           <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
