@@ -36,7 +36,7 @@ const NativeBannerAd = () => {
 };
 
 // ============================================================
-// Adsterra Banner 728x90 - iframe 직접 삽입 방식
+// Adsterra Banner 728x90 - document.write override 방식
 // ============================================================
 const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -45,24 +45,44 @@ const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
     if (done.current || !ref.current) return;
     done.current = true;
     const el = ref.current;
-    // atOptions를 고유 변수명으로 설정해서 충돌 방지
-    const s1 = document.createElement('script');
-    s1.type = 'text/javascript';
-    s1.text = "atOptions = {'key':'cab28a3c8ec96edb306ab13e7af5944b','format':'iframe','height':90,'width':728,'params':{}};";
-    document.head.appendChild(s1);
-    const s2 = document.createElement('script');
-    s2.type = 'text/javascript';
-    s2.async = false;
-    s2.src = 'https://www.highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js';
-    // s2 로드 후 el에 iframe 확인
-    s2.onload = () => {
-      // invoke.js가 el 내부에 iframe을 주입했는지 확인, 없으면 el로 이동
-      const iframes = document.querySelectorAll('body > iframe[width="728"]');
-      iframes.forEach(iframe => {
-        if (!el.contains(iframe)) el.appendChild(iframe);
-      });
+    // document.write를 intercept해서 el에 삽입
+    const origWrite = document.write.bind(document);
+    const origWriteln = document.writeln.bind(document);
+    let captured = '';
+    document.write = (s: string) => { captured += s; };
+    document.writeln = (s: string) => { captured += s + '\n'; };
+    
+    // atOptions 설정
+    (window as any).atOptions = {
+      key: 'cab28a3c8ec96edb306ab13e7af5944b',
+      format: 'iframe',
+      height: 90,
+      width: 728,
+      params: {}
     };
-    el.appendChild(s2);
+    
+    const s = document.createElement('script');
+    s.src = 'https://www.highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js';
+    s.onload = () => {
+      // restore
+      document.write = origWrite;
+      document.writeln = origWriteln;
+      if (captured) {
+        el.innerHTML = captured;
+        // el 내부 script 재실행
+        el.querySelectorAll('script').forEach(oldScript => {
+          const newScript = document.createElement('script');
+          if (oldScript.src) newScript.src = oldScript.src;
+          else newScript.text = oldScript.text;
+          oldScript.replaceWith(newScript);
+        });
+      }
+    };
+    s.onerror = () => {
+      document.write = origWrite;
+      document.writeln = origWriteln;
+    };
+    document.head.appendChild(s);
   }, []);
   return (
     <div
@@ -74,7 +94,7 @@ const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
 };
 
 // ============================================================
-// Adsterra Banner 300x250
+// Adsterra Banner 300x250 - document.write override 방식
 // ============================================================
 const Banner300x250Ad = ({ id }: { id: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -83,15 +103,40 @@ const Banner300x250Ad = ({ id }: { id: string }) => {
     if (done.current || !ref.current) return;
     done.current = true;
     const el = ref.current;
-    const s1 = document.createElement('script');
-    s1.type = 'text/javascript';
-    s1.text = "atOptions = {'key':'333406d0aacce2e565463f8c1d21d1bd','format':'iframe','height':250,'width':300,'params':{}};";
-    document.head.appendChild(s1);
-    const s2 = document.createElement('script');
-    s2.type = 'text/javascript';
-    s2.async = false;
-    s2.src = 'https://www.highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js';
-    el.appendChild(s2);
+    const origWrite = document.write.bind(document);
+    const origWriteln = document.writeln.bind(document);
+    let captured = '';
+    document.write = (s: string) => { captured += s; };
+    document.writeln = (s: string) => { captured += s + '\n'; };
+    
+    (window as any).atOptions = {
+      key: '333406d0aacce2e565463f8c1d21d1bd',
+      format: 'iframe',
+      height: 250,
+      width: 300,
+      params: {}
+    };
+    
+    const s = document.createElement('script');
+    s.src = 'https://www.highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js';
+    s.onload = () => {
+      document.write = origWrite;
+      document.writeln = origWriteln;
+      if (captured) {
+        el.innerHTML = captured;
+        el.querySelectorAll('script').forEach(oldScript => {
+          const newScript = document.createElement('script');
+          if (oldScript.src) newScript.src = oldScript.src;
+          else newScript.text = oldScript.text;
+          oldScript.replaceWith(newScript);
+        });
+      }
+    };
+    s.onerror = () => {
+      document.write = origWrite;
+      document.writeln = origWriteln;
+    };
+    document.head.appendChild(s);
   }, []);
   return (
     <div
