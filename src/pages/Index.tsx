@@ -13,43 +13,50 @@ import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
 
-// Adsterra Banner 728x90 - invoke script appended directly into container
+// Adsterra ad loader - uses inline script for atOptions to avoid race condition
+function loadAdsterraIframe(el: HTMLElement, key: string, width: number, height: number) {
+  // Insert atOptions as inline script FIRST so invoke.js reads it synchronously
+  const optScript = document.createElement("script");
+  optScript.type = "text/javascript";
+  optScript.text = `window.atOptions = { key: "${key}", format: "iframe", height: ${height}, width: ${width}, params: {} };`;
+  el.appendChild(optScript);
+
+  // fake script as currentScript anchor
+  const fake = document.createElement("script");
+  fake.type = "text/javascript";
+  el.appendChild(fake);
+
+  // override currentScript so invoke.js inserts iframe before fake
+  const orig =
+    Object.getOwnPropertyDescriptor(Document.prototype, "currentScript") ||
+    Object.getOwnPropertyDescriptor(document, "currentScript");
+  Object.defineProperty(document, "currentScript", {
+    get() { return fake; },
+    configurable: true,
+  });
+
+  const inv = document.createElement("script");
+  inv.async = false; // load synchronously relative to other scripts
+  inv.setAttribute("data-cfasync", "false");
+  inv.src = `https://www.highperformanceformat.com/${key}/invoke.js`;
+  inv.onload = () => {
+    setTimeout(() => {
+      try {
+        if (orig) Object.defineProperty(document, "currentScript", orig);
+      } catch (_) {}
+    }, 500);
+  };
+  el.appendChild(inv);
+}
+
+// Adsterra Banner 728x90
 const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const loaded = useRef(false);
   useEffect(() => {
     if (loaded.current || !ref.current) return;
     loaded.current = true;
-    const el = ref.current;
-    (window as any).atOptions = {
-      key: "cab28a3c8ec96edb306ab13e7af5944b",
-      format: "iframe",
-      height: 90,
-      width: 728,
-      params: {},
-    };
-    const fake = document.createElement("script");
-    fake.type = "text/javascript";
-    el.appendChild(fake);
-    const orig =
-      Object.getOwnPropertyDescriptor(Document.prototype, "currentScript") ||
-      Object.getOwnPropertyDescriptor(document, "currentScript");
-    Object.defineProperty(document, "currentScript", {
-      get() { return fake; },
-      configurable: true,
-    });
-    const inv = document.createElement("script");
-    inv.async = true;
-    inv.setAttribute("data-cfasync", "false");
-    inv.src = "https://www.highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js";
-    inv.onload = () => {
-      setTimeout(() => {
-        try {
-          if (orig) Object.defineProperty(document, "currentScript", orig);
-        } catch (_) {}
-      }, 1000);
-    };
-    el.appendChild(inv);
+    loadAdsterraIframe(ref.current, "cab28a3c8ec96edb306ab13e7af5944b", 728, 90);
   }, []);
   return (
     <div
@@ -67,36 +74,7 @@ const Banner300x250Ad = ({ id }: { id: string }) => {
   useEffect(() => {
     if (loaded.current || !ref.current) return;
     loaded.current = true;
-    const el = ref.current;
-    (window as any).atOptions = {
-      key: "333406d0aacce2e565463f8c1d21d1bd",
-      format: "iframe",
-      height: 250,
-      width: 300,
-      params: {},
-    };
-    const fake = document.createElement("script");
-    fake.type = "text/javascript";
-    el.appendChild(fake);
-    const orig =
-      Object.getOwnPropertyDescriptor(Document.prototype, "currentScript") ||
-      Object.getOwnPropertyDescriptor(document, "currentScript");
-    Object.defineProperty(document, "currentScript", {
-      get() { return fake; },
-      configurable: true,
-    });
-    const inv = document.createElement("script");
-    inv.async = true;
-    inv.setAttribute("data-cfasync", "false");
-    inv.src = "https://www.highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js";
-    inv.onload = () => {
-      setTimeout(() => {
-        try {
-          if (orig) Object.defineProperty(document, "currentScript", orig);
-        } catch (_) {}
-      }, 1000);
-    };
-    el.appendChild(inv);
+    loadAdsterraIframe(ref.current, "333406d0aacce2e565463f8c1d21d1bd", 300, 250);
   }, []);
   return (
     <div
