@@ -36,33 +36,45 @@ const NativeBannerAd = () => {
 };
 
 // ============================================================
-// Adsterra Banner 728x90
-// key: cab28a3c8ec96edb306ab13e7af5944b
+// Adsterra Banner 728x90 - iframe 직접 삽입 방식
 // ============================================================
-const Banner728x90Ad = () => {
+const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
   const ref = useRef<HTMLDivElement>(null);
   const done = useRef(false);
   useEffect(() => {
     if (done.current || !ref.current) return;
     done.current = true;
     const el = ref.current;
+    // atOptions를 고유 변수명으로 설정해서 충돌 방지
     const s1 = document.createElement('script');
     s1.type = 'text/javascript';
-    s1.text = `atOptions = {'key':'cab28a3c8ec96edb306ab13e7af5944b','format':'iframe','height':90,'width':728,'params':{}};`;
-    el.appendChild(s1);
+    s1.text = "atOptions = {'key':'cab28a3c8ec96edb306ab13e7af5944b','format':'iframe','height':90,'width':728,'params':{}};";
+    document.head.appendChild(s1);
     const s2 = document.createElement('script');
     s2.type = 'text/javascript';
+    s2.async = false;
     s2.src = 'https://www.highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js';
+    // s2 로드 후 el에 iframe 확인
+    s2.onload = () => {
+      // invoke.js가 el 내부에 iframe을 주입했는지 확인, 없으면 el로 이동
+      const iframes = document.querySelectorAll('body > iframe[width="728"]');
+      iframes.forEach(iframe => {
+        if (!el.contains(iframe)) el.appendChild(iframe);
+      });
+    };
     el.appendChild(s2);
   }, []);
   return (
-    <div ref={ref} className="flex justify-center items-center" style={{minHeight:'90px',width:'728px',maxWidth:'100%',margin:'0 auto'}} />
+    <div
+      ref={ref}
+      className="flex justify-center items-center overflow-hidden"
+      style={{minHeight:'90px', width:'728px', maxWidth:'100%', margin:'0 auto'}}
+    />
   );
 };
 
 // ============================================================
-// Adsterra Banner 300x250 (사이드바/중간)
-// key: 333406d0aacce2e565463f8c1d21d1bd
+// Adsterra Banner 300x250
 // ============================================================
 const Banner300x250Ad = ({ id }: { id: string }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -73,15 +85,21 @@ const Banner300x250Ad = ({ id }: { id: string }) => {
     const el = ref.current;
     const s1 = document.createElement('script');
     s1.type = 'text/javascript';
-    s1.text = `atOptions = {'key':'333406d0aacce2e565463f8c1d21d1bd','format':'iframe','height':250,'width':300,'params':{}};`;
-    el.appendChild(s1);
+    s1.text = "atOptions = {'key':'333406d0aacce2e565463f8c1d21d1bd','format':'iframe','height':250,'width':300,'params':{}};";
+    document.head.appendChild(s1);
     const s2 = document.createElement('script');
     s2.type = 'text/javascript';
+    s2.async = false;
     s2.src = 'https://www.highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js';
     el.appendChild(s2);
   }, []);
   return (
-    <div ref={ref} id={id} className="flex justify-center items-center overflow-hidden rounded-xl" style={{minHeight:'250px',width:'300px',margin:'0 auto'}} />
+    <div
+      ref={ref}
+      id={id}
+      className="flex justify-center items-center overflow-hidden rounded-xl"
+      style={{minHeight:'250px', width:'300px', margin:'0 auto'}}
+    />
   );
 };
 
@@ -103,12 +121,10 @@ const Index = () => {
 
   const filteredArticles = useMemo(() => {
     return articles.filter((article) => {
-      const matchesSearch =
-        !searchQuery ||
+      const matchesSearch = !searchQuery ||
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (article.description || "").toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === "all" || article.category === selectedCategory;
+      const matchesCategory = selectedCategory === "all" || article.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
   }, [articles, searchQuery, selectedCategory]);
@@ -134,7 +150,7 @@ const Index = () => {
 
       {/* 티커 하단 - 728x90 */}
       <div className="bg-background py-3 border-b border-border/50">
-        <Banner728x90Ad />
+        <Banner728x90Ad instanceId="top-728" />
       </div>
 
       <main className="mx-auto max-w-7xl px-4 py-6">
@@ -163,11 +179,6 @@ const Index = () => {
               onRefresh={refresh}
               lastFetched={lastFetched}
             />
-
-            {/* 뉴스 목록 하단 - 728x90 */}
-            <div className="flex justify-center py-4 border-t border-border">
-              <Banner728x90Ad />
-            </div>
           </div>
 
           {/* 사이드바 */}
@@ -175,13 +186,8 @@ const Index = () => {
             <div className="sticky top-20 space-y-4">
               {/* 사이드바 상단 - 300x250 */}
               <Banner300x250Ad id="ad-sidebar-top" />
-
-              <RisingKeywords
-                articles={articles}
-                onKeywordClick={(kw) => setSearchQuery(kw)}
-              />
+              <RisingKeywords articles={articles} onKeywordClick={(kw) => setSearchQuery(kw)} />
               <MarketWidget />
-
               {/* 트렌딩 키워드 */}
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
@@ -190,20 +196,25 @@ const Index = () => {
                 <div className="flex flex-wrap gap-2">
                   {trendingKeywords.length > 0
                     ? trendingKeywords.map((item, idx) => (
-                        <button key={item} onClick={() => setSearchQuery(item)}
-                          className="text-xs px-2.5 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground flex items-center gap-1">
+                        <button
+                          key={item}
+                          onClick={() => setSearchQuery(item)}
+                          className="text-xs px-2.5 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground flex items-center gap-1"
+                        >
                           <span className="text-orange-500 font-bold">{idx + 1}</span>#{item}
                         </button>
                       ))
                     : ["Fed","Bitcoin","KOSPI","USD/KRW","Oil","Gold","S&P500"].map((kw) => (
-                        <button key={kw} onClick={() => setSearchQuery(kw)}
-                          className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground">
+                        <button
+                          key={kw}
+                          onClick={() => setSearchQuery(kw)}
+                          className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
+                        >
                           #{kw}
                         </button>
                       ))}
                 </div>
               </div>
-
               {/* 사이드바 하단 - 300x250 */}
               <Banner300x250Ad id="ad-sidebar-bottom" />
             </div>
