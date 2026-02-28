@@ -170,10 +170,12 @@ const Index = () => {
             <div className="sticky top-20 space-y-4">
               <Banner300x250Ad id="ad-sidebar-top" />
               <RisingKeywords articles={articles} onKeywordClick={(kw) => setSearchQuery(kw)} />
+              <Banner300x250Ad id="ad-sidebar-between" />
               <MarketWidget />
+              <Banner300x250Ad id="ad-sidebar-below-market" />
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-                  <span className="text-orange-500">🔥</span> {t("trending")}
+                  <span className="text-orange-500">Trending</span>
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {trendingKeywords.length > 0
