@@ -6,7 +6,6 @@ import SEOHead from "../components/SEOHead";
 import type { NewsArticle } from "../hooks/useTheNewsApi";
 
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
-// Adsterra Native Banner ID: ea5bbfe829e07e03a26eddac6389273b
 
 export const saveArticlesToStore = (articles: NewsArticle[]) => {
   try {
@@ -49,17 +48,93 @@ const formatDate = (s: string) => {
   }
 };
 
-const AdsterraAd = ({ className = "" }: { className?: string }) => {
+const Banner728x90Ad = ({ className = "" }: { className?: string }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const loaded = useRef(false);
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current || loaded.current) return;
+    loaded.current = true;
+    ref.current.innerHTML = "";
+    const iframe = document.createElement("iframe");
+    iframe.style.width = "728px";
+    iframe.style.height = "90px";
+    iframe.style.border = "none";
+    iframe.style.maxWidth = "100%";
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute("allowtransparency", "true");
+    ref.current.appendChild(iframe);
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (doc) {
+      doc.open();
+      doc.write(
+        '<script type="text/javascript">' +
+        'atOptions = { key: "cab28a3c8ec96edb306ab13e7af5944b", format: "iframe", height: 90, width: 728, params: {} };' +
+        '<' + '/script>' +
+        '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"><' + '/script>'
+      );
+      doc.close();
+    }
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className={"flex justify-center items-center overflow-hidden " + className}
+      style={{ minHeight: "90px" }}
+    />
+  );
+};
+
+const Banner300x250Ad = ({ className = "" }: { className?: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const loaded = useRef(false);
+  useEffect(() => {
+    if (!ref.current || loaded.current) return;
+    loaded.current = true;
+    ref.current.innerHTML = "";
+    const iframe = document.createElement("iframe");
+    iframe.style.width = "300px";
+    iframe.style.height = "250px";
+    iframe.style.border = "none";
+    iframe.style.maxWidth = "100%";
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute("allowtransparency", "true");
+    ref.current.appendChild(iframe);
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (doc) {
+      doc.open();
+      doc.write(
+        '<script type="text/javascript">' +
+        'atOptions = { key: "333406d0aacce2e565463f8c1d21d1bd", format: "iframe", height: 250, width: 300, params: {} };' +
+        '<' + '/script>' +
+        '<script type="text/javascript" src="//highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js"><' + '/script>'
+      );
+      doc.close();
+    }
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className={"flex justify-center items-center overflow-hidden " + className}
+      style={{ minHeight: "250px" }}
+    />
+  );
+};
+
+const NativeBannerAd = ({ className = "" }: { className?: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const loaded = useRef(false);
+  useEffect(() => {
+    if (!ref.current || loaded.current) return;
+    loaded.current = true;
     ref.current.innerHTML = "";
     const script = document.createElement("script");
     script.async = true;
     script.setAttribute("data-cfasync", "false");
     script.src = "https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js";
     const div = document.createElement("div");
-    div.id = "container-ea5bbfe829e07e03a26eddac6389273b-" + Math.random().toString(36).substr(2, 9);
+    div.id = "container-ea5bbfe829e07e03a26eddac6389273b";
     ref.current.appendChild(script);
     ref.current.appendChild(div);
   }, []);
@@ -83,12 +158,12 @@ const buildArticleBody = (article: NewsArticle): string[] => {
     .map((s) => s.trim())
     .filter(Boolean)
     .join(" ");
-  if (!combined) return ["이 기사의 본문을 불러올 수 없습니다. 원문 링크를 통해 전체 기사를 확인하세요."];
+  if (!combined) return ["This article content could not be loaded. Please check the original link."];
   const clean = combined
     .replace(/<[^>]*>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  const sentences = clean.match(/[^.!?。]+[.!?。]*/g) || [clean];
+  const sentences = clean.match(/[^.!?]+[.!?]*/g) || [clean];
   const parts: string[] = [];
   for (let i = 0; i < sentences.length; i += 3) {
     const para = sentences
@@ -99,10 +174,10 @@ const buildArticleBody = (article: NewsArticle): string[] => {
   }
   if (parts.join("").length < 200) {
     parts.push(
-      article.title + "에 관한 최신 소식입니다. 본 기사는 " + article.category + " 분야의 주요 동향을 전달합니다.",
-      "전문가들은 이번 사안이 국내외 경제에 미치는 영향을 분석하고 있으며, 관련 업계에서도 지속적인 관심을 보이고 있습니다.",
-      "시장 전문가들은 단기적 변동성이 있을 수 있으나 중장기적으로는 안정적인 흐름을 유지할 것으로 전망하고 있습니다.",
-      "향후 시장 동향과 정책 변화에 따라 추가적인 영향이 예상되며, EconoJabis는 관련 소식을 지속적으로 전달할 예정입니다.",
+      article.title + " - Latest news in " + article.category + " sector.",
+      "Experts are analyzing the impact of this development on domestic and international markets.",
+      "Market analysts expect short-term volatility but stable medium-to-long-term trends.",
+      "EconoJabis will continue to provide updates on this story as it develops.",
     );
   }
   return parts;
@@ -206,21 +281,20 @@ const ArticleDetail = () => {
   if (!article) {
     return (
       <div className="min-h-screen bg-background">
-        {/* 스크롤 진행률 표시바 */}
         <div className="fixed top-0 left-0 z-50 w-full h-1 bg-gray-200">
           <div className="h-full bg-orange-500 transition-all duration-150" style={{ width: scrollProgress + "%" }} />
         </div>
         <Header searchQuery="" onSearchChange={() => {}} />
         <div className="mx-auto max-w-3xl px-4 py-20 text-center">
           <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground text-lg mb-2">기사를 찾을 수 없습니다.</p>
-          <p className="text-muted-foreground text-sm mb-6">홈으로 돌아가서 최신 뉴스를 확인하세요.</p>
+          <p className="text-muted-foreground text-lg mb-2">Article not found.</p>
+          <p className="text-muted-foreground text-sm mb-6">Go back to homepage to check the latest news.</p>
           <button
             onClick={() => navigate("/")}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            홈으로
+            Home
           </button>
         </div>
       </div>
@@ -251,9 +325,11 @@ const ArticleDetail = () => {
       <div className="fixed top-0 left-0 z-50 h-0.5 bg-primary/20 w-full">
         <div className="h-full bg-primary transition-all duration-150" style={{ width: readProgress + "%" }} />
       </div>
+
       <div className="w-full flex justify-center py-2 bg-muted/30 border-b border-border">
-        <AdsterraAd />
+        <Banner728x90Ad />
       </div>
+
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex gap-8 items-start">
           <main className="flex-1 min-w-0" ref={articleRef}>
@@ -262,8 +338,9 @@ const ArticleDetail = () => {
               className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors group"
             >
               <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
-              뒤로가기
+              Back
             </button>
+
             <article>
               <div className="mb-3 flex items-center gap-2 flex-wrap">
                 <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary text-primary-foreground">
@@ -271,12 +348,14 @@ const ArticleDetail = () => {
                 </span>
                 {article.isBreaking && (
                   <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-500 text-white animate-pulse">
-                    속보
+                    BREAKING
                   </span>
                 )}
                 <span className="text-xs text-muted-foreground">{article.source}</span>
               </div>
+
               <h1 className="text-2xl sm:text-3xl font-bold leading-tight mb-4 text-foreground">{article.title}</h1>
+
               <div className="flex items-center justify-between mb-6 text-sm text-muted-foreground flex-wrap gap-2">
                 <div className="flex items-center gap-1">
                   <Clock className="h-3.5 w-3.5" />
@@ -288,14 +367,14 @@ const ArticleDetail = () => {
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500 text-white text-xs font-semibold hover:bg-sky-600 transition-colors"
                   >
                     <Twitter className="h-3.5 w-3.5" />
-                    트위터
+                    Twitter
                   </button>
                   <button
                     onClick={handleCopyLink}
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-xs font-semibold hover:bg-accent transition-colors border border-border"
                   >
                     <Link className="h-3.5 w-3.5" />
-                    {copied ? "복사됨!" : "링크복사"}
+                    {copied ? "Copied!" : "Copy Link"}
                   </button>
                   {article.url && (
                     <a
@@ -305,11 +384,12 @@ const ArticleDetail = () => {
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition-colors"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
-                      원문
+                      Original
                     </a>
                   )}
                 </div>
               </div>
+
               {imageUrl && (
                 <div className="mb-6 overflow-hidden rounded-xl">
                   <img
@@ -320,26 +400,37 @@ const ArticleDetail = () => {
                   />
                 </div>
               )}
+
+              <div className="my-4 flex justify-center">
+                <Banner728x90Ad />
+              </div>
+
               <div className="prose prose-neutral dark:prose-invert max-w-none">
                 {bodyParagraphs.map((para, i) => (
                   <div key={i}>
                     <p className="mb-5 text-base leading-relaxed text-foreground/90">{para}</p>
-                    {i === 2 && (
+                    {i === 1 && (
                       <div className="my-6 flex justify-center">
-                        <AdsterraAd />
+                        <Banner728x90Ad />
                       </div>
                     )}
-                    {i === 8 && (
+                    {i === 4 && (
                       <div className="my-6 flex justify-center">
-                        <AdsterraAd />
+                        <Banner728x90Ad />
+                      </div>
+                    )}
+                    {i === 7 && (
+                      <div className="my-6 flex justify-center">
+                        <Banner728x90Ad />
                       </div>
                     )}
                   </div>
                 ))}
               </div>
+
               {(article as any).relatedKeywords?.length > 0 && (
                 <div className="mt-6 pt-4 border-t border-border">
-                  <p className="text-xs text-muted-foreground mb-2 font-medium">관련 키워드</p>
+                  <p className="text-xs text-muted-foreground mb-2 font-medium">Related Keywords</p>
                   <div className="flex flex-wrap gap-1.5">
                     {((article as any).relatedKeywords as string[]).slice(0, 8).map((kw: string) => (
                       <button
@@ -353,6 +444,7 @@ const ArticleDetail = () => {
                   </div>
                 </div>
               )}
+
               <div className="mt-8 pt-6 border-t border-border">
                 <div className="flex items-center justify-between flex-wrap gap-3">
                   <button
@@ -360,7 +452,7 @@ const ArticleDetail = () => {
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors"
                   >
                     <ArrowLeft className="h-4 w-4" />
-                    목록으로
+                    List
                   </button>
                   <div className="flex items-center gap-2">
                     {article.url && (
@@ -371,7 +463,7 @@ const ArticleDetail = () => {
                         className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-colors"
                       >
                         <ExternalLink className="h-4 w-4" />
-                        원문 기사 보기
+                        Read Original
                       </a>
                     )}
                     <button
@@ -379,19 +471,21 @@ const ArticleDetail = () => {
                       className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-muted text-muted-foreground text-sm font-semibold hover:bg-accent transition-colors border border-border"
                     >
                       <Share2 className="h-4 w-4" />
-                      공유
+                      Share
                     </button>
                   </div>
                 </div>
               </div>
             </article>
+
             <div className="my-8 flex justify-center">
-              <AdsterraAd />
+              <Banner728x90Ad />
             </div>
+
             {relatedArticles.length > 0 && (
               <section className="mt-6 pt-6 border-t border-border">
                 <h2 className="text-xl font-bold mb-5 text-foreground flex items-center gap-2">
-                  <span className="text-primary">📰</span>관련 기사
+                  <span className="text-primary">Related Articles</span>
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {relatedArticles.map((rel) => (
@@ -404,10 +498,15 @@ const ArticleDetail = () => {
                 </div>
               </section>
             )}
+
+            <div className="my-6">
+              <NativeBannerAd />
+            </div>
+
             {moreArticles.length > 0 && (
-              <section className="mt-8 pt-6 border-t border-border">
+              <section className="mt-4 pt-6 border-t border-border">
                 <h2 className="text-lg font-bold mb-4 text-foreground flex items-center gap-2">
-                  <span className="text-orange-500">🔥</span>이런 기사는 어떠세요?
+                  <span className="text-orange-500">More Articles</span>
                 </h2>
                 <div className="space-y-2">
                   {moreArticles.map((rel) => (
@@ -420,37 +519,38 @@ const ArticleDetail = () => {
                 </div>
               </section>
             )}
+
             <div className="mt-10 p-5 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 text-center">
-              <p className="text-sm font-semibold text-foreground mb-2">더 많은 경제 뉴스를 확인하세요</p>
-              <p className="text-xs text-muted-foreground mb-4">실시간으로 업데이트되는 국내외 경제 뉴스</p>
+              <p className="text-sm font-semibold text-foreground mb-2">Explore more economic news</p>
+              <p className="text-xs text-muted-foreground mb-4">Real-time domestic and international economic news</p>
               <button
                 onClick={() => navigate("/")}
                 className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
               >
-                전체 뉴스 보기
+                All News
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </main>
-          <aside className="hidden lg:block w-80 flex-shrink-0 space-y-5">
-            <div className="bg-muted rounded-xl border border-border p-2 text-center">
-              <AdsterraAd />
+
+          <aside className="hidden lg:block w-80 flex-shrink-0 space-y-5" style={{ position: "sticky", top: "80px" }}>
+            <div className="flex justify-center">
+              <Banner300x250Ad />
             </div>
+
             <div className="bg-card rounded-xl border border-border overflow-hidden">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/50">
-                <span className="text-orange-500 text-sm font-bold">🔥</span>
-                <h3 className="font-bold text-sm">급상승 검색어</h3>
+                <span className="text-orange-500 text-sm font-bold">Trending</span>
+                <h3 className="font-bold text-sm">Hot Keywords</h3>
               </div>
               <ul className="divide-y divide-border">
-                {["반도체", "코스피", "금리", "AI", "비트코인", "환율", "삼성전자", "아파트"].map((kw, idx) => (
+                {["Semiconductor", "KOSPI", "Interest Rate", "AI", "Bitcoin", "Exchange Rate", "Samsung", "Apartment"].map((kw, idx) => (
                   <li
                     key={kw}
                     className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 cursor-pointer transition-colors"
                     onClick={() => navigate("/?q=" + encodeURIComponent(kw))}
                   >
-                    <span
-                      className={"text-sm font-bold w-5 " + (idx < 3 ? "text-orange-500" : "text-muted-foreground")}
-                    >
+                    <span className={"text-sm font-bold w-5 " + (idx < 3 ? "text-orange-500" : "text-muted-foreground")}>
                       {idx + 1}
                     </span>
                     <span className="text-sm flex-1">{kw}</span>
@@ -459,11 +559,16 @@ const ArticleDetail = () => {
                 ))}
               </ul>
             </div>
+
+            <div className="flex justify-center">
+              <Banner300x250Ad />
+            </div>
+
             <div className="bg-card rounded-xl border border-border overflow-hidden">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/50">
-                <h3 className="font-bold text-sm">최신 뉴스</h3>
+                <h3 className="font-bold text-sm">Latest News</h3>
                 <button onClick={() => navigate("/")} className="text-xs text-primary hover:underline">
-                  더보기
+                  More
                 </button>
               </div>
               <div className="divide-y divide-border">
@@ -484,12 +589,13 @@ const ArticleDetail = () => {
                 ))}
               </div>
             </div>
+
             <div className="bg-card rounded-xl border border-border overflow-hidden">
               <div className="px-4 py-3 border-b border-border bg-muted/50">
-                <h3 className="font-bold text-sm">카테고리</h3>
+                <h3 className="font-bold text-sm">Categories</h3>
               </div>
               <div className="p-3 flex flex-wrap gap-2">
-                {["경제", "주식", "시장", "부동산", "암호화폐", "테크", "금융", "거시경제"].map((cat) => (
+                {["Economy", "Stocks", "Markets", "Real Estate", "Crypto", "Tech", "Finance", "Macro"].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => navigate("/?category=" + cat)}
@@ -500,8 +606,9 @@ const ArticleDetail = () => {
                 ))}
               </div>
             </div>
-            <div className="bg-muted rounded-xl border border-border p-2 text-center">
-              <AdsterraAd />
+
+            <div className="flex justify-center">
+              <Banner300x250Ad />
             </div>
           </aside>
         </div>
