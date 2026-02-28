@@ -13,22 +13,22 @@ import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
 
-// --- Ad Components (srcdoc iframe approach) ---
+// --- Adsterra Ad Components (srcdoc iframe) ---
 const Ad728x90 = ({ uid }: { uid: string }) => {
   const ref = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
-    iframe.srcdoc =
-      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
+    const html =
+      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent;}</style></head><body>' +
       '<script type="text/javascript">atOptions={"key":"cab28a3c8ec96edb306ab13e7af5944b","format":"iframe","height":90,"width":728,"params":{}}<\/script>' +
       '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"><\/script>' +
       '</body></html>';
+    iframe.srcdoc = html;
   }, []);
   return (
     <iframe
       ref={ref}
-      key={uid}
       title={"ad-" + uid}
       scrolling="no"
       frameBorder="0"
@@ -43,16 +43,16 @@ const Ad300x250 = ({ uid }: { uid: string }) => {
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
-    iframe.srcdoc =
-      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
+    const html =
+      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent;}</style></head><body>' +
       '<script type="text/javascript">atOptions={"key":"333406d0aacce2e565463f8c1d21d1bd","format":"iframe","height":250,"width":300,"params":{}}<\/script>' +
       '<script type="text/javascript" src="//highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js"><\/script>' +
       '</body></html>';
+    iframe.srcdoc = html;
   }, []);
   return (
     <iframe
       ref={ref}
-      key={uid}
       title={"ad-" + uid}
       scrolling="no"
       frameBorder="0"
@@ -112,21 +112,16 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <SEOHead />
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onCategoryChange={setSelectedCategory} />
-
       {/* Header Banner Ad 728x90 */}
-      <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2 min-h-[94px]">
+      <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2" style={{ minHeight: 94 }}>
         <Ad728x90 uid="index-header" />
       </div>
-
       <MarketTicker />
-
       <main className="mx-auto max-w-7xl px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
           {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
             <FeaturedNews articles={filteredArticles} />
-
-            {/* Category tabs */}
             <div className="sticky top-14 z-30 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4 border-b border-border">
               <CategoryTabs
                 selectedCategory={selectedCategory}
@@ -134,7 +129,6 @@ const Index = () => {
                 categories={categories}
               />
             </div>
-
             <NewsList
               articles={filteredArticles}
               isLoading={isLoading}
@@ -143,27 +137,21 @@ const Index = () => {
               lastFetched={lastFetched}
             />
           </div>
-
           {/* Sidebar */}
           <aside className="hidden lg:block w-72 flex-shrink-0">
             <div className="sticky top-20 space-y-4">
-
               {/* Sidebar Top Ad 300x250 */}
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
                 <Ad300x250 uid="sidebar-top" />
               </div>
-
               {/* Rising Keywords */}
               <RisingKeywords articles={articles} onKeywordClick={(kw) => setSearchQuery(kw)} />
-
-              {/* Ad between keywords and market */}
+              {/* Ad between keywords and market widget */}
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
                 <Ad300x250 uid="sidebar-mid" />
               </div>
-
               {/* Market Widget */}
               <MarketWidget />
-
               {/* Trending keywords */}
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
@@ -193,7 +181,6 @@ const Index = () => {
                       ))}
                 </div>
               </div>
-
               {/* Sidebar Bottom Ad 300x250 */}
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
                 <Ad300x250 uid="sidebar-bottom" />
@@ -201,7 +188,6 @@ const Index = () => {
             </div>
           </aside>
         </div>
-
         {/* Native Banner Ad at bottom */}
         <div className="mt-8 pt-4 border-t border-border">
           <AdNative />
