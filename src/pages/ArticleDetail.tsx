@@ -315,7 +315,7 @@ const ArticleDetail = () => {
             {related.length > 0 && (
               <section className="mt-4 pt-5 border-t-2 border-primary/30">
                 <h2 className="text-lg font-extrabold mb-4 text-foreground flex items-center gap-2">
-                  <span className="w-1 h-5 bg-primary rounded inline-block" /> Related Articles
+                  <span className="w-1 h-5 bg-primary rounded inline-block" /> 관련 기사
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {related.map(rel => (
@@ -332,7 +332,7 @@ const ArticleDetail = () => {
             {more.length > 0 && (
               <section className="mt-5 pt-5 border-t border-border">
                 <h2 className="text-base font-extrabold mb-4 text-foreground flex items-center gap-2">
-                  <span className="text-orange-500">You Might Also Like</span>
+                  <span className="text-orange-500">이 기사도 읽어보세요</span>
                 </h2>
                 <div className="space-y-2">
                   {more.map(rel => (
@@ -374,8 +374,8 @@ const ArticleDetail = () => {
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/50">
-                <h3 className="font-bold text-sm">Latest News</h3>
-                <button onClick={() => navigate("/")} className="text-xs text-primary hover:underline">More</button>
+                <h3 className="font-bold text-sm">최신 뉴스</h3>
+                <button onClick={() => navigate("/")} className="text-xs text-primary hover:underline">더보기</button>
               </div>
               <div className="divide-y divide-border">
                 {all.slice(0, 6).map(a => (
