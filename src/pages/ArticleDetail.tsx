@@ -7,7 +7,7 @@ import type { NewsArticle } from "../hooks/useTheNewsApi";
 
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
 
-export const saveArticlesToStore = (articles: NewsArticle[]) => {h
+export const saveArticlesToStore = (articles: NewsArticle[]) => {
   try { localStorage.setItem(ARTICLE_STORE_KEY, JSON.stringify(articles)); } catch {}
 };
 
