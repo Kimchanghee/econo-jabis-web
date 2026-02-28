@@ -185,8 +185,18 @@ export const useLanguage = () => useContext(LanguageContext);
 
 export const useLanguageState = () => {
   const [language, setLanguageState] = useState<Language>(() => {
+    // Check if user has previously saved a language preference
     const saved = localStorage.getItem('econojabis-language');
-    return (saved as Language) || 'ko';
+    if (saved && ['ko', 'en', 'es', 'ja', 'zh'].includes(saved)) {
+      return saved as Language;
+    }
+    // Auto-detect browser language, fallback to English
+    const browserLang = (navigator.language || navigator.languages?.[0] || 'en').toLowerCase();
+    if (browserLang.startsWith('ko')) return 'ko';
+    if (browserLang.startsWith('ja')) return 'ja';
+    if (browserLang.startsWith('zh')) return 'zh';
+    if (browserLang.startsWith('es')) return 'es';
+    return 'en'; // Default fallback is English
   });
 
   const setLanguage = (lang: Language) => {
@@ -211,4 +221,5 @@ export const useLanguageState = () => {
   }, [language]);
 
   return { language, setLanguage, t };
+
 };
