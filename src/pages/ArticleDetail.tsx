@@ -106,12 +106,7 @@ const buildBody = (article: NewsArticle): string[] => {
     if (p.length > 20) out.push(p);
   }
   if (out.join("").length < 200) {
-    out.push(
-      article.title + " - Breaking news in " + article.category + ".",
-      "Experts are analyzing the impact across domestic and international markets.",
-      "Market conditions are being closely watched for further developments.",
-      "EconoJabis will continue to provide real-time updates on this story.",
-    );
+    return ["기사 내용을 불러오는 중입니다. 원문 링크를 확인해 주세요."];
   }
   return out;
 };
