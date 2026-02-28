@@ -175,9 +175,9 @@ const ArticleDetail = () => {
         <Header searchQuery="" onSearchChange={() => {}} />
         <div className="mx-auto max-w-3xl px-4 py-20 text-center">
           <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <p className="text-lg text-muted-foreground mb-6">Article not found.</p>
+          <p className="text-lg text-muted-foreground mb-6">기사를 찾을 수 없습니다.</p>
           <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
-            <ArrowLeft className="h-4 w-4" /> Home
+            <ArrowLeft className="h-4 w-4" /> 홈
           </button>
         </div>
       </div>
@@ -211,13 +211,13 @@ const ArticleDetail = () => {
 
           <main className="flex-1 min-w-0 max-w-3xl" ref={articleRef}>
             <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-5 transition-colors group">
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" /> Back
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" /> 뒤로
             </button>
 
             <div className="border-b-2 border-primary pb-4 mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-primary text-primary-foreground uppercase tracking-wide">{article.category}</span>
-                {article.isBreaking && <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-red-500 text-white animate-pulse">BREAKING</span>}
+                {article.isBreaking && <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-red-500 text-white animate-pulse">속보</span>}
                 <span className="text-xs text-muted-foreground font-medium">{article.source}</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight text-foreground mb-3">{article.title}</h1>
@@ -231,11 +231,11 @@ const ArticleDetail = () => {
                     <Twitter className="h-3.5 w-3.5" /> Twitter
                   </button>
                   <button onClick={copyLink} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-muted-foreground text-xs font-semibold hover:bg-accent transition-colors border border-border">
-                    <Link className="h-3.5 w-3.5" /> {copied ? "Copied!" : "Copy"}
+                    <Link className="h-3.5 w-3.5" /> {copied ? "복사됨!" : "링크복사"}
                   </button>
                   {article.url && (
                     <a href={article.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition-colors">
-                      <ExternalLink className="h-3.5 w-3.5" /> Original
+                      <ExternalLink className="h-3.5 w-3.5" /> 원문보기
                     </a>
                   )}
                 </div>
@@ -293,16 +293,16 @@ const ArticleDetail = () => {
             <div className="mt-8 pt-5 border-t border-border">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors text-sm">
-                  <ArrowLeft className="h-4 w-4" /> List
+                  <ArrowLeft className="h-4 w-4" /> 목록으로
                 </button>
                 <div className="flex gap-2">
                   {article.url && (
                     <a href={article.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-colors">
-                      <ExternalLink className="h-4 w-4" /> Read Original
+                      <ExternalLink className="h-4 w-4" /> 원문읽기
                     </a>
                   )}
                   <button onClick={copyLink} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-muted text-sm font-semibold hover:bg-accent transition-colors border border-border">
-                    <Share2 className="h-4 w-4" /> Share
+                    <Share2 className="h-4 w-4" /> 공유
                   </button>
                 </div>
               </div>
