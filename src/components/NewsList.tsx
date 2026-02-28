@@ -60,7 +60,7 @@ const InArticleBarAd = ({ instanceId }: { instanceId: string }) => {
     return (
           <div ref={wrapRef} className="my-4 w-full flex justify-center bg-muted/20 rounded-lg py-2 border border-dashed border-border">
                 <div ref={ref} data-ad-id={instanceId} style={{ width: '728px', maxWidth: '100%', margin: '0 auto', overflow: 'hidden' }} />
-          </div>div>
+          </div>
         );
 };
 
