@@ -13,87 +13,56 @@ import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
 
-// Adsterra ad loader - inline script for atOptions prevents race condition
-function loadAdsterraIframe(el: HTMLElement, key: string, width: number, height: number) {
-  const optScript = document.createElement("script");
-  optScript.type = "text/javascript";
-  optScript.text = `window.atOptions = { key: "${key}", format: "iframe", height: ${height}, width: ${width}, params: {} };`;
-  el.appendChild(optScript);
-  const fake = document.createElement("script");
-  fake.type = "text/javascript";
-  el.appendChild(fake);
-  const orig =
-    Object.getOwnPropertyDescriptor(Document.prototype, "currentScript") ||
-    Object.getOwnPropertyDescriptor(document, "currentScript");
-  Object.defineProperty(document, "currentScript", {
-    get() {
-      return fake;
-    },
-    configurable: true,
-  });
-  const inv = document.createElement("script");
-  inv.async = false;
-  inv.setAttribute("data-cfasync", "false");
-  inv.src = `https://www.highperformanceformat.com/${key}/invoke.js`;
-  inv.onload = () => {
-    setTimeout(() => {
-      try {
-        if (orig) Object.defineProperty(document, "currentScript", orig);
-      } catch (_) {}
-    }, 500);
-  };
-  el.appendChild(inv);
-}
-
-const Banner728x90Ad = ({ instanceId }: { instanceId: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const loaded = useRef(false);
+// --- Ad Components (srcdoc iframe approach) ---
+const Ad728x90 = ({ uid }: { uid: string }) => {
+  const ref = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
-    if (loaded.current || !ref.current) return;
-    loaded.current = true;
-    loadAdsterraIframe(ref.current, "cab28a3c8ec96edb306ab13e7af5944b", 728, 90);
-    setTimeout(() => {
-      const el = ref.current;
-      if (el && el.querySelectorAll("iframe").length === 0) {
-        if (wrapRef.current) wrapRef.current.style.display = "none";
-      }
-    }, 2000);
+    const iframe = ref.current;
+    if (!iframe) return;
+    iframe.srcdoc =
+      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
+      '<script type="text/javascript">atOptions={"key":"cab28a3c8ec96edb306ab13e7af5944b","format":"iframe","height":90,"width":728,"params":{}}<\/script>' +
+      '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"><\/script>' +
+      '</body></html>';
   }, []);
   return (
-    <div ref={wrapRef}>
-      <div
-        ref={ref}
-        data-ad-id={instanceId}
-        style={{ width: "728px", maxWidth: "100%", margin: "0 auto", overflow: "hidden" }}
-      />
-    </div>
+    <iframe
+      ref={ref}
+      key={uid}
+      title={"ad-" + uid}
+      scrolling="no"
+      frameBorder="0"
+      style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block" }}
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+    />
   );
 };
 
-const Banner300x250Ad = ({ id }: { id: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const loaded = useRef(false);
+const Ad300x250 = ({ uid }: { uid: string }) => {
+  const ref = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
-    if (loaded.current || !ref.current) return;
-    loaded.current = true;
-    loadAdsterraIframe(ref.current, "333406d0aacce2e565463f8c1d21d1bd", 300, 250);
-    setTimeout(() => {
-      const el = ref.current;
-      if (el && el.querySelectorAll("iframe").length === 0) {
-        if (wrapRef.current) wrapRef.current.style.display = "none";
-      }
-    }, 2000);
+    const iframe = ref.current;
+    if (!iframe) return;
+    iframe.srcdoc =
+      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
+      '<script type="text/javascript">atOptions={"key":"333406d0aacce2e565463f8c1d21d1bd","format":"iframe","height":250,"width":300,"params":{}}<\/script>' +
+      '<script type="text/javascript" src="//highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js"><\/script>' +
+      '</body></html>';
   }, []);
   return (
-    <div ref={wrapRef}>
-      <div ref={ref} id={id} style={{ width: "300px", margin: "0 auto", overflow: "hidden" }} />
-    </div>
+    <iframe
+      ref={ref}
+      key={uid}
+      title={"ad-" + uid}
+      scrolling="no"
+      frameBorder="0"
+      style={{ width: "300px", height: "250px", border: "none", display: "block" }}
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+    />
   );
 };
 
-const NativeBannerAd = () => {
+const AdNative = () => {
   const ref = useRef<HTMLDivElement>(null);
   const loaded = useRef(false);
   useEffect(() => {
@@ -143,14 +112,21 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <SEOHead />
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onCategoryChange={setSelectedCategory} />
-      <div className="bg-muted/30 border-b border-border py-2 flex justify-center">
-        <Banner728x90Ad instanceId="header-728" />
+
+      {/* Header Banner Ad 728x90 */}
+      <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2 min-h-[94px]">
+        <Ad728x90 uid="index-header" />
       </div>
+
       <MarketTicker />
+
       <main className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
+          {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
             <FeaturedNews articles={filteredArticles} />
+
+            {/* Category tabs */}
             <div className="sticky top-14 z-30 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4 border-b border-border">
               <CategoryTabs
                 selectedCategory={selectedCategory}
@@ -158,6 +134,7 @@ const Index = () => {
                 categories={categories}
               />
             </div>
+
             <NewsList
               articles={filteredArticles}
               isLoading={isLoading}
@@ -166,45 +143,68 @@ const Index = () => {
               lastFetched={lastFetched}
             />
           </div>
-          <aside className="hidden lg:block w-80 flex-shrink-0">
+
+          {/* Sidebar */}
+          <aside className="hidden lg:block w-72 flex-shrink-0">
             <div className="sticky top-20 space-y-4">
-              <Banner300x250Ad id="ad-sidebar-top" />
+
+              {/* Sidebar Top Ad 300x250 */}
+              <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
+                <Ad300x250 uid="sidebar-top" />
+              </div>
+
+              {/* Rising Keywords */}
               <RisingKeywords articles={articles} onKeywordClick={(kw) => setSearchQuery(kw)} />
-              <Banner300x250Ad id="ad-sidebar-between" />
+
+              {/* Ad between keywords and market */}
+              <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
+                <Ad300x250 uid="sidebar-mid" />
+              </div>
+
+              {/* Market Widget */}
               <MarketWidget />
-              <Banner300x250Ad id="ad-sidebar-below-market" />
+
+              {/* Trending keywords */}
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-                  <span className="text-orange-500">Trending</span>
+                  <span className="text-orange-500">🔥</span>
+                  <span>{t("trending")}</span>
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {trendingKeywords.length > 0
                     ? trendingKeywords.map((item, idx) => (
                         <button
                           key={item}
                           onClick={() => setSearchQuery(item)}
-                          className="text-xs px-2.5 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground flex items-center gap-1"
+                          className="text-xs px-2.5 py-1 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors text-secondary-foreground flex items-center gap-1"
                         >
-                          <span className="text-orange-500 font-bold">{idx + 1}</span>#{item}
+                          <span className="text-orange-500 font-bold">{idx + 1}</span>
+                          #{item}
                         </button>
                       ))
                     : ["Fed", "Bitcoin", "KOSPI", "USD/KRW", "Oil", "Gold", "S&P500"].map((kw) => (
                         <button
                           key={kw}
                           onClick={() => setSearchQuery(kw)}
-                          className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-accent transition-colors text-secondary-foreground"
+                          className="text-xs px-2 py-1 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors text-secondary-foreground"
                         >
                           #{kw}
                         </button>
                       ))}
                 </div>
               </div>
-              <Banner300x250Ad id="ad-sidebar-bottom" />
+
+              {/* Sidebar Bottom Ad 300x250 */}
+              <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
+                <Ad300x250 uid="sidebar-bottom" />
+              </div>
             </div>
           </aside>
         </div>
+
+        {/* Native Banner Ad at bottom */}
         <div className="mt-8 pt-4 border-t border-border">
-          <NativeBannerAd />
+          <AdNative />
         </div>
       </main>
       <Footer />
