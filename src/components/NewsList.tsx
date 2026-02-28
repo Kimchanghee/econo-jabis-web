@@ -12,55 +12,28 @@ interface NewsListProps {
   lastFetched?: Date | null;
 }
 
-const formatDate = (dateStr: string): string => {
-  try {
-    return new Date(dateStr).toLocaleDateString();
-  } catch {
-    return dateStr;
-  }
-};
-
-function loadAdsterraIframe(el: HTMLElement, key: string, width: number, height: number) {
-  const optScript = document.createElement('script');
-  optScript.type = 'text/javascript';
-  optScript.text = `window.atOptions = { key: "${key}", format: "iframe", height: ${height}, width: ${width}, params: {} };`;
-  el.appendChild(optScript);
-  const fake = document.createElement('script');
-  fake.type = 'text/javascript';
-  el.appendChild(fake);
-  const orig = Object.getOwnPropertyDescriptor(Document.prototype, 'currentScript') || Object.getOwnPropertyDescriptor(document, 'currentScript');
-  Object.defineProperty(document, 'currentScript', { get() { return fake; }, configurable: true });
-  const inv = document.createElement('script');
-  inv.async = false;
-  inv.setAttribute('data-cfasync', 'false');
-  inv.src = `https://www.highperformanceformat.com/${key}/invoke.js`;
-  inv.onload = () => {
-    setTimeout(() => {
-      try { if (orig) Object.defineProperty(document, 'currentScript', orig); } catch (_) {}
-    }, 500);
-  };
-  el.appendChild(inv);
-}
-
-const InArticleBarAd = ({ instanceId }: { instanceId: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const loaded = useRef(false);
+// Adsterra 728x90 bar ad via srcdoc iframe
+const AdBar728 = ({ uid }: { uid: string }) => {
+  const ref = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
-    if (loaded.current || !ref.current) return;
-    loaded.current = true;
-    loadAdsterraIframe(ref.current, 'cab28a3c8ec96edb306ab13e7af5944b', 728, 90);
-    setTimeout(() => {
-      const el = ref.current;
-      if (el && el.querySelectorAll('iframe').length === 0) {
-        if (wrapRef.current) wrapRef.current.style.display = 'none';
-      }
-    }, 2000);
+    const iframe = ref.current;
+    if (!iframe) return;
+    const html = '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;}</style></head><body>'
+      + '<script type="text/javascript">atOptions={"key":"cab28a3c8ec96edb306ab13e7af5944b","format":"iframe","height":90,"width":728,"params":{}}</script>'
+      + '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"></script>'
+      + '</body></html>';
+    iframe.srcdoc = html;
   }, []);
   return (
-    <div ref={wrapRef} className="my-4 w-full flex justify-center bg-muted/20 rounded-lg py-2 border border-dashed border-border">
-      <div ref={ref} data-ad-id={instanceId} style={{ width: '728px', maxWidth: '100%', margin: '0 auto', overflow: 'hidden' }} />
-    </div>
+    <iframe
+      ref={ref}
+      key={uid}
+      title="ad-bar"
+      scrolling="no"
+      frameBorder="0"
+      style={{ width: '728px', maxWidth: '100%', height: '90px', border: 'none', display: 'block' }}
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+    />
   );
 };
 
@@ -73,33 +46,45 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
       to={`/article/${encodeURIComponent(article.id)}`}
       className="group flex gap-4 p-3 rounded-lg hover:bg-muted transition-colors border-b border-border last:border-0"
     >
-      <div className="flex-shrink-0 w-24 h-18 overflow-hidden rounded-md">
-        <img
-          src={imgSrc}
-          alt={article.title}
-          className="w-24 h-18 object-cover"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=200&auto=format&fit=crop';
-          }}
-        />
-      </div>
+      {imgSrc && (
+        <div className="flex-shrink-0 w-24 overflow-hidden rounded-md">
+          <img
+            src={imgSrc}
+            alt={article.title}
+            className="w-24 h-16 object-cover"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+        </div>
+      )}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           {article.isBreaking && (
-            <span className="bg-destructive text-destructive-foreground text-xs px-1.5 py-0.5 rounded font-bold">LIVE</span>
+            <span className="bg-destructive text-destructive-foreground text-xs px-1.5 py-0.5 rounded font-bold">
+              LIVE
+            </span>
           )}
-          <span className="text-xs text-primary font-medium">{article.category}</span>
+          <span className="text-xs text-primary font-semibold">{article.category}</span>
         </div>
-        <h3 className="text-sm font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+        <h3 className="text-sm font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors leading-snug">
           {article.title}
         </h3>
         {descStr && (
-          <p className="text-xs text-muted-foreground line-clamp-1 mt-1">{descStr}</p>
+          <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{descStr}</p>
         )}
         <div className="flex items-center gap-2 mt-1.5 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
-          <span>{dateStr ? new Date(dateStr).toLocaleString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}</span>
+          <span>
+            {dateStr
+              ? new Date(dateStr).toLocaleString('ko-KR', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              : ''}
+          </span>
           {article.source && <span className="text-primary/70">· {article.source}</span>}
         </div>
       </div>
@@ -112,8 +97,8 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
   const nonFeaturedArticles = articles.filter((a) => !a.isFeatured);
 
   return (
-    <div style={{ overflowY: 'visible' }}>
-      <div className="flex items-center justify-between mb-4">
+    <div>
+      <div className="flex items-center justify-between mb-3">
         <h2 className="text-xl font-bold text-foreground">{t('latestNews')}</h2>
         <div className="flex items-center gap-2">
           {lastFetched && (
@@ -133,14 +118,19 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
           )}
         </div>
       </div>
-      {error && (
-        <div className="text-center py-4 text-destructive text-sm">{error}</div>
-      )}
+
+      {/* Top bar ad */}
+      <div className="flex justify-center my-3 bg-muted/30 rounded-lg py-1.5">
+        <AdBar728 uid="newslist-top" />
+      </div>
+
+      {error && <div className="text-center py-4 text-destructive text-sm">{error}</div>}
+
       {isLoading && articles.length === 0 && (
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
             <div key={i} className="flex gap-4 p-3 animate-pulse">
-              <div className="w-24 h-18 bg-muted rounded-md" />
+              <div className="w-24 h-16 bg-muted rounded-md flex-shrink-0" />
               <div className="flex-1 space-y-2">
                 <div className="h-3 bg-muted rounded w-1/4" />
                 <div className="h-4 bg-muted rounded w-3/4" />
@@ -150,21 +140,22 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
           ))}
         </div>
       )}
-      <InArticleBarAd instanceId="newslist-top" />
-      <div className="space-y-0">
+
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         {nonFeaturedArticles.map((article, index) => (
           <div key={article.id}>
             <NewsCard article={article} />
             {(index + 1) % 5 === 0 && (
-              <InArticleBarAd instanceId={`newslist-mid-${index}`} />
+              <div className="flex justify-center py-2 bg-muted/20 border-t border-b border-dashed border-border">
+                <AdBar728 uid={`newslist-mid-${index}`} />
+              </div>
             )}
           </div>
         ))}
       </div>
+
       {!isLoading && nonFeaturedArticles.length === 0 && !error && (
-        <div className="text-center py-8 text-muted-foreground text-sm">
-          {t('loading')}
-        </div>
+        <div className="text-center py-8 text-muted-foreground text-sm">{t('loading')}</div>
       )}
     </div>
   );
