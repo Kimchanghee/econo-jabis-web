@@ -357,10 +357,10 @@ const ArticleDetail = () => {
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/50">
-                <span className="text-orange-500 text-sm">Hot Keywords</span>
+                <span className="text-orange-500 text-sm">인기 검색어</span>
               </div>
               <ul className="divide-y divide-border">
-                {["Semiconductor", "KOSPI", "Interest Rate", "AI", "Bitcoin", "USD/KRW", "Samsung", "Real Estate"].map((kw, idx) => (
+                {["코스피", "환율", "금리", "반도체", "비트코인", "부동산", "삼성전자", "원달러"].map((kw, idx) => (
                   <li key={kw} className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 cursor-pointer transition-colors" onClick={() => navigate("/?q=" + encodeURIComponent(kw))}>
                     <span className={"text-sm font-bold w-5 " + (idx < 3 ? "text-orange-500" : "text-muted-foreground")}>{idx + 1}</span>
                     <span className="text-sm flex-1">{kw}</span>
