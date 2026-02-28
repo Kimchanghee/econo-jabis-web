@@ -587,109 +587,71 @@ function getNewsImageUrl(title: string, category: string): string {
 // ============================================================
 // Gemini API 호출 - Google Search Grounding으로 실시간 뉴스
 // ============================================================
-async function fetchGeminiNews(query: string, apiKey: string): Promise<NewsArticle[]> {
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-  const prompt = `You are a professional global economic and financial journalist. Write 3 latest real-time news articles on the topic: "${query}" for today (February 27, 2026).
-
-CRITICAL: Respond ONLY with a JSON array. No other text whatsoever:
-
-[
-  {
-    "title": "Compelling news headline (in the user's language based on query - Korean for Korean queries, English otherwise)",
-    "source": "Source media name (Reuters/Bloomberg/Financial Times etc.)",
-    "published_at": "2026-02-27T18:00:00+09:00",
-    "category": "주식|부동산|환율|암호화폐|금융|테크|거시경제|경제 (one of these)",
-    "keywords": "keyword1,keyword2,keyword3",
-    "body": "Article body (minimum 1500 characters, 8-10 paragraphs, each separated by blank line)"
-  }
-]
-
-Requirements:
-1. body must be at least 1500 characters
-2. Each paragraph: 3-5 sentences
-3. Include specific numbers, percentages, company names, person names
-4. Based on REAL news from today (February 27, 2026) using Google Search
-5. ABSOLUTELY NO text outside JSON format
-6. For Korean-language queries: write in Korean; for English queries: write in English
-`;
-    const requestBody = {
-    contents: [{ parts: [{ text: prompt }] }],
-    tools: [{ google_search: {} }],
-    generationConfig: {
-      temperature: 0.2,
-      maxOutputTokens: 16384,
-    },
-  };
-
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(requestBody),
-  });
-
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(`Gemini API error: ${res.status} - ${errText}`);
-  }
-
-  const data = await res.json();
-  const responseText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  console.log('[EconoJabis] Gemini raw response length:', responseText.length);
-
-  const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) {
-    console.warn('[EconoJabis] No JSON array found in response:', responseText.substring(0, 200));
-    return [];
-  }
-
-  let raw: Record<string, unknown>[];
+async function fetchGeminiNews(query: string, _apiKey: string): Promise<NewsArticle[]> {
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
+  
   try {
-    raw = JSON.parse(jsonMatch[0]);
-  } catch (e) {
-    console.warn('[EconoJabis] JSON parse failed:', e);
+    const res = await fetch(`${backendUrl}/api/news?query=${encodeURIComponent(query)}`);
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`Backend API error: ${res.status} - ${errText}`);
+    }
+    const data = await res.json();
+    const raw: Record<string, unknown>[] = data.articles || [];
+    
+    const articles: NewsArticle[] = [];
+    for (const item of raw) {
+      const title = String(item.title || '').trim();
+      const url = String(item.url || `https://econojabis.com/article/${Date.now()}`).trim();
+      const body = String(item.body || '').trim();
+      
+      if (!title || title.length < 5) continue;
+      if (isDuplicateArticle(title, url)) continue;
+      
+      const paragraphs = body
+        .split(/\n\n+/)
+        .map(p => p.trim())
+        .filter(p => p.length > 20);
+      
+      const category = String(item.category || classifyCategory(title, body));
+      const id = `gemini_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const publishedAt = String(item.published_at || new Date().toISOString());
+      const imageUrl = getNewsImageUrl(title, category);
+      
+      registerArticle(title, url);
+      articles.push({
+        id,
+        uuid: id,
+        title,
+        description: paragraphs[0] || '',
+        keywords: String(item.keywords || ''),
+        snippet: paragraphs[0] || '',
+        url,
+        image_url: imageUrl,
+        imageUrl,
+        language: 'ko',
+        published_at: publishedAt,
+        publishedAt,
+        source: String(item.source || 'EconoJabis'),
+        categories: [category],
+        category,
+        date: publishedAt,
+        relevance_score: null,
+        locale: 'ko',
+        isBreaking: false,
+        isFeatured: false,
+        summary: paragraphs[0] || '',
+        fullBody: body,
+        bodyParagraphs: paragraphs,
+        relatedKeywords: String(item.keywords || '').split(',').map(k => k.trim()).filter(Boolean),
+      });
+    }
+    console.log(`[EconoJabis] Backend query "${query}" -> ${articles.length} articles`);
+    return articles;
+  } catch (err) {
+    console.error('[EconoJabis] Backend fetch error:', err);
     return [];
   }
-
-  const articles: NewsArticle[] = [];
-  for (const item of raw) {
-    const title = String(item.title || '').trim();
-    const url = String(item.url || `https://econojabis.com/article/${Date.now()}`).trim();
-    const body = String(item.body || '').trim();
-    if (!title || title.length < 5) continue;
-    if (isDuplicateArticle(title, url)) continue;
-
-    const paragraphs = body
-      .split(/\n\n+/)
-      .map(p => p.trim())
-      .filter(p => p.length > 20);
-
-    const category = String(item.category || classifyCategory(title, body));
-    const id = `gemini_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    const publishedAt = String(item.published_at || new Date().toISOString());
-    const imageUrl = getNewsImageUrl(title, category);
-
-    registerArticle(title, url);
-    articles.push({
-      id, uuid: id, title,
-      description: paragraphs[0] || '',
-      keywords: String(item.keywords || ''),
-      snippet: paragraphs[0] || '',
-      url, image_url: imageUrl, imageUrl,
-      language: 'ko',
-      published_at: publishedAt, publishedAt,
-      source: String(item.source || 'EconoJabis'),
-      categories: [category], category,
-      date: publishedAt,
-      relevance_score: null, locale: 'ko',
-      isBreaking: false, isFeatured: false,
-      summary: paragraphs[0] || '',
-      fullBody: body,
-      bodyParagraphs: paragraphs,
-      relatedKeywords: String(item.keywords || '').split(',').map(k => k.trim()).filter(Boolean),
-    });
-  }
-  console.log(`[EconoJabis] Query "${query}" -> ${articles.length} articles`);
-  return articles;
 }
 
 // ============================================================
@@ -712,7 +674,7 @@ export const useTheNewsApi = (_language = 'ko') => {
   }, []);
 
   // API 키는 환경변수에서만 로드
-  const apiKey = import.meta.env.VITE_GEMINI_KEY || '';
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
 
   const fetchNews = useCallback(async () => {
     if (fetchingRef.current) return;
@@ -720,15 +682,7 @@ export const useTheNewsApi = (_language = 'ko') => {
     setIsLoading(true);
     setError(null);
 
-    if (!apiKey) {
-      console.error('[EconoJabis] VITE_GEMINI_KEY is not set!');
-      setError('API 키가 설정되지 않았습니다.');
-      setIsLoading(false);
-      fetchingRef.current = false;
-      return;
-    }
-
-    console.log('[EconoJabis] Starting news fetch with API key:', apiKey.substring(0, 10) + '...');
+    console.log('[EconoJabis] Starting news fetch via backend:', backendUrl);
 
     try {
       const shuffled = [...NEWS_QUERIES].sort(() => Math.random() - 0.5);
@@ -736,7 +690,7 @@ export const useTheNewsApi = (_language = 'ko') => {
       console.log('[EconoJabis] Selected queries:', selectedQueries);
 
       const results = await Promise.allSettled(
-        selectedQueries.map(q => fetchGeminiNews(q, apiKey))
+        selectedQueries.map(q => fetchGeminiNews(q, backendUrl))
       );
 
       const newArticles: NewsArticle[] = [];
@@ -785,7 +739,7 @@ export const useTheNewsApi = (_language = 'ko') => {
       setIsLoading(false);
       fetchingRef.current = false;
     }
-  }, [apiKey]);
+  }, [backendUrl]);
 
   useEffect(() => {
     // 마운트 후 1초 뒤에 API 호출 (UI 먼저 렌더링)
