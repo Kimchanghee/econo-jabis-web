@@ -343,10 +343,10 @@ const ArticleDetail = () => {
             )}
 
             <div className="mt-10 p-6 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 text-center">
-              <p className="text-sm font-bold text-foreground mb-1">More Economic News</p>
-              <p className="text-xs text-muted-foreground mb-4">Real-time global economy updates</p>
+              <p className="text-sm font-bold text-foreground mb-1">더 많은 경제 뉴스</p>
+              <p className="text-xs text-muted-foreground mb-4">실시간 글로벌 경제 업데이트</p>
               <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors">
-                All News <ChevronRight className="h-4 w-4" />
+                전체 뉴스 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </main>
