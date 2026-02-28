@@ -1,0 +1,53 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+
+env:
+  PROJECT_ID: project-d0118f2c-58f4-4081-864
+  SERVICE: econojabis-backend
+  REGION: us-central1
+  SA_EMAIL: econojabis-vertex@project-d0118f2c-58f4-4081-864.iam.gserviceaccount.com
+
+jobs:
+  deploy:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.WIF_SERVICE_ACCOUNT }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build and Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE \
+            --source ./backend \
+            --region $REGION \
+            --project $PROJECT_ID \
+            --service-account $SA_EMAIL \
+            --allow-unauthenticated \
+            --port 8080 \
+            --memory 512Mi \
+            --cpu 1 \
+            --min-instances 0 \
+            --max-instances 3 \
+            --set-env-vars GOOGLE_CLOUD_PROJECT=$PROJECT_ID,LOCATION=$REGION
+
+      - name: Show Service URL
+        run: |
+          gcloud run services describe $SERVICE --region=$REGION --format='value(status.url)'
