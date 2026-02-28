@@ -8,7 +8,8 @@
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
           <title>EconoJabis 경제뉴스 포털</title>
         <meta name="description" content="한국 경제 뉴스 포털 - 주식, 부동산, 환율, 암호화폐, 금리 등 실시간 경제 뉴스와 시장 분석을 제공합니다." />
-        <meta name="keywords" content="경제뉴스,주식,코스피,코스닥,환율,비트코인,부동산,금리,투자,AI,반도체" />
+        <meta name="description" lang="en" content="Real-time global economic news - stocks, real estate, forex, crypto, interest rates and market analysis." />
+    <meta name="keywords" content="경제뉴스,주식,코스피,코스닥,환율,비트코인,부동산,금리,투자,AI,반도체" />
         <meta name="author" content="EconoJabis" />
         <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
         <meta name="googlebot" content="index,follow" />
@@ -27,14 +28,14 @@
         <meta property="og:description" content="한국 경제 뉴스 포털 - 주식, 부동산, 환율, 암호화폐 등 실시간 경제 뉴스" />
         <meta property="og:site_name" content="EconoJabis" />
         <meta property="og:locale" content="ko_KR" />
-        <meta property="og:image" content="/og-image.png" />
+        <meta property="og:image" content="https://econojabis.com/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:url" content="https://econojabis.com/" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="EconoJabis - 실시간 경제뉴스 포털" />
         <meta name="twitter:description" content="한국 경제 뉴스 포털 - 주식, 부동산, 환율, 암호화폐 등 실시간 경제 뉴스" />
-        <meta name="twitter:image" content="/og-image.png" />
+        <meta name="twitter:image" content="https://econojabis.com/og-image.png" />
         <link rel="alternate" hreflang="ko" href="https://econojabis.com/" />
         <link rel="alternate" hreflang="x-default" href="https://econojabis.com/" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -45,7 +46,46 @@
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5884595045902078" crossorigin="anonymous"></script>
-    </head>
+    
+    <!-- JSON-LD Structured Data for SEO/AEO/GEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "EconoJabis",
+      "alternateName": "이코노자비스",
+      "url": "https://econojabis.com/",
+      "description": "Real-time global economic news portal covering stocks, real estate, forex, cryptocurrency, and financial markets",
+      "inLanguage": ["ko", "en", "ja", "zh", "es"],
+      "publisher": {
+        "@type": "Organization",
+        "name": "EconoJabis",
+        "url": "https://econojabis.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://econojabis.com/og-image.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://econojabis.com/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsMediaOrganization",
+      "name": "EconoJabis",
+      "url": "https://econojabis.com/",
+      "logo": "https://econojabis.com/og-image.png",
+      "sameAs": [],
+      "publishingPrinciples": "https://econojabis.com/about",
+      "actionableFeedbackPolicy": "https://econojabis.com/contact"
+    }
+    </script>
+  </head>
   <body>
         <div id="root"></div>
         <script type="module" src="/src/main.tsx"></script>
