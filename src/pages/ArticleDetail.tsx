@@ -389,10 +389,10 @@ const ArticleDetail = () => {
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="px-4 py-3 border-b border-border bg-muted/50">
-                <h3 className="font-bold text-sm">Categories</h3>
+                <h3 className="font-bold text-sm">카테고리</h3>
               </div>
               <div className="p-3 flex flex-wrap gap-1.5">
-                {["Economy", "Stocks", "Markets", "Real Estate", "Crypto", "Tech", "Finance", "Macro"].map(cat => (
+                {["거시경제", "주식", "시장", "부동산", "암호화폐", "테크", "금융", "환율"].map(cat => (
                   <button key={cat} onClick={() => navigate("/?category=" + cat)} className="px-3 py-1 rounded-full text-xs font-medium bg-muted hover:bg-primary hover:text-primary-foreground transition-colors border border-border">
                     {cat}
                   </button>
