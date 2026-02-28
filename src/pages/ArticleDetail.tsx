@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Clock, Share2, Link, Twitter, ExternalLink, ChevronRight, BookOpen } from "lucide-react";
+import { ArrowLeft, Clock, Share2, Link, Twitter, ExternalLink, ChevronRight, BookOpen, Tag } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import SEOHead from "../components/SEOHead";
@@ -8,9 +8,7 @@ import type { NewsArticle } from "../hooks/useTheNewsApi";
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
 
 export const saveArticlesToStore = (articles: NewsArticle[]) => {
-  try {
-    localStorage.setItem(ARTICLE_STORE_KEY, JSON.stringify(articles));
-  } catch {}
+  try { localStorage.setItem(ARTICLE_STORE_KEY, JSON.stringify(articles)); } catch {}
 };
 
 const getArticleFromStore = (id: string): NewsArticle | null => {
@@ -19,9 +17,7 @@ const getArticleFromStore = (id: string): NewsArticle | null => {
     if (!raw) return null;
     const all: NewsArticle[] = JSON.parse(raw);
     return all.find((a) => a.id === decodeURIComponent(id)) || null;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 };
 
 const getAllArticlesFromStore = (): NewsArticle[] => {
@@ -29,282 +25,174 @@ const getAllArticlesFromStore = (): NewsArticle[] => {
     const raw = localStorage.getItem(ARTICLE_STORE_KEY);
     if (!raw) return [];
     return JSON.parse(raw);
-  } catch {
-    return [];
-  }
+  } catch { return []; }
 };
 
-const formatDate = (s: string) => {
+const fmtDate = (s: string) => {
   try {
-    return new Date(s).toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return s;
-  }
+    return new Date(s).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  } catch { return s; }
 };
 
-const Banner728x90Ad = ({ className = "" }: { className?: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const loaded = useRef(false);
+const Ad728x90 = ({ uid }: { uid: string }) => {
+  const ref = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
-    if (!ref.current || loaded.current) return;
-    loaded.current = true;
-    ref.current.innerHTML = "";
-    const iframe = document.createElement("iframe");
-    iframe.style.width = "728px";
-    iframe.style.height = "90px";
-    iframe.style.border = "none";
-    iframe.style.maxWidth = "100%";
-    iframe.setAttribute("scrolling", "no");
-    iframe.setAttribute("frameborder", "0");
-    iframe.setAttribute("allowtransparency", "true");
-    ref.current.appendChild(iframe);
-    const doc = iframe.contentDocument || iframe.contentWindow?.document;
-    if (doc) {
-      doc.open();
-      doc.write(
-        '<script type="text/javascript">' +
-        'atOptions = { key: "cab28a3c8ec96edb306ab13e7af5944b", format: "iframe", height: 90, width: 728, params: {} };' +
-        '<' + '/script>' +
-        '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"><' + '/script>'
-      );
-      doc.close();
-    }
+    const iframe = ref.current;
+    if (!iframe) return;
+    iframe.srcdoc =
+      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
+      '<script type="text/javascript">atOptions={"key":"cab28a3c8ec96edb306ab13e7af5944b","format":"iframe","height":90,"width":728,"params":{}}<\/script>' +
+      '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"><\/script>' +
+      '</body></html>';
   }, []);
   return (
-    <div
-      ref={ref}
-      className={"flex justify-center items-center overflow-hidden " + className}
-      style={{ minHeight: "90px" }}
-    />
+    <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
+      style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block" }}
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
   );
 };
 
-const Banner300x250Ad = ({ className = "" }: { className?: string }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const loaded = useRef(false);
+const Ad300x250 = ({ uid }: { uid: string }) => {
+  const ref = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
-    if (!ref.current || loaded.current) return;
-    loaded.current = true;
-    ref.current.innerHTML = "";
-    const iframe = document.createElement("iframe");
-    iframe.style.width = "300px";
-    iframe.style.height = "250px";
-    iframe.style.border = "none";
-    iframe.style.maxWidth = "100%";
-    iframe.setAttribute("scrolling", "no");
-    iframe.setAttribute("frameborder", "0");
-    iframe.setAttribute("allowtransparency", "true");
-    ref.current.appendChild(iframe);
-    const doc = iframe.contentDocument || iframe.contentWindow?.document;
-    if (doc) {
-      doc.open();
-      doc.write(
-        '<script type="text/javascript">' +
-        'atOptions = { key: "333406d0aacce2e565463f8c1d21d1bd", format: "iframe", height: 250, width: 300, params: {} };' +
-        '<' + '/script>' +
-        '<script type="text/javascript" src="//highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js"><' + '/script>'
-      );
-      doc.close();
-    }
+    const iframe = ref.current;
+    if (!iframe) return;
+    iframe.srcdoc =
+      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
+      '<script type="text/javascript">atOptions={"key":"333406d0aacce2e565463f8c1d21d1bd","format":"iframe","height":250,"width":300,"params":{}}<\/script>' +
+      '<script type="text/javascript" src="//highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js"><\/script>' +
+      '</body></html>';
   }, []);
   return (
-    <div
-      ref={ref}
-      className={"flex justify-center items-center overflow-hidden " + className}
-      style={{ minHeight: "250px" }}
-    />
+    <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
+      style={{ width: "300px", height: "250px", border: "none", display: "block" }}
+      sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
   );
 };
 
-const NativeBannerAd = ({ className = "" }: { className?: string }) => {
+const AdNative = () => {
   const ref = useRef<HTMLDivElement>(null);
   const loaded = useRef(false);
   useEffect(() => {
-    if (!ref.current || loaded.current) return;
+    if (loaded.current || !ref.current) return;
     loaded.current = true;
-    ref.current.innerHTML = "";
-    const script = document.createElement("script");
-    script.async = true;
-    script.setAttribute("data-cfasync", "false");
-    script.src = "https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js";
-    const div = document.createElement("div");
-    div.id = "container-ea5bbfe829e07e03a26eddac6389273b";
-    ref.current.appendChild(script);
-    ref.current.appendChild(div);
+    const c = document.createElement("div");
+    c.id = "container-native-" + Date.now();
+    ref.current.appendChild(c);
+    const s = document.createElement("script");
+    s.async = true;
+    s.setAttribute("data-cfasync", "false");
+    s.src = "https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js";
+    ref.current.appendChild(s);
   }, []);
-  return <div ref={ref} className={"w-full overflow-hidden " + className} />;
+  return <div ref={ref} className="w-full min-h-[90px]" />;
 };
 
-const buildArticleBody = (article: NewsArticle): string[] => {
-  const geminiParagraphs = (article as any).bodyParagraphs as string[] | undefined;
-  if (geminiParagraphs && geminiParagraphs.length >= 3) return geminiParagraphs;
+const buildBody = (article: NewsArticle): string[] => {
+  const bp = (article as any).bodyParagraphs as string[] | undefined;
+  if (bp && bp.length >= 3) return bp;
   const fullBody = (article as any).fullBody as string | undefined;
   if (fullBody && fullBody.length > 300) {
-    const paragraphs = fullBody
-      .split(/\n\n+/)
-      .map((p: string) => p.trim())
-      .filter((p: string) => p.length > 20);
-    if (paragraphs.length >= 3) return paragraphs;
+    const parts = fullBody.split(/\n\n+/).map((p: string) => p.trim()).filter((p: string) => p.length > 20);
+    if (parts.length >= 3) return parts;
   }
-  const rawDesc = article.description || "";
-  const rawSummary = (article as any).summary || "";
-  const combined = [rawDesc, rawSummary]
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .join(" ");
-  if (!combined) return ["This article content could not be loaded. Please check the original link."];
-  const clean = combined
-    .replace(/<[^>]*>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-  const sentences = clean.match(/[^.!?]+[.!?]*/g) || [clean];
-  const parts: string[] = [];
-  for (let i = 0; i < sentences.length; i += 3) {
-    const para = sentences
-      .slice(i, i + 3)
-      .join(" ")
-      .trim();
-    if (para.length > 20) parts.push(para);
+  const raw = [article.description || "", (article as any).summary || ""].join(" ").trim();
+  if (!raw) return ["Article content unavailable. Please read the original source."];
+  const clean = raw.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  const sents = clean.match(/[^.!?]+[.!?]*/g) || [clean];
+  const out: string[] = [];
+  for (let i = 0; i < sents.length; i += 3) {
+    const p = sents.slice(i, i + 3).join(" ").trim();
+    if (p.length > 20) out.push(p);
   }
-  if (parts.join("").length < 200) {
-    parts.push(
-      article.title + " - Latest news in " + article.category + " sector.",
-      "Experts are analyzing the impact of this development on domestic and international markets.",
-      "Market analysts expect short-term volatility but stable medium-to-long-term trends.",
-      "EconoJabis will continue to provide updates on this story as it develops.",
+  if (out.join("").length < 200) {
+    out.push(
+      article.title + " - Breaking news in " + article.category + ".",
+      "Experts are analyzing the impact across domestic and international markets.",
+      "Market conditions are being closely watched for further developments.",
+      "EconoJabis will continue to provide real-time updates on this story.",
     );
   }
-  return parts;
+  return out;
 };
 
-const RelatedArticleCard = ({ article, onClick }: { article: NewsArticle; onClick: () => void }) => (
-  <div
-    onClick={onClick}
-    className="flex gap-3 p-3 rounded-xl border border-border hover:bg-primary/5 hover:border-primary/30 cursor-pointer transition-all group"
-  >
-    {((article as any).imageUrl || (article as any).image) && (
-      <img
-        src={(article as any).imageUrl || (article as any).image}
-        alt={article.title}
-        className="w-24 h-20 object-cover rounded-lg flex-shrink-0 group-hover:opacity-90 transition-opacity"
-        onError={(e) => {
-          (e.target as HTMLImageElement).style.display = "none";
-        }}
-      />
-    )}
-    <div className="flex-1 min-w-0">
-      <span className="text-xs font-semibold text-primary mb-1 block">{article.category}</span>
-      <h3 className="text-sm font-semibold line-clamp-2 text-foreground group-hover:text-primary transition-colors leading-snug">
-        {article.title}
-      </h3>
-      {(article.description || (article as any).summary) && (
-        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-          {article.description || (article as any).summary}
-        </p>
+const RelatedCard = ({ article, onClick }: { article: NewsArticle; onClick: () => void }) => {
+  const img = (article as any).imageUrl || (article as any).image || "";
+  return (
+    <div onClick={onClick} className="flex gap-3 p-3 rounded-xl border border-border hover:bg-primary/5 hover:border-primary/30 cursor-pointer transition-all group">
+      {img && (
+        <img src={img} alt={article.title} className="w-20 h-16 object-cover rounded-lg flex-shrink-0 group-hover:opacity-90"
+          onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
       )}
-      <div className="flex items-center gap-1 mt-1.5 text-xs text-muted-foreground">
-        <Clock className="h-3 w-3" />
-        <span>{formatDate(article.publishedAt || (article as any).date || "")}</span>
+      <div className="flex-1 min-w-0">
+        <span className="text-xs font-semibold text-primary mb-0.5 block">{article.category}</span>
+        <h3 className="text-sm font-semibold line-clamp-2 text-foreground group-hover:text-primary transition-colors leading-snug">{article.title}</h3>
+        <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
+          <Clock className="h-3 w-3" />
+          <span>{fmtDate(article.publishedAt || (article as any).date || "")}</span>
+        </div>
       </div>
+      <ChevronRight className="h-4 w-4 text-muted-foreground self-center opacity-0 group-hover:opacity-100 flex-shrink-0" />
     </div>
-    <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0 self-center opacity-0 group-hover:opacity-100 transition-opacity" />
-  </div>
-);
+  );
+};
 
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const article = id ? getArticleFromStore(id) : null;
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState("");
   const [imgError, setImgError] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [readProgress, setReadProgress] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [readPct, setReadPct] = useState(0);
   const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? Math.round((scrollTop / docHeight) * 100) : 0;
-      setScrollProgress(progress);
+    const onScroll = () => {
       if (!articleRef.current) return;
       const el = articleRef.current;
-      const rect = el.getBoundingClientRect();
-      const total = el.offsetHeight;
-      const scrolled = Math.max(0, -rect.top + window.innerHeight * 0.5);
-      const readPct = Math.min(100, Math.round((scrolled / total) * 100));
-      setReadProgress(readPct);
+      const scrolled = Math.max(0, -(el.getBoundingClientRect().top) + window.innerHeight * 0.4);
+      setReadPct(Math.min(100, Math.round((scrolled / el.offsetHeight) * 100)));
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
     if (!article) return;
-    const src = (article as any).imageUrl || (article as any).image || "";
-    setImageUrl(src);
+    setImageUrl((article as any).imageUrl || (article as any).image || "");
     setImgError(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [article]);
 
-  const handleImageError = () => {
-    if (imgError) return;
-    setImgError(true);
-    setImageUrl("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop");
-  };
-
-  const handleCopyLink = () => {
+  const copyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setCopied(true); setTimeout(() => setCopied(false), 2000);
     });
   };
-
-  const handleTwitterShare = () => {
-    window.open(
-      "https://twitter.com/intent/tweet?text=" +
-        encodeURIComponent(article?.title || "") +
-        "&url=" +
-        encodeURIComponent(window.location.href),
-      "_blank",
-      "width=600,height=400",
-    );
+  const tweetShare = () => {
+    window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(article?.title || "") + "&url=" + encodeURIComponent(window.location.href), "_blank", "width=600,height=400");
   };
 
   if (!article) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="fixed top-0 left-0 z-50 w-full h-1 bg-gray-200">
-          <div className="h-full bg-orange-500 transition-all duration-150" style={{ width: scrollProgress + "%" }} />
-        </div>
         <Header searchQuery="" onSearchChange={() => {}} />
         <div className="mx-auto max-w-3xl px-4 py-20 text-center">
           <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <p className="text-muted-foreground text-lg mb-2">Article not found.</p>
-          <p className="text-muted-foreground text-sm mb-6">Go back to homepage to check the latest news.</p>
-          <button
-            onClick={() => navigate("/")}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Home
+          <p className="text-lg text-muted-foreground mb-6">Article not found.</p>
+          <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
+            <ArrowLeft className="h-4 w-4" /> Home
           </button>
         </div>
       </div>
     );
   }
 
-  const bodyParagraphs = buildArticleBody(article);
-  const allArticles = getAllArticlesFromStore();
-  const relatedArticles = allArticles.filter((a) => a.id !== article.id && a.category === article.category).slice(0, 6);
-  const moreArticles = allArticles.filter((a) => a.id !== article.id && a.category !== article.category).slice(0, 4);
+  const body = buildBody(article);
+  const all = getAllArticlesFromStore();
+  const related = all.filter(a => a.id !== article.id && a.category === article.category).slice(0, 6);
+  const more = all.filter(a => a.id !== article.id && a.category !== article.category).slice(0, 4);
 
   return (
     <div className="min-h-screen bg-background">
@@ -312,303 +200,212 @@ const ArticleDetail = () => {
         title={article.title}
         description={(article.description || (article as any).summary || "").slice(0, 160)}
         ogImage={imageUrl}
-        article={{
-          title: article.title,
-          description: article.description || "",
-          publishedAt: article.publishedAt || new Date().toISOString(),
-          category: article.category || "",
-          source: "EconoJabis",
-          image: imageUrl,
-        }}
+        article={{ title: article.title, description: article.description || "", publishedAt: article.publishedAt || new Date().toISOString(), category: article.category || "", source: "EconoJabis", image: imageUrl }}
       />
-      <Header searchQuery="" onSearchChange={() => {}} />
-      <div className="fixed top-0 left-0 z-50 h-0.5 bg-primary/20 w-full">
-        <div className="h-full bg-primary transition-all duration-150" style={{ width: readProgress + "%" }} />
+      <div className="fixed top-0 left-0 z-50 h-0.5 bg-primary/20 w-full pointer-events-none">
+        <div className="h-full bg-primary transition-all duration-100" style={{ width: readPct + "%" }} />
       </div>
+      <Header searchQuery="" onSearchChange={() => {}} />
 
-      <div className="w-full flex justify-center py-2 bg-muted/30 border-b border-border">
-        <Banner728x90Ad />
+      <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2 min-h-[94px]">
+        <Ad728x90 uid="article-top" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex gap-8 items-start">
-          <main className="flex-1 min-w-0" ref={articleRef}>
-            <button
-              onClick={() => navigate(-1)}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors group"
-            >
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
-              Back
+
+          <main className="flex-1 min-w-0 max-w-3xl" ref={articleRef}>
+            <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-5 transition-colors group">
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" /> Back
             </button>
 
-            <article>
-              <div className="mb-3 flex items-center gap-2 flex-wrap">
-                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary text-primary-foreground">
-                  {article.category}
-                </span>
-                {article.isBreaking && (
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-red-500 text-white animate-pulse">
-                    BREAKING
-                  </span>
-                )}
-                <span className="text-xs text-muted-foreground">{article.source}</span>
+            <div className="border-b-2 border-primary pb-4 mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-primary text-primary-foreground uppercase tracking-wide">{article.category}</span>
+                {article.isBreaking && <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-red-500 text-white animate-pulse">BREAKING</span>}
+                <span className="text-xs text-muted-foreground font-medium">{article.source}</span>
               </div>
-
-              <h1 className="text-2xl sm:text-3xl font-bold leading-tight mb-4 text-foreground">{article.title}</h1>
-
-              <div className="flex items-center justify-between mb-6 text-sm text-muted-foreground flex-wrap gap-2">
+              <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight text-foreground mb-3">{article.title}</h1>
+              <div className="flex items-center justify-between flex-wrap gap-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Clock className="h-3.5 w-3.5" />
-                  <span>{formatDate(article.publishedAt || (article as any).date || "")}</span>
+                  <span>{fmtDate(article.publishedAt || (article as any).date || "")}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handleTwitterShare}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500 text-white text-xs font-semibold hover:bg-sky-600 transition-colors"
-                  >
-                    <Twitter className="h-3.5 w-3.5" />
-                    Twitter
+                <div className="flex items-center gap-1.5">
+                  <button onClick={tweetShare} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-500 text-white text-xs font-semibold hover:bg-sky-600 transition-colors">
+                    <Twitter className="h-3.5 w-3.5" /> Twitter
                   </button>
-                  <button
-                    onClick={handleCopyLink}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-muted text-muted-foreground text-xs font-semibold hover:bg-accent transition-colors border border-border"
-                  >
-                    <Link className="h-3.5 w-3.5" />
-                    {copied ? "Copied!" : "Copy Link"}
+                  <button onClick={copyLink} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-muted-foreground text-xs font-semibold hover:bg-accent transition-colors border border-border">
+                    <Link className="h-3.5 w-3.5" /> {copied ? "Copied!" : "Copy"}
                   </button>
                   {article.url && (
-                    <a
-                      href={article.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition-colors"
-                    >
-                      <ExternalLink className="h-3.5 w-3.5" />
-                      Original
+                    <a href={article.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition-colors">
+                      <ExternalLink className="h-3.5 w-3.5" /> Original
                     </a>
                   )}
                 </div>
               </div>
+            </div>
 
-              {imageUrl && (
-                <div className="mb-6 overflow-hidden rounded-xl">
-                  <img
-                    src={imageUrl}
-                    alt={article.title}
-                    className="w-full object-cover max-h-[500px]"
-                    onError={handleImageError}
-                  />
-                </div>
-              )}
-
-              <div className="my-4 flex justify-center">
-                <Banner728x90Ad />
+            {imageUrl && (
+              <div className="mb-5 overflow-hidden rounded-xl bg-muted">
+                <img src={imageUrl} alt={article.title} className="w-full object-cover max-h-[480px]"
+                  onError={() => { if (!imgError) { setImgError(true); setImageUrl("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop"); }}} />
               </div>
+            )}
 
-              <div className="prose prose-neutral dark:prose-invert max-w-none">
-                {bodyParagraphs.map((para, i) => (
-                  <div key={i}>
-                    <p className="mb-5 text-base leading-relaxed text-foreground/90">{para}</p>
-                    {i === 1 && (
-                      <div className="my-6 flex justify-center">
-                        <Banner728x90Ad />
-                      </div>
-                    )}
-                    {i === 4 && (
-                      <div className="my-6 flex justify-center">
-                        <Banner728x90Ad />
-                      </div>
-                    )}
-                    {i === 7 && (
-                      <div className="my-6 flex justify-center">
-                        <Banner728x90Ad />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+            <div className="flex justify-center my-4 bg-muted/20 rounded-lg py-1.5">
+              <Ad728x90 uid="article-after-img" />
+            </div>
 
-              {(article as any).relatedKeywords?.length > 0 && (
-                <div className="mt-6 pt-4 border-t border-border">
-                  <p className="text-xs text-muted-foreground mb-2 font-medium">Related Keywords</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {((article as any).relatedKeywords as string[]).slice(0, 8).map((kw: string) => (
-                      <button
-                        key={kw}
-                        onClick={() => navigate("/?q=" + encodeURIComponent(kw))}
-                        className="text-xs px-2.5 py-1 rounded-full bg-muted hover:bg-primary hover:text-primary-foreground transition-colors border border-border"
-                      >
-                        #{kw}
-                      </button>
-                    ))}
-                  </div>
+            <article className="text-[15px] leading-[1.9] text-foreground/90">
+              {body.map((para, i) => (
+                <div key={i}>
+                  <p className="mb-4">{para}</p>
+                  {i === 2 && (
+                    <div className="flex justify-center my-5 bg-muted/20 rounded-lg py-1.5">
+                      <Ad728x90 uid="article-mid1" />
+                    </div>
+                  )}
+                  {i === 5 && (
+                    <div className="flex justify-center my-5 bg-muted/20 rounded-lg py-1.5">
+                      <Ad728x90 uid="article-mid2" />
+                    </div>
+                  )}
+                  {i === 8 && (
+                    <div className="flex justify-center my-5 bg-muted/20 rounded-lg py-1.5">
+                      <Ad728x90 uid="article-mid3" />
+                    </div>
+                  )}
                 </div>
-              )}
-
-              <div className="mt-8 pt-6 border-t border-border">
-                <div className="flex items-center justify-between flex-wrap gap-3">
-                  <button
-                    onClick={() => navigate("/")}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    List
-                  </button>
-                  <div className="flex items-center gap-2">
-                    {article.url && (
-                      <a
-                        href={article.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-colors"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        Read Original
-                      </a>
-                    )}
-                    <button
-                      onClick={handleCopyLink}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-muted text-muted-foreground text-sm font-semibold hover:bg-accent transition-colors border border-border"
-                    >
-                      <Share2 className="h-4 w-4" />
-                      Share
-                    </button>
-                  </div>
-                </div>
-              </div>
+              ))}
             </article>
 
-            <div className="my-8 flex justify-center">
-              <Banner728x90Ad />
+            {(article as any).relatedKeywords?.length > 0 && (
+              <div className="mt-6 pt-4 border-t border-border">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Tag className="h-3.5 w-3.5 text-muted-foreground" />
+                  {((article as any).relatedKeywords as string[]).slice(0, 8).map((kw: string) => (
+                    <button key={kw} onClick={() => navigate("/?q=" + encodeURIComponent(kw))}
+                      className="text-xs px-2.5 py-1 rounded-full bg-muted hover:bg-primary hover:text-primary-foreground transition-colors border border-border">
+                      #{kw}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-8 pt-5 border-t border-border">
+              <div className="flex items-center justify-between flex-wrap gap-3">
+                <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors text-sm">
+                  <ArrowLeft className="h-4 w-4" /> List
+                </button>
+                <div className="flex gap-2">
+                  {article.url && (
+                    <a href={article.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-colors">
+                      <ExternalLink className="h-4 w-4" /> Read Original
+                    </a>
+                  )}
+                  <button onClick={copyLink} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-muted text-sm font-semibold hover:bg-accent transition-colors border border-border">
+                    <Share2 className="h-4 w-4" /> Share
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {relatedArticles.length > 0 && (
-              <section className="mt-6 pt-6 border-t border-border">
-                <h2 className="text-xl font-bold mb-5 text-foreground flex items-center gap-2">
-                  <span className="text-primary">Related Articles</span>
+            <div className="flex justify-center my-6 bg-muted/20 rounded-lg py-1.5">
+              <Ad728x90 uid="article-bottom" />
+            </div>
+
+            {related.length > 0 && (
+              <section className="mt-4 pt-5 border-t-2 border-primary/30">
+                <h2 className="text-lg font-extrabold mb-4 text-foreground flex items-center gap-2">
+                  <span className="w-1 h-5 bg-primary rounded inline-block" /> Related Articles
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {relatedArticles.map((rel) => (
-                    <RelatedArticleCard
-                      key={rel.id}
-                      article={rel}
-                      onClick={() => navigate("/article/" + encodeURIComponent(rel.id))}
-                    />
+                  {related.map(rel => (
+                    <RelatedCard key={rel.id} article={rel} onClick={() => navigate("/article/" + encodeURIComponent(rel.id))} />
                   ))}
                 </div>
               </section>
             )}
 
-            <div className="my-6">
-              <NativeBannerAd />
+            <div className="mt-5 pt-4">
+              <AdNative />
             </div>
 
-            {moreArticles.length > 0 && (
-              <section className="mt-4 pt-6 border-t border-border">
-                <h2 className="text-lg font-bold mb-4 text-foreground flex items-center gap-2">
-                  <span className="text-orange-500">More Articles</span>
+            {more.length > 0 && (
+              <section className="mt-5 pt-5 border-t border-border">
+                <h2 className="text-base font-extrabold mb-4 text-foreground flex items-center gap-2">
+                  <span className="text-orange-500">You Might Also Like</span>
                 </h2>
                 <div className="space-y-2">
-                  {moreArticles.map((rel) => (
-                    <RelatedArticleCard
-                      key={rel.id}
-                      article={rel}
-                      onClick={() => navigate("/article/" + encodeURIComponent(rel.id))}
-                    />
+                  {more.map(rel => (
+                    <RelatedCard key={rel.id} article={rel} onClick={() => navigate("/article/" + encodeURIComponent(rel.id))} />
                   ))}
                 </div>
               </section>
             )}
 
-            <div className="mt-10 p-5 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 text-center">
-              <p className="text-sm font-semibold text-foreground mb-2">Explore more economic news</p>
-              <p className="text-xs text-muted-foreground mb-4">Real-time domestic and international economic news</p>
-              <button
-                onClick={() => navigate("/")}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
-              >
-                All News
-                <ChevronRight className="h-4 w-4" />
+            <div className="mt-10 p-6 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 text-center">
+              <p className="text-sm font-bold text-foreground mb-1">More Economic News</p>
+              <p className="text-xs text-muted-foreground mb-4">Real-time global economy updates</p>
+              <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors">
+                All News <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </main>
 
-          <aside className="hidden lg:block w-80 flex-shrink-0 space-y-5" style={{ position: "sticky", top: "80px" }}>
-            <div className="flex justify-center">
-              <Banner300x250Ad />
+          <aside className="hidden lg:block w-72 flex-shrink-0" style={{ position: "sticky", top: "80px", alignSelf: "flex-start" }}>
+            <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1 mb-4">
+              <Ad300x250 uid="art-side-top" />
             </div>
-
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/50">
-                <span className="text-orange-500 text-sm font-bold">Trending</span>
-                <h3 className="font-bold text-sm">Hot Keywords</h3>
+                <span className="text-orange-500 text-sm">Hot Keywords</span>
               </div>
               <ul className="divide-y divide-border">
-                {["Semiconductor", "KOSPI", "Interest Rate", "AI", "Bitcoin", "Exchange Rate", "Samsung", "Apartment"].map((kw, idx) => (
-                  <li
-                    key={kw}
-                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 cursor-pointer transition-colors"
-                    onClick={() => navigate("/?q=" + encodeURIComponent(kw))}
-                  >
-                    <span className={"text-sm font-bold w-5 " + (idx < 3 ? "text-orange-500" : "text-muted-foreground")}>
-                      {idx + 1}
-                    </span>
+                {["Semiconductor", "KOSPI", "Interest Rate", "AI", "Bitcoin", "USD/KRW", "Samsung", "Real Estate"].map((kw, idx) => (
+                  <li key={kw} className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 cursor-pointer transition-colors" onClick={() => navigate("/?q=" + encodeURIComponent(kw))}>
+                    <span className={"text-sm font-bold w-5 " + (idx < 3 ? "text-orange-500" : "text-muted-foreground")}>{idx + 1}</span>
                     <span className="text-sm flex-1">{kw}</span>
                     {idx < 2 && <span className="text-xs font-bold text-red-500">NEW</span>}
                   </li>
                 ))}
               </ul>
             </div>
-
-            <div className="flex justify-center">
-              <Banner300x250Ad />
+            <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1 mb-4">
+              <Ad300x250 uid="art-side-mid" />
             </div>
-
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/50">
                 <h3 className="font-bold text-sm">Latest News</h3>
-                <button onClick={() => navigate("/")} className="text-xs text-primary hover:underline">
-                  More
-                </button>
+                <button onClick={() => navigate("/")} className="text-xs text-primary hover:underline">More</button>
               </div>
               <div className="divide-y divide-border">
-                {allArticles.slice(0, 6).map((a) => (
-                  <div
-                    key={a.id}
-                    className="p-3 hover:bg-muted/50 cursor-pointer transition-colors group"
-                    onClick={() => navigate("/article/" + encodeURIComponent(a.id))}
-                  >
-                    <p className="text-xs font-semibold text-primary mb-1">{a.category}</p>
-                    <p className="text-sm font-medium line-clamp-2 text-foreground group-hover:text-primary transition-colors">
-                      {a.title}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      {formatDate(a.publishedAt || (a as any).date || "")}
-                    </p>
+                {all.slice(0, 6).map(a => (
+                  <div key={a.id} className="p-3 hover:bg-muted/50 cursor-pointer transition-colors group" onClick={() => navigate("/article/" + encodeURIComponent(a.id))}>
+                    <p className="text-xs font-semibold text-primary mb-0.5">{a.category}</p>
+                    <p className="text-sm font-medium line-clamp-2 text-foreground group-hover:text-primary transition-colors">{a.title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{fmtDate(a.publishedAt || (a as any).date || "")}</p>
                   </div>
                 ))}
               </div>
             </div>
-
-            <div className="bg-card rounded-xl border border-border overflow-hidden">
+            <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="px-4 py-3 border-b border-border bg-muted/50">
                 <h3 className="font-bold text-sm">Categories</h3>
               </div>
-              <div className="p-3 flex flex-wrap gap-2">
-                {["Economy", "Stocks", "Markets", "Real Estate", "Crypto", "Tech", "Finance", "Macro"].map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => navigate("/?category=" + cat)}
-                    className="px-3 py-1.5 rounded-full text-xs font-medium bg-muted hover:bg-primary hover:text-primary-foreground transition-colors border border-border"
-                  >
+              <div className="p-3 flex flex-wrap gap-1.5">
+                {["Economy", "Stocks", "Markets", "Real Estate", "Crypto", "Tech", "Finance", "Macro"].map(cat => (
+                  <button key={cat} onClick={() => navigate("/?category=" + cat)} className="px-3 py-1 rounded-full text-xs font-medium bg-muted hover:bg-primary hover:text-primary-foreground transition-colors border border-border">
                     {cat}
                   </button>
                 ))}
               </div>
             </div>
-
-            <div className="flex justify-center">
-              <Banner300x250Ad />
+            <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
+              <Ad300x250 uid="art-side-bottom" />
             </div>
           </aside>
         </div>
