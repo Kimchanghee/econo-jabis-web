@@ -7,7 +7,7 @@ import type { NewsArticle } from "../hooks/useTheNewsApi";
 
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
 
-export const saveArticlesToStore = (articles: NewsArticle[]) => {
+export const saveArticlesToStore = (articles: NewsArticle[]) => {h
   try { localStorage.setItem(ARTICLE_STORE_KEY, JSON.stringify(articles)); } catch {}
 };
 
@@ -157,7 +157,7 @@ const ArticleDetail = () => {
     if (!article) return;
     setImageUrl((article as any).imageUrl || (article as any).image || "");
     setImgError(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [article]);
 
   const copyLink = () => {
