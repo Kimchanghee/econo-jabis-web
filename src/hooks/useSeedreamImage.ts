@@ -1,24 +1,13 @@
-// BytePlus Seedream AI Image Generation Hook
-// API: https://ark.ap-southeast.bytepluses.com/api/v3/images/generations
-// Docs: https://docs.byteplus.com/en/docs/ModelArk/1824121
+// AI Image Generation Hook via Cloud Run Backend (Vertex AI)
+// Uses gemini-3.1-flash-image-preview for image generation
 
-const SEEDREAM_API_URL = "https://ark.ap-southeast.bytepluses.com/api/v3/images/generations";
-const SEEDREAM_MODEL = "seedream-4-5-251128";
 const CACHE_KEY = "econojabis_seedream_cache";
-const API_KEY_STORAGE = "econojabis_seedream_apikey";
 
 interface SeedreamCache {
   [articleId: string]: {
     url: string;
     generatedAt: number;
   };
-}
-
-interface SeedreamResponse {
-  data: Array<{
-    b64_image?: string;
-    url?: string;
-  }>;
 }
 
 const CATEGORY_PROMPTS: Record<string, string> = {
@@ -36,16 +25,17 @@ const CATEGORY_PROMPTS: Record<string, string> = {
 
 function detectCategory(title: string): string {
   const categoryMap: Array<[string[], string]> = [
-    [["\uc8fc\uc2dd", "\ucf54\uc2a4\ud53c", "\ucf54\uc2a4\ub2e5", "\uc0c1\uc7a5", "\uc885\ubaa9", "\uc8fc\uac00", "\ub9e4\uc218", "\ub9e4\ub3c4"], "stock"],
-    [["\ube44\ud2b8\ucf54\uc778", "\uac00\uc0c1\ud654\ud3d0", "\uc554\ud638\ud654\ud3d0", "\uc774\ub354\ub9ac\uc6c0", "\ud1a0\ud070", "\ube14\ub85d\uccb4\uc778"], "crypto"],
-    [["\ubd80\ub3d9\uc0b0", "\uc544\ud30c\ud2b8", "\uc804\uc138", "\uc6d4\uc138", "\uc8fc\ud0dd", "\ub9e4\ub9e4", "\ubd84\uc591"], "realestate"],
-    [["\uae08\ub9ac", "\ud658\uc728", "\uc740\ud589", "\ub300\ucd9c", "\uc608\uae08", "\uae08\uc735", "\ud22c\uc790"], "finance"],
-    [["\uc815\ucc45", "\uc815\ubd80", "\uad6d\ud68c", "\ubc95\uc548", "\uaddc\uc81c", "\uc138\uae08", "\uc608\uc0b0"], "policy"],
-    [["\ubc18\ub3c4\uccb4", "AI", "\uc778\uacf5\uc9c0\ub2a5", "\ud14c\ud06c", "\uc18c\ud504\ud2b8\uc6e8\uc5b4", "IT", "\ub514\uc9c0\ud138"], "technology"],
-    [["\uc0b0\uc5c5", "\uc81c\uc870", "\uacf5\uc7a5", "\uc0dd\uc0b0", "\uc218\ucd9c", "\uc218\uc785", "\ubb34\uc5ed"], "industry"],
-    [["\ubbf8\uad6d", "\uc911\uad6d", "\uc77c\ubcf8", "\uc720\ub7fd", "\uad6d\uc81c", "\ud574\uc678", "\uae00\ub85c\ubc8c"], "global"],
-    [["\uacbd\uc81c", "GDP", "\ubb3c\uac00", "\uc778\ud50c\ub808\uc774\uc158", "\uc131\uc7a5\ub960", "\uacbd\uae30"], "economy"],
+    [["주식", "코스피", "코스닥", "상장", "종목", "주가", "매수", "매도"], "stock"],
+    [["비트코인", "가상화폐", "암호화폐", "이더리움", "토큰", "블록체인"], "crypto"],
+    [["부동산", "아파트", "전세", "월세", "주택", "매매", "분양"], "realestate"],
+    [["금리", "환율", "은행", "대출", "예금", "금융", "투자"], "finance"],
+    [["정책", "정부", "국회", "법안", "규제", "세금", "예산"], "policy"],
+    [["반도체", "AI", "인공지능", "테크", "소프트웨어", "IT", "디지털"], "technology"],
+    [["산업", "제조", "공장", "생산", "수출", "수입", "무역"], "industry"],
+    [["미국", "중국", "일본", "유럽", "국제", "해외", "글로벌"], "global"],
+    [["경제", "GDP", "물가", "인플레이션", "성장률", "경기"], "economy"],
   ];
+
   for (const [keywords, category] of categoryMap) {
     if (keywords.some((kw) => title.includes(kw))) {
       return category;
@@ -84,19 +74,21 @@ function setCachedImage(articleId: string, url: string): void {
       }
     }
     localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-  } catch { /* silently fail */ }
+  } catch {
+    /* silently fail */
+  }
 }
 
 export function getApiKey(): string {
-  return localStorage.getItem(API_KEY_STORAGE) || "";
+  return 'backend-managed';
 }
 
-export function setApiKey(key: string): void {
-  localStorage.setItem(API_KEY_STORAGE, key);
+export function setApiKey(_key: string): void {
+  // No-op: API key is managed by backend
 }
 
 export function hasApiKey(): boolean {
-  return !!getApiKey();
+  return true; // Always true since backend handles auth
 }
 
 export async function generateSeedreamImage(
@@ -106,44 +98,33 @@ export async function generateSeedreamImage(
 ): Promise<string | null> {
   const cached = getCachedImage(articleId);
   if (cached) return cached;
-  const apiKey = getApiKey();
-  if (!apiKey) return null;
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
   const prompt = generatePrompt(title, category);
+
   try {
-    const response = await fetch(SEEDREAM_API_URL, {
+    const response = await fetch(`${backendUrl}/api/image`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        model: SEEDREAM_MODEL,
-        prompt,
-        size: "2K",
-        watermark: false,
-      }),
+      body: JSON.stringify({ prompt }),
     });
+
     if (!response.ok) {
-      console.error("Seedream API error:", response.status);
+      console.error("Backend image API error:", response.status);
       return null;
     }
-    const data: SeedreamResponse = await response.json();
-    if (data.data && data.data.length > 0) {
-      const imageData = data.data[0];
-      let imageUrl: string | null = null;
-      if (imageData.url) {
-        imageUrl = imageData.url;
-      } else if (imageData.b64_image) {
-        imageUrl = `data:image/png;base64,${imageData.b64_image}`;
-      }
-      if (imageUrl) {
-        setCachedImage(articleId, imageUrl);
-        return imageUrl;
-      }
+
+    const data = await response.json();
+    if (data.imageUrl) {
+      setCachedImage(articleId, data.imageUrl);
+      return data.imageUrl;
     }
+
     return null;
   } catch (error) {
-    console.error("Seedream image generation failed:", error);
+    console.error("Image generation via backend failed:", error);
     return null;
   }
 }
