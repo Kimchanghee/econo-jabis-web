@@ -121,6 +121,6 @@ export const getLanguageAlternates = (
   });
 
   const defaultHref = alternates.find((item) => item.hreflang === DEFAULT_LANGUAGE)?.href || normalized.toString();
-  alternates.push({ hreflang: "x-default", href: defaultHref });
+  alternates.push({ hreflang: "x-default" as any, href: defaultHref });
   return alternates;
 };
