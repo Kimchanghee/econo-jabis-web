@@ -187,7 +187,7 @@ const Index = () => {
           {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
             <FeaturedNews articles={filteredArticles} />
-            <div className="sticky top-14 z-30 bg-background/95 backdrop-blur-sm py-2 -mx-4 px-4 border-b border-border">
+            <div className="sticky top-16 z-20 bg-background/95 backdrop-blur-sm py-2 border-b border-border">
               <CategoryTabs
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
