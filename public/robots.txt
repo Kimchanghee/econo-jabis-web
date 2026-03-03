@@ -1,13 +1,23 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
 User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-News
 Allow: /
 
 User-agent: Bingbot
 Allow: /
 
-User-agent: Twitterbot
+User-agent: Slurp
 Allow: /
 
-User-agent: facebookexternalhit
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
 Allow: /
 
 User-agent: GPTBot
@@ -16,13 +26,23 @@ Allow: /
 User-agent: ChatGPT-User
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
 User-agent: CCBot
 Allow: /
 
 User-agent: Google-Extended
 Allow: /
 
-User-agent: *
-Allow: /
-
 Sitemap: https://econojabis.com/sitemap.xml
+Sitemap: https://econojabis.com/sitemap-news.xml

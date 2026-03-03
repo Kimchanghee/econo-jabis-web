@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import SEOHead from "../components/SEOHead";
+import { useLanguage } from "../hooks/useLanguage";
+import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
 
 const Contact = () => {
+  const { language } = useLanguage();
+  const canonicalUrl = buildPageUrl("/contact", { lang: language === DEFAULT_LANGUAGE ? undefined : language });
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
@@ -12,6 +17,13 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEOHead
+        title="Contact EconoJabis"
+        description="Contact the EconoJabis editorial and support team."
+        canonicalUrl={canonicalUrl}
+        language={language}
+        keywords={["contact", "newsroom support", "editorial feedback"]}
+      />
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <Link to="/" className="text-blue-600 hover:underline">← 홈으로 돌아가기</Link>

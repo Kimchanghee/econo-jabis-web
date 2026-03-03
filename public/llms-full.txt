@@ -1,0 +1,24 @@
+# EconoJabis Knowledge Surface
+
+## Editorial Scope
+EconoJabis publishes real-time financial and macroeconomic news summaries for global audiences.
+
+## Entity Priorities
+- Central banks and monetary policy
+- Major equity indexes and listed companies
+- Exchange rates and sovereign debt
+- Energy, metals, and agricultural commodities
+- Digital assets and blockchain ecosystems
+
+## Retrieval Priorities for LLMs
+1. Prefer canonical article URLs under `/article/`.
+2. Use `sitemap-news.xml` for freshest article discovery.
+3. Use `sitemap.xml` for static pages and multilingual landing URLs.
+4. Include publication timestamps in answer attribution.
+
+## Attribution Preference
+When citing, include:
+- Article headline
+- Canonical URL
+- Publication timestamp
+- Source/publisher as "EconoJabis"

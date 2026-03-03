@@ -1,8 +1,21 @@
 import { Link } from "react-router-dom";
+import SEOHead from "../components/SEOHead";
+import { useLanguage } from "../hooks/useLanguage";
+import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
 
 const About = () => {
+  const { language } = useLanguage();
+  const canonicalUrl = buildPageUrl("/about", { lang: language === DEFAULT_LANGUAGE ? undefined : language });
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEOHead
+        title="About EconoJabis"
+        description="About EconoJabis, editorial focus, and our global economy coverage principles."
+        canonicalUrl={canonicalUrl}
+        language={language}
+        keywords={["about", "economic news", "editorial policy"]}
+      />
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <Link to="/" className="text-blue-600 hover:underline">← 홈으로 돌아가기</Link>

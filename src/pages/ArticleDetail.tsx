@@ -3,7 +3,9 @@ import { ArrowLeft, Clock, Share2, Link, Twitter, ExternalLink, ChevronRight, Bo
 import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import SEOHead from "../components/SEOHead";
-import type { NewsArticle } from "../hooks/useTheNewsApi";
+import { FALLBACK_ARTICLES, type NewsArticle } from "../hooks/useTheNewsApi";
+import { useLanguage } from "../hooks/useLanguage";
+import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
 
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
 
@@ -13,19 +15,31 @@ export const saveArticlesToStore = (articles: NewsArticle[]) => {
 
 const getArticleFromStore = (id: string): NewsArticle | null => {
   try {
+    const decoded = decodeURIComponent(id);
     const raw = localStorage.getItem(ARTICLE_STORE_KEY);
-    if (!raw) return null;
+    if (!raw) {
+      return FALLBACK_ARTICLES.find((a) => a.id === decoded) || null;
+    }
     const all: NewsArticle[] = JSON.parse(raw);
-    return all.find((a) => a.id === decodeURIComponent(id)) || null;
-  } catch { return null; }
+    return all.find((a) => a.id === decoded) || FALLBACK_ARTICLES.find((a) => a.id === decoded) || null;
+  } catch {
+    return null;
+  }
 };
 
 const getAllArticlesFromStore = (): NewsArticle[] => {
   try {
     const raw = localStorage.getItem(ARTICLE_STORE_KEY);
-    if (!raw) return [];
-    return JSON.parse(raw);
-  } catch { return []; }
+    if (!raw) return FALLBACK_ARTICLES;
+    const saved: NewsArticle[] = JSON.parse(raw);
+    const byId = new Map(saved.map((article) => [article.id, article]));
+    FALLBACK_ARTICLES.forEach((article) => {
+      if (!byId.has(article.id)) byId.set(article.id, article);
+    });
+    return Array.from(byId.values());
+  } catch {
+    return FALLBACK_ARTICLES;
+  }
 };
 
 const fmtDate = (s: string) => {
@@ -135,6 +149,7 @@ const RelatedCard = ({ article, onClick }: { article: NewsArticle; onClick: () =
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { language } = useLanguage();
   const article = id ? getArticleFromStore(id) : null;
   const [imageUrl, setImageUrl] = useState("");
   const [imgError, setImgError] = useState(false);
@@ -170,8 +185,18 @@ const ArticleDetail = () => {
   };
 
   if (!article) {
+    const fallbackCanonical = buildPageUrl(`/article/${encodeURIComponent(id || "unknown")}`, {
+      lang: language === DEFAULT_LANGUAGE ? undefined : language,
+    });
     return (
       <div className="min-h-screen bg-background">
+        <SEOHead
+          title="Article Not Found"
+          description="The requested article could not be found."
+          canonicalUrl={fallbackCanonical}
+          language={language}
+          noindex
+        />
         <Header searchQuery="" onSearchChange={() => {}} />
         <div className="mx-auto max-w-3xl px-4 py-20 text-center">
           <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -188,14 +213,36 @@ const ArticleDetail = () => {
   const all = getAllArticlesFromStore();
   const related = all.filter(a => a.id !== article.id && a.category === article.category).slice(0, 6);
   const more = all.filter(a => a.id !== article.id && a.category !== article.category).slice(0, 4);
+  const canonicalUrl = buildPageUrl(`/article/${encodeURIComponent(article.id)}`, {
+    lang: language === DEFAULT_LANGUAGE ? undefined : language,
+  });
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
         title={article.title}
         description={(article.description || (article as any).summary || "").slice(0, 160)}
+        canonicalUrl={canonicalUrl}
+        language={language}
         ogImage={imageUrl}
-        article={{ title: article.title, description: article.description || "", publishedAt: article.publishedAt || new Date().toISOString(), category: article.category || "", source: "EconoJabis", image: imageUrl }}
+        keywords={[
+          ...(article.keywords || "")
+            .split(",")
+            .map((keyword) => keyword.trim())
+            .filter(Boolean),
+          article.category,
+          article.source,
+        ]}
+        article={{
+          title: article.title,
+          description: article.description || "",
+          publishedAt: article.publishedAt || new Date().toISOString(),
+          modifiedAt: article.publishedAt || new Date().toISOString(),
+          category: article.category || "",
+          source: article.source || "EconoJabis",
+          author: article.source || "EconoJabis",
+          image: imageUrl,
+        }}
       />
       <div className="fixed top-0 left-0 z-50 h-0.5 bg-primary/20 w-full pointer-events-none">
         <div className="h-full bg-primary transition-all duration-100" style={{ width: readPct + "%" }} />

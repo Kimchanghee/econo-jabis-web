@@ -13,6 +13,12 @@ const langMap: Record<Language, string> = {
   es: "es",
   ja: "ja",
   zh: "zh",
+  fr: "fr",
+  de: "de",
+  pt: "pt",
+  id: "id",
+  ar: "ar",
+  hi: "hi",
 };
 
 // Map categories to search keywords for TheNewsAPI

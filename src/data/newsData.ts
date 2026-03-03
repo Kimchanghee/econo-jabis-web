@@ -7,7 +7,7 @@
 export type { NewsArticle } from '../hooks/useTheNewsApi';
 
 export type Category = "전체" | "주식" | "부동산" | "환율" | "암호화폐";
-export type Language = "ko" | "en" | "es" | "ja" | "zh";
+export type Language = "ko" | "en" | "es" | "ja" | "zh" | "fr" | "de" | "pt" | "id" | "ar" | "hi";
 
 export interface MarketData {
   symbol: string;
@@ -33,6 +33,12 @@ export const languages: { code: Language; label: string; flag: string }[] = [
   { code: "es", label: "Español", flag: "es" },
   { code: "ja", label: "日本語", flag: "jp" },
   { code: "zh", label: "中文", flag: "cn" },
+  { code: "fr", label: "Français", flag: "fr" },
+  { code: "de", label: "Deutsch", flag: "de" },
+  { code: "pt", label: "Português", flag: "br" },
+  { code: "id", label: "Bahasa Indonesia", flag: "id" },
+  { code: "ar", label: "العربية", flag: "sa" },
+  { code: "hi", label: "हिन्दी", flag: "in" },
 ];
 
 // 기사 이미지 fallback 헬퍼

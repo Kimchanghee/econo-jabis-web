@@ -35,7 +35,7 @@ export interface NewsArticle {
 // 실제 뉴스 기사 30개 (한국경제 2026.03.04 기준 실제 기사)
 // ============================================================
 const now = new Date('2026-03-04T01:00:00+09:00');
-const FALLBACK_ARTICLES: NewsArticle[] = [
+export const FALLBACK_ARTICLES: NewsArticle[] = [
   {
     id: 'real_001', uuid: 'real_001',
     title: '코인도 주식처럼 호가창 촘촘하게…"큰손"이 거래 체결 돕는다',

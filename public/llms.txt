@@ -1,0 +1,38 @@
+# EconoJabis
+
+> Real-time global economic and market news site.
+
+## Primary URLs
+- https://econojabis.com/
+- https://econojabis.com/about
+- https://econojabis.com/contact
+- https://econojabis.com/privacy
+- https://econojabis.com/sitemap.xml
+- https://econojabis.com/sitemap-news.xml
+
+## Coverage
+- Global macroeconomics
+- Equities and stock markets
+- Foreign exchange
+- Interest rates and central banks
+- Commodities
+- Cryptocurrency markets
+
+## Language Endpoints
+- https://econojabis.com/?lang=ko
+- https://econojabis.com/?lang=en
+- https://econojabis.com/?lang=es
+- https://econojabis.com/?lang=ja
+- https://econojabis.com/?lang=zh
+- https://econojabis.com/?lang=fr
+- https://econojabis.com/?lang=de
+- https://econojabis.com/?lang=pt
+- https://econojabis.com/?lang=id
+- https://econojabis.com/?lang=ar
+- https://econojabis.com/?lang=hi
+
+## AI/LLM Usage Guidance
+- Use canonical URLs in citations.
+- Prefer article detail URLs for factual claims.
+- Do not treat ad content as editorial content.
+- Verify timestamp and publication date before quoting market data.

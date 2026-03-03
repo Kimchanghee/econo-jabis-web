@@ -15,6 +15,12 @@ const LANGUAGES: LangOption[] = [
   { code: 'es', name: 'Spanish', flag: 'es', nativeName: 'Espanol' },
   { code: 'ja', name: 'Japanese', flag: 'jp', nativeName: 'Japanese' },
   { code: 'zh', name: 'Chinese', flag: 'cn', nativeName: 'Chinese' },
+  { code: 'fr', name: 'French', flag: 'fr', nativeName: 'Francais' },
+  { code: 'de', name: 'German', flag: 'de', nativeName: 'Deutsch' },
+  { code: 'pt', name: 'Portuguese', flag: 'br', nativeName: 'Portugues' },
+  { code: 'id', name: 'Indonesian', flag: 'id', nativeName: 'Indonesia' },
+  { code: 'ar', name: 'Arabic', flag: 'sa', nativeName: 'Arabic' },
+  { code: 'hi', name: 'Hindi', flag: 'in', nativeName: 'Hindi' },
 ];
 
 const flagEmoji: Record<string, string> = {
@@ -23,6 +29,12 @@ const flagEmoji: Record<string, string> = {
   es: 'ES',
   jp: 'JP',
   cn: 'ZH',
+  fr: 'FR',
+  de: 'DE',
+  br: 'PT',
+  id: 'ID',
+  sa: 'AR',
+  in: 'HI',
 };
 
 const LanguageSwitcher = () => {
@@ -51,7 +63,7 @@ const LanguageSwitcher = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1 w-36 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+        <div className="absolute right-0 mt-1 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-72 overflow-auto">
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}

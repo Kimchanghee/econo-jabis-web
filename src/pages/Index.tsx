@@ -1,5 +1,6 @@
 // EconoJabis - Main page
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
 import FeaturedNews from "../components/FeaturedNews";
 import NewsList from "../components/NewsList";
@@ -12,6 +13,7 @@ import SEOHead from "../components/SEOHead";
 import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
+import { DEFAULT_LANGUAGE, buildPageUrl, isSupportedLanguage } from "../lib/seo";
 
 // --- Adsterra Ad Components (srcdoc iframe) ---
 const Ad728x90 = ({ uid }: { uid: string }) => {
@@ -82,11 +84,54 @@ const AdNative = () => {
 };
 
 const Index = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const { language, t } = useLanguage();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") || "");
+  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") || "all");
+  const { language, setLanguage, t } = useLanguage();
   const { articles, isLoading, error, lastFetched, refresh, extractTrendingKeywords } = useTheNewsApi(language);
   const trendingKeywords = useMemo(() => extractTrendingKeywords(), [articles, extractTrendingKeywords]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const nextQuery = params.get("q") || "";
+    const nextCategory = params.get("category") || "all";
+    const nextLang = params.get("lang");
+
+    if (nextQuery !== searchQuery) setSearchQuery(nextQuery);
+    if (nextCategory !== selectedCategory) setSelectedCategory(nextCategory);
+    if (nextLang && isSupportedLanguage(nextLang) && nextLang !== language) {
+      setLanguage(nextLang);
+    }
+  }, [language, location.search, searchQuery, selectedCategory, setLanguage]);
+
+  useEffect(() => {
+    const current = new URLSearchParams(location.search);
+    const next = new URLSearchParams(location.search);
+    const trimmedQuery = searchQuery.trim();
+
+    if (trimmedQuery) {
+      next.set("q", trimmedQuery);
+    } else {
+      next.delete("q");
+    }
+
+    if (selectedCategory !== "all") {
+      next.set("category", selectedCategory);
+    } else {
+      next.delete("category");
+    }
+
+    if (language === DEFAULT_LANGUAGE) {
+      next.delete("lang");
+    } else {
+      next.set("lang", language);
+    }
+
+    if (next.toString() !== current.toString()) {
+      setSearchParams(next, { replace: true });
+    }
+  }, [language, location.search, searchQuery, selectedCategory, setSearchParams]);
 
   useEffect(() => {
     if (articles.length > 0) saveArticlesToStore(articles);
@@ -108,9 +153,29 @@ const Index = () => {
     });
   }, [articles, searchQuery, selectedCategory]);
 
+  const seoCanonicalUrl = useMemo(() => {
+    const langParam = language === DEFAULT_LANGUAGE ? undefined : language;
+    const categoryParam = selectedCategory === "all" ? undefined : selectedCategory;
+    return buildPageUrl("/", { lang: langParam, category: categoryParam });
+  }, [language, selectedCategory]);
+
+  const seoDescription = useMemo(() => {
+    if (searchQuery.trim()) {
+      return `Search results for "${searchQuery}" on ${t("siteName")} covering global markets and economic developments.`;
+    }
+    return "Live global economic coverage with market-moving headlines, rate decisions, stocks, forex, and crypto updates.";
+  }, [searchQuery, t]);
+
   return (
     <div className="min-h-screen bg-background">
-      <SEOHead />
+      <SEOHead
+        title="Global Economy & Market News"
+        description={seoDescription}
+        canonicalUrl={seoCanonicalUrl}
+        language={language}
+        keywords={trendingKeywords.slice(0, 10)}
+        noindex={searchQuery.trim().length > 0}
+      />
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onCategoryChange={setSelectedCategory} />
       {/* Header Banner Ad 728x90 */}
       <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2" style={{ minHeight: 94 }}>
