@@ -162,6 +162,7 @@ const ArticleDetail = () => {
   const [copied, setCopied] = useState(false);
   const [readPct, setReadPct] = useState(0);
   const articleRef = useRef<HTMLElement>(null);
+  const imgWrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -171,7 +172,18 @@ const ArticleDetail = () => {
       setReadPct(Math.min(100, Math.round((scrolled / el.offsetHeight) * 100)));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => windo
+
+  useEffect(() => {
+    const el = imgWrapperRef.current;
+    if (!el) return;
+    const handler = (e: WheelEvent) => {
+      e.preventDefault();
+      window.scrollBy(0, e.deltaY);
+    };
+    el.addEventListener("wheel", handler, { passive: false });
+    return () => el.removeEventListener("wheel", handler);
+  }, []);w.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -290,7 +302,7 @@ const ArticleDetail = () => {
             </div>
 
             {imageUrl && (
-              <div className="mb-5 overflow-hidden rounded-xl bg-muted" onWheel={(e) => { e.stopPropagation(); window.scrollBy(0, e.deltaY); }}>
+              <div ref={imgWrapperRef} className="mb-5 overflow-hidden rounded-xl bg-muted">
                 <img src={imageUrl} alt={article.title} className="w-full object-cover max-h-[480px] pointer-events-none"
                   onError={() => { if (!imgError) { setImgError(true); setImageUrl("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop"); }}} />
               </div>
