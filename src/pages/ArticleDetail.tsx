@@ -291,7 +291,7 @@ const ArticleDetail = () => {
 
             {imageUrl && (
               <div className="mb-5 overflow-hidden rounded-xl bg-muted" onWheel={(e) => { e.stopPropagation(); window.scrollBy(0, e.deltaY); }}>
-                <img src={imageUrl} alt={article.title} className="w-full object-cover max-h-[480px]"
+                <img src={imageUrl} alt={article.title} className="w-full object-cover max-h-[480px] pointer-events-none"
                   onError={() => { if (!imgError) { setImgError(true); setImageUrl("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop"); }}} />
               </div>
             )}
