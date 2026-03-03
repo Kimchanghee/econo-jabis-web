@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Clock, Share2, Link, Twitter, ExternalLink, ChevronRight, BookOpen, Tag } from "lucide-react";
+import { ArrowLeft, Clock, Share2, Link, Twitter, ChevronRight, BookOpen, Tag } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import SEOHead from "../components/SEOHead";
@@ -111,7 +111,7 @@ const buildBody = (article: NewsArticle): string[] => {
     if (parts.length >= 3) return parts;
   }
   const raw = [article.description || "", (article as any).summary || ""].join(" ").trim();
-  if (!raw) return ["Article content unavailable. Please read the original source."];
+  if (!raw) return ["기사 내용을 불러오는 중입니다."];
   const clean = raw.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
   const sents = clean.match(/[^.!?]+[.!?]*/g) || [clean];
   const out: string[] = [];
@@ -120,7 +120,7 @@ const buildBody = (article: NewsArticle): string[] => {
     if (p.length > 20) out.push(p);
   }
   if (out.join("").length < 200) {
-    return ["기사 내용을 불러오는 중입니다. 원문 링크를 확인해 주세요."];
+    return ["기사 내용을 불러오는 중입니다."];
   }
   return out;
 };
@@ -265,7 +265,6 @@ const ArticleDetail = () => {
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-primary text-primary-foreground uppercase tracking-wide">{article.category}</span>
                 {article.isBreaking && <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-red-500 text-white animate-pulse">속보</span>}
-                <span className="text-xs text-muted-foreground font-medium">{article.source}</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight text-foreground mb-3">{article.title}</h1>
               <div className="flex items-center justify-between flex-wrap gap-2 text-sm text-muted-foreground">
@@ -280,11 +279,6 @@ const ArticleDetail = () => {
                   <button onClick={copyLink} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-muted-foreground text-xs font-semibold hover:bg-accent transition-colors border border-border">
                     <Link className="h-3.5 w-3.5" /> {copied ? "복사됨!" : "링크복사"}
                   </button>
-                  {article.url && (
-                    <a href={article.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-green-600 text-white text-xs font-semibold hover:bg-green-700 transition-colors">
-                      <ExternalLink className="h-3.5 w-3.5" /> 원문보기
-                    </a>
-                  )}
                 </div>
               </div>
             </div>
@@ -343,11 +337,6 @@ const ArticleDetail = () => {
                   <ArrowLeft className="h-4 w-4" /> 목록으로
                 </button>
                 <div className="flex gap-2">
-                  {article.url && (
-                    <a href={article.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 transition-colors">
-                      <ExternalLink className="h-4 w-4" /> 원문읽기
-                    </a>
-                  )}
                   <button onClick={copyLink} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-muted text-sm font-semibold hover:bg-accent transition-colors border border-border">
                     <Share2 className="h-4 w-4" /> 공유
                   </button>
