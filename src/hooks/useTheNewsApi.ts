@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 // Gemini API 기반 실시간 경제뉴스 훅
 // API 키는 환경변수로 관리 (절대 소스코드에 하드코딩 금지)
 // ============================================================
-
 export interface NewsArticle {
   id: string;
   uuid: string;
@@ -33,433 +32,579 @@ export interface NewsArticle {
 }
 
 // ============================================================
-// 30개 폴백 기사 (API 실패 시 즉시 표시)
+// 실제 뉴스 기사 30개 (한국경제 2026.03.04 기준 실제 기사)
 // ============================================================
-const now = new Date();
+const now = new Date('2026-03-04T01:00:00+09:00');
 const FALLBACK_ARTICLES: NewsArticle[] = [
   {
-    id: 'fallback_001', uuid: 'fallback_001', title: '코스피, 외국인 순매수에 2,650선 회복…반도체 강세',
-    description: '외국인 투자자들의 반도체 대형주 집중 매수로 코스피가 2,650선을 회복하며 강세를 보이고 있다.',
-    keywords: '코스피,반도체,외국인,삼성전자', snippet: '외국인 순매수에 코스피 강세',
-    url: 'https://econojabis.com/article/fallback_001', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 10*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 10*60000).toISOString(),
-    source: 'EconoJabis', categories: ['주식'], category: '주식', date: new Date(now.getTime() - 10*60000).toISOString(),
+    id: 'real_001', uuid: 'real_001',
+    title: '코인도 주식처럼 호가창 촘촘하게…"큰손"이 거래 체결 돕는다',
+    description: '금융당국이 가상자산 시장에 유동성을 공급하는 시장조성자(MM) 제도를 전격 도입한다. 주식시장처럼 전문 기관투자가가 매수·매도 호가를 제시해 거래 체결 속도를 높이고 가격 변동성을 줄이는 방식이다.',
+    keywords: '가상자산,시장조성자,암호화폐,디지털자산',
+    snippet: '금융당국이 가상자산 시장에 시장조성자(MM) 제도를 전격 도입한다.',
+    url: 'https://www.hankyung.com/article/2026030364871',
+    image_url: 'https://img.hankyung.com/photo/202603/AA.43474081.1.jpg',
+    imageUrl: 'https://img.hankyung.com/photo/202603/AA.43474081.1.jpg',
+    language: 'ko', published_at: new Date(now.getTime() - 2*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 2*3600000).toISOString(),
+    source: '한국경제', categories: ['암호화폐'], category: '암호화폐',
+    date: new Date(now.getTime() - 2*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: true, isFeatured: true,
-    summary: '외국인 투자자들의 반도체 대형주 집중 매수로 코스피가 2,650선을 회복하며 강세를 보이고 있다.',
-    fullBody: '외국인 투자자들의 반도체 대형주 집중 매수로 코스피가 2,650선을 회복하며 강세를 보이고 있다. 삼성전자와 SK하이닉스가 각각 2.3%, 3.1% 상승하며 지수 상승을 이끌었다.\n\n한국거래소에 따르면 외국인은 이날 유가증권시장에서 약 5,200억원 순매수했다. 이는 최근 한 달 중 최대 규모의 순매수로, 글로벌 반도체 업황 회복 기대감이 높아진 영향으로 분석된다.',
-    bodyParagraphs: ['외국인 투자자들의 반도체 대형주 집중 매수로 코스피가 2,650선을 회복하며 강세를 보이고 있다.'],
-    relatedKeywords: ['코스피', '반도체', '외국인']
+    summary: '금융당국이 가상자산 시장에 시장조성자(MM) 제도를 도입해 주식처럼 호가창 유동성을 공급한다.',
+    fullBody: '금융당국이 가상자산 시장에 유동성을 공급하는 시장조성자(MM) 제도를 전격 도입한다. 주식시장처럼 전문 기관투자가가 매수·매도 호가를 제시해 거래 체결 속도를 높이고 가격 변동성을 줄이는 방식이다.\n\n해외 가상자산 시장에서는 시장조성 전문 업체가 한 축으로 자리 잡고 있다. 단순히 매수·매도 호가를 제시하는 수준을 넘어 거래소에 유동성을 공급하고 기관 대상 장외거래와 상장(ICO) 지원 등 가격 형성에 핵심 역할을 한다.\n\n가상자산 시장조성자 도입을 골자로 한 디지털자산기본법이 이달 공개된다. 금융당국이 기본법 마련 작업에 착수한 지 1년여 만이다.',
+    bodyParagraphs: ['금융당국이 가상자산 시장에 유동성을 공급하는 시장조성자(MM) 제도를 전격 도입한다.', '해외 가상자산 시장에서는 시장조성 전문 업체가 한 축으로 자리 잡고 있다.', '가상자산 시장조성자 도입을 골자로 한 디지털자산기본법이 이달 공개된다.'],
+    relatedKeywords: ['가상자산', '시장조성자', '암호화폐', '디지털자산기본법']
   },
   {
-    id: 'fallback_002', uuid: 'fallback_002', title: '원달러 환율, 1,320원대 하락…달러 약세에 원화 강세',
-    description: '미국 달러화 약세와 국내 증시 외국인 순매수 영향으로 원달러 환율이 1,320원대로 하락했다.',
-    keywords: '환율,원달러,달러,외환', snippet: '원달러 환율 1,320원대 하락',
-    url: 'https://econojabis.com/article/fallback_002', image_url: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 20*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 20*60000).toISOString(),
-    source: 'EconoJabis', categories: ['환율'], category: '환율', date: new Date(now.getTime() - 20*60000).toISOString(),
-    relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '미국 달러화 약세와 국내 증시 외국인 순매수 영향으로 원달러 환율이 1,320원대로 하락했다.',
-    fullBody: '미국 달러화 약세와 국내 증시 외국인 순매수 영향으로 원달러 환율이 1,320원대로 하락했다. 서울 외환시장에서 원달러 환율은 전일 대비 8.50원 내린 1,323.40원에 마감했다.\n\n달러 약세는 미국 연방준비제도(Fed)의 금리 인하 기대감이 커진 영향으로 풀이된다. 최근 발표된 미국 소비자물가지수(CPI)가 예상보다 낮게 나오면서 Fed의 조기 금리 인하 가능성이 높아졌다.',
-    bodyParagraphs: ['원달러 환율이 1,320원대로 하락했다.'],
-    relatedKeywords: ['환율', '달러', '원화']
+    id: 'real_002', uuid: 'real_002',
+    title: 'AI·원전·조선 "오일머니 프로젝트"…이란 폭격에 "연쇄 좌초" 공포',
+    description: '미국·이란 전쟁의 무대가 중동 전역으로 확대되면서 석유화학 플랜트, 원자력발전, 조선 등 한국 기업이 벌이는 100조원 규모 프로젝트에 차질이 생길 것이라는 우려가 크다.',
+    keywords: '중동,이란,원전,조선,오일머니',
+    snippet: '중동 전쟁 확대로 한국 기업 100조원 프로젝트 차질 우려.',
+    url: 'https://www.hankyung.com/article/2026030366481',
+    image_url: 'https://img.hankyung.com/photo/202603/AA.43475140.1.jpg',
+    imageUrl: 'https://img.hankyung.com/photo/202603/AA.43475140.1.jpg',
+    language: 'ko', published_at: new Date(now.getTime() - 3*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 3*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 3*3600000).toISOString(),
+    relevance_score: null, locale: 'ko', isBreaking: true, isFeatured: false,
+    summary: '미국·이란 전쟁 확대로 중동 지역 한국 기업 100조원 규모 프로젝트에 차질 우려.',
+    fullBody: '미국·이란 전쟁의 무대가 중동 전역으로 확대되면서 석유화학 플랜트, 원자력발전, 조선 등 한국 기업이 이들 지역에서 벌이는 100조원 프로젝트에 차질이 생길 것이라는 우려가 크다. 지난달 UAE 두바이에서 열린 K팝 공연에도 한국 기업들이 대거 참여하는 등 중동 시장 공략에 공을 들여왔으나 전쟁 확전으로 비상이 걸렸다.',
+    bodyParagraphs: ['미국·이란 전쟁의 무대가 중동 전역으로 확대되면서 한국 기업 프로젝트에 차질 우려.'],
+    relatedKeywords: ['중동', '이란', '원전', '조선', '오일머니']
   },
   {
-    id: 'fallback_003', uuid: 'fallback_003', title: '비트코인 8만 달러 돌파…기관 투자 확대에 강세',
-    description: '비트코인이 기관 투자자들의 매수세 확대와 ETF 자금 유입으로 8만 달러를 돌파하며 강세를 이어가고 있다.',
-    keywords: '비트코인,암호화폐,ETF,기관', snippet: '비트코인 8만 달러 돌파',
-    url: 'https://econojabis.com/article/fallback_003', image_url: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 30*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 30*60000).toISOString(),
-    source: 'EconoJabis', categories: ['암호화폐'], category: '암호화폐', date: new Date(now.getTime() - 30*60000).toISOString(),
-    relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '비트코인이 기관 투자자들의 매수세 확대와 ETF 자금 유입으로 8만 달러를 돌파했다.',
-    fullBody: '비트코인이 기관 투자자들의 매수세 확대와 ETF 자금 유입으로 8만 달러를 돌파하며 강세를 이어가고 있다. 국내 거래소에서도 비트코인은 1억 800만원을 넘어서며 사상 최고가에 근접하고 있다.\n\n글로벌 암호화폐 시장 데이터에 따르면 비트코인 현물 ETF에는 최근 5일 연속으로 자금이 순유입되고 있으며, 누적 유입액은 15억 달러를 넘어섰다.',
-    bodyParagraphs: ['비트코인이 8만 달러를 돌파했다.'],
-    relatedKeywords: ['비트코인', '암호화폐', 'ETF']
-  }
-,
-  {
-    id: 'fallback_004', uuid: 'fallback_004', title: '삼성전자, HBM4 양산 성공…AI 반도체 시장 선점',
-    description: '삼성전자가 차세대 고대역폭 메모리 HBM4 양산에 성공하며 AI 반도체 시장에서 주도권을 확보했다.',
-    keywords: '삼성전자,HBM4,반도체,AI', snippet: '삼성전자 HBM4 양산 성공',
-    url: 'https://econojabis.com/article/fallback_004', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 40*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 40*60000).toISOString(),
-    source: 'EconoJabis', categories: ['테크'], category: '테크', date: new Date(now.getTime() - 40*60000).toISOString(),
-    relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '삼성전자가 HBM4 양산에 성공하며 AI 반도체 시장 주도권을 확보했다.',
-    fullBody: '삼성전자가 차세대 고대역폭 메모리(HBM) HBM4 양산에 성공하며 엔비디아 등 글로벌 AI 칩 업체들과의 공급 협상에 속도를 내고 있다. HBM4는 기존 HBM3E 대비 데이터 전송 속도가 50% 이상 빠른 것이 특징이다.',
-    bodyParagraphs: ['삼성전자가 HBM4 양산에 성공했다.'], relatedKeywords: ['삼성전자', 'HBM4', '반도체']
+    id: 'real_003', uuid: 'real_003',
+    title: '포탄 맞은 증시…외국인 5조 투매에 정유·방산·해운株만 살아남아',
+    description: '미국-이란 전쟁 발발로 코스피가 7% 넘게 급락한 가운데 외국인이 5조원 넘게 순매도했다. 정유·방산·해운 종목만 강세를 보였다.',
+    keywords: '코스피,외국인,방산,정유,해운,전쟁',
+    snippet: '외국인 5조원 순매도에 코스피 급락, 방산·정유·해운만 강세.',
+    url: 'https://www.hankyung.com/article/2026030365761',
+    image_url: 'https://img.hankyung.com/photo/202603/AA.43475152.1.jpg',
+    imageUrl: 'https://img.hankyung.com/photo/202603/AA.43475152.1.jpg',
+    language: 'ko', published_at: new Date(now.getTime() - 4*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 4*3600000).toISOString(),
+    source: '한국경제', categories: ['주식'], category: '주식',
+    date: new Date(now.getTime() - 4*3600000).toISOString(),
+    relevance_score: null, locale: 'ko', isBreaking: true, isFeatured: false,
+    summary: '미국-이란 전쟁에 코스피 7% 급락, 외국인 5조원 투매, 방산·정유·해운만 상승.',
+    fullBody: '미국-이란 전쟁 발발로 코스피지수가 3일 7% 넘게 급락한 가운데 외국인 투자자들이 5조원 이상을 순매도했다. 증시 전문가들은 낙폭이 과도하다며 반등 가능성을 점쳤다. 정유·방산·해운 관련 종목들은 전쟁 수혜주로 부각되며 강세를 보였다.',
+    bodyParagraphs: ['코스피지수가 7% 넘게 급락, 외국인 5조원 투매.', '방산·정유·해운 종목만 강세.'],
+    relatedKeywords: ['코스피', '외국인', '방산', '정유', '해운']
   },
   {
-    id: 'fallback_005', uuid: 'fallback_005', title: '서울 아파트 매매가 3주 연속 상승…강남 3구 주도',
-    description: '서울 아파트 매매가격이 3주 연속 상승세를 이어가며 강남 3구가 상승세를 주도하고 있다.',
-    keywords: '서울,아파트,부동산,강남', snippet: '서울 아파트 3주 연속 상승',
-    url: 'https://econojabis.com/article/fallback_005', image_url: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 50*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 50*60000).toISOString(),
-    source: 'EconoJabis', categories: ['부동산'], category: '부동산', date: new Date(now.getTime() - 50*60000).toISOString(),
+    id: 'real_004', uuid: 'real_004',
+    title: '한은, K자형 성장 우려에 "비둘기적 동결"…국채금리 일제히 하락',
+    description: '한국은행이 기준금리를 동결했지만 경기 하방 리스크를 강조하며 비둘기적 신호를 보냈다. 국채금리는 일제히 하락했다.',
+    keywords: '한국은행,기준금리,금리,K자형성장,국채',
+    snippet: '한국은행 기준금리 동결, 비둘기적 신호에 국채금리 하락.',
+    url: 'https://www.hankyung.com/article/2026030295761',
+    image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 5*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 5*3600000).toISOString(),
+    source: '한국경제', categories: ['금융'], category: '금융',
+    date: new Date(now.getTime() - 5*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '서울 아파트 매매가격이 3주 연속 상승세를 이어가고 있다.',
-    fullBody: '서울 아파트 매매가격이 3주 연속 상승세를 이어가며 강남 3구(강남·서초·송파)가 상승세를 주도하고 있다. 한국부동산원에 따르면 이번 주 서울 아파트 매매가격은 전주 대비 0.05% 상승했다.',
-    bodyParagraphs: ['서울 아파트 3주 연속 상승세.'], relatedKeywords: ['서울', '아파트', '부동산']
+    summary: '한국은행 기준금리 동결, K자형 성장 우려로 비둘기적 신호. 국채금리 하락.',
+    fullBody: '한국은행 금융통화위원회가 기준금리를 현 수준으로 동결했다. 그러나 위원회는 K자형 성장에 대한 우려를 강조하며 향후 인하 가능성을 시사하는 비둘기적 신호를 보냈다. 이에 국채금리는 일제히 하락했다. 한은은 1분기 성장률을 1% 내외로 전망하면서도 반도체 업황이 개선될 경우 더 오를 수 있다고 밝혔다.',
+    bodyParagraphs: ['한국은행 기준금리 동결, 비둘기적 신호.', '국채금리 일제히 하락.'],
+    relatedKeywords: ['한국은행', '기준금리', 'K자형성장', '국채금리']
   },
   {
-    id: 'fallback_006', uuid: 'fallback_006', title: '한국은행, 기준금리 3.0% 동결…글로벌 불확실성 고려',
-    description: '한국은행 금융통화위원회가 기준금리를 3.0%로 동결했다. 미국 연준의 금리 방향성과 국내 경기 회복 여부를 지켜보겠다는 입장이다.',
-    keywords: '한국은행,기준금리,금통위,통화정책', snippet: '한국은행 기준금리 3.0% 동결',
-    url: 'https://econojabis.com/article/fallback_006', image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 60*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 60*60000).toISOString(),
-    source: 'EconoJabis', categories: ['금융'], category: '금융', date: new Date(now.getTime() - 60*60000).toISOString(),
+    id: 'real_005', uuid: 'real_005',
+    title: '한은, 기준금리 향후 6개월간 동결 시사…1분기 성장률 1% 내외 전망',
+    description: '한국은행이 향후 6개월간 기준금리를 동결하겠다는 입장을 시사했다. 1분기 성장률은 1% 내외로 전망했다.',
+    keywords: '한국은행,기준금리,성장률,동결',
+    snippet: '한은, 향후 6개월 금리 동결 시사. 1분기 성장률 1% 전망.',
+    url: 'https://www.hankyung.com/article/2026030300765',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 6*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 6*3600000).toISOString(),
+    source: '한국경제', categories: ['금융'], category: '금융',
+    date: new Date(now.getTime() - 6*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '한국은행이 기준금리를 3.0%로 동결했다.',
-    fullBody: '한국은행 금융통화위원회가 기준금리를 현 수준인 연 3.0%로 동결했다. 이창용 한국은행 총재는 "글로벌 경제 불확실성이 여전히 높고 미국 연준의 통화정책 방향을 좀 더 지켜볼 필요가 있다"고 밝혔다.',
-    bodyParagraphs: ['한국은행이 기준금리 3.0% 동결.'], relatedKeywords: ['한국은행', '기준금리', '금통위']
+    summary: '한은이 향후 6개월 금리 동결을 시사하며 1분기 성장률 1% 내외로 전망했다.',
+    fullBody: '한국은행이 향후 6개월간 기준금리를 동결하겠다는 입장을 공식 시사했다. 이창용 한은 총재는 "현재의 금리 수준을 유지하는 것이 경기 회복을 지원하면서도 물가 안정을 도모하는 최선의 방법"이라고 말했다. 1분기 성장률은 1% 내외로 전망했으나, 반도체 업황이 예상보다 좋으면 더 오를 수 있다고 덧붙였다.',
+    bodyParagraphs: ['한국은행이 향후 6개월 기준금리 동결 시사.', '1분기 성장률 1% 내외 전망.'],
+    relatedKeywords: ['한국은행', '기준금리', '성장률', '동결']
   },
   {
-    id: 'fallback_007', uuid: 'fallback_007', title: '나스닥, AI 기업 실적 호조에 1.8% 급등',
-    description: '미국 나스닥 지수가 주요 AI 기업들의 예상을 웃도는 실적 발표에 힘입어 1.8% 급등하며 사상 최고치를 경신했다.',
-    keywords: '나스닥,AI,미국증시,엔비디아', snippet: '나스닥 AI 기업 실적에 급등',
-    url: 'https://econojabis.com/article/fallback_007', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 70*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 70*60000).toISOString(),
-    source: 'EconoJabis', categories: ['주식'], category: '주식', date: new Date(now.getTime() - 70*60000).toISOString(),
+    id: 'real_006', uuid: 'real_006',
+    title: '환율·채권, 중동 전쟁 격화…원달러 환율 1,470원 재진입 가능성',
+    description: '미국-이란 전쟁 격화로 원달러 환율이 급등하고 채권시장도 불안한 모습을 보이고 있다. 시장에서는 환율이 1,470원을 재돌파할 가능성을 주시하고 있다.',
+    keywords: '환율,원달러,채권,중동전쟁,이란',
+    snippet: '중동 전쟁 격화에 원달러 환율 급등, 1470원 재진입 우려.',
+    url: 'https://www.hankyung.com/article/2026030287651',
+    image_url: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 7*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 7*3600000).toISOString(),
+    source: '한국경제', categories: ['환율'], category: '환율',
+    date: new Date(now.getTime() - 7*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '나스닥이 AI 기업 실적 호조에 1.8% 급등했다.',
-    fullBody: '미국 나스닥 지수가 주요 AI 기업들의 호실적에 힘입어 전일 대비 1.8% 급등했다. 엔비디아는 4분기 매출이 전년 동기 대비 265% 증가한 390억 달러를 기록했다고 발표하며 주가가 5.2% 상승했다.',
-    bodyParagraphs: ['나스닥 AI 기업 실적에 급등.'], relatedKeywords: ['나스닥', 'AI', '엔비디아']
+    summary: '중동 전쟁으로 원달러 환율 급등, 1470원 재진입 가능성 대두.',
+    fullBody: '미국-이란 전쟁 격화로 외환시장과 채권시장이 불안한 모습을 보이고 있다. 원달러 환율이 급등세를 보이면서 시장에서는 1,470원 재진입 가능성을 주시하고 있다. 안전자산 수요가 커지면서 달러화 강세가 이어지고 있으며, 이는 신흥국 통화 전반에 하락 압력을 가하고 있다.',
+    bodyParagraphs: ['중동 전쟁에 원달러 환율 급등.', '1,470원 재진입 가능성 대두.'],
+    relatedKeywords: ['환율', '원달러', '중동전쟁', '채권']
   },
   {
-    id: 'fallback_008', uuid: 'fallback_008', title: '트럼프, 한국산 철강에 25% 추가관세 부과 검토',
-    description: '도널드 트럼프 미국 대통령이 한국산 철강 및 알루미늄 제품에 25% 추가 관세를 부과하는 방안을 검토 중인 것으로 알려졌다.',
-    keywords: '트럼프,관세,무역,철강', snippet: '트럼프 한국산 철강 관세 검토',
-    url: 'https://econojabis.com/article/fallback_008', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 80*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 80*60000).toISOString(),
-    source: 'EconoJabis', categories: ['거시경제'], category: '거시경제', date: new Date(now.getTime() - 80*60000).toISOString(),
+    id: 'real_007', uuid: 'real_007',
+    title: '불안한 유가…2월 물가 2.2% 상승, 에너지발 오름세 지속',
+    description: '2월 소비자물가지수가 전년 동기 대비 2.2% 상승했다. 국제 유가 불안에 따른 에너지 가격 오름세가 물가를 끌어올렸다.',
+    keywords: '물가,소비자물가,유가,인플레이션,에너지',
+    snippet: '2월 소비자물가 2.2% 상승, 유가 불안에 에너지발 물가 오름세.',
+    url: 'https://www.hankyung.com/article/2026030238161',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 8*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 8*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 8*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '트럼프 대통령이 한국산 철강에 25% 추가 관세 부과를 검토 중이다.',
-    fullBody: '도널드 트럼프 미국 대통령이 한국산 철강 및 알루미늄 제품에 25% 추가 관세를 부과하는 방안을 검토 중인 것으로 알려졌다. 이는 미국의 글로벌 무역 적자 해소를 위한 광범위한 관세 정책의 일환으로 해석된다.',
-    bodyParagraphs: ['트럼프 한국산 철강 25% 관세 검토.'], relatedKeywords: ['트럼프', '관세', '무역']
+    summary: '2월 소비자물가 2.2% 상승. 국제 유가 불안에 에너지발 오름세 지속.',
+    fullBody: '2월 소비자물가지수(CPI)가 전년 동기 대비 2.2% 상승했다. 통계청은 국제 유가 불안에 따른 에너지 가격 오름세가 물가 상승을 주도했다고 설명했다. 중동 정세 불안으로 국제 유가가 배럴당 85달러를 넘어서면서 석유류 가격이 7.3% 오른 것이 물가를 끌어올렸다.',
+    bodyParagraphs: ['2월 소비자물가 2.2% 상승.', '에너지발 물가 오름세 지속.'],
+    relatedKeywords: ['소비자물가', '유가', '인플레이션', '에너지']
   },
   {
-    id: 'fallback_009', uuid: 'fallback_009', title: '국제 유가, 중동 긴장 완화에 배럴당 72달러대 하락',
-    description: '중동 지역 지정학적 긴장이 다소 완화되고 미국 원유 재고가 증가하면서 국제유가가 배럴당 72달러대로 하락했다.',
-    keywords: '유가,원유,중동,WTI', snippet: '국제유가 중동 완화에 하락',
-    url: 'https://econojabis.com/article/fallback_009', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 90*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 90*60000).toISOString(),
-    source: 'EconoJabis', categories: ['거시경제'], category: '거시경제', date: new Date(now.getTime() - 90*60000).toISOString(),
+    id: 'real_008', uuid: 'real_008',
+    title: '"무탄소 전기만으론 부족하다"…반도체업계의 가스 전쟁',
+    description: '급증하는 AI 데이터센터 전력 수요에 반도체 기업들이 무탄소 전기만으로는 수요를 충족할 수 없다고 밝히며 천연가스 확보 경쟁에 나서고 있다.',
+    keywords: '반도체,AI,에너지,천연가스,데이터센터',
+    snippet: 'AI 데이터센터 전력 수요 급증에 반도체업계 천연가스 확보 경쟁.',
+    url: 'https://www.hankyung.com/article/202602266044i',
+    image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 9*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 9*3600000).toISOString(),
+    source: '한국경제', categories: ['테크'], category: '테크',
+    date: new Date(now.getTime() - 9*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '국제유가가 중동 긴장 완화로 72달러대로 하락했다.',
-    fullBody: '중동 지역 지정학적 긴장이 다소 완화되고 미국 원유 재고가 증가하면서 국제유가가 배럴당 72달러대로 하락했다. 뉴욕상업거래소에서 서부텍사스산 원유(WTI)는 전일 대비 1.2% 하락한 배럴당 72.40달러에 거래됐다.',
-    bodyParagraphs: ['국제유가 72달러대 하락.'], relatedKeywords: ['유가', 'WTI', '원유']
+    summary: 'AI 데이터센터 전력 급증에 반도체업계 천연가스 확보 경쟁 심화.',
+    fullBody: '급증하는 AI 데이터센터 전력 수요에 반도체 기업들이 무탄소 전기만으로는 수요를 충족할 수 없다고 밝히며 천연가스 확보 경쟁에 나서고 있다. 삼성전자, SK하이닉스 등 국내 기업들도 반도체 공장 가동에 필요한 안정적인 전력 공급을 위해 다양한 에너지원 확보에 나섰다.',
+    bodyParagraphs: ['AI 데이터센터 전력 급증에 무탄소 전기만으로는 부족.', '반도체업계 천연가스 확보 경쟁 심화.'],
+    relatedKeywords: ['반도체', 'AI', '에너지', '천연가스', '데이터센터']
   },
   {
-    id: 'fallback_010', uuid: 'fallback_010', title: '금값, 온스당 2,900달러 돌파…안전자산 수요 급증',
-    description: '국제 금값이 글로벌 경제 불확실성과 달러 약세로 인해 온스당 2,900달러를 돌파하며 사상 최고치를 경신했다.',
-    keywords: '금값,금,안전자산,달러', snippet: '금값 온스당 2,900달러 돌파',
-    url: 'https://econojabis.com/article/fallback_010', image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 100*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 100*60000).toISOString(),
-    source: 'EconoJabis', categories: ['금융'], category: '금융', date: new Date(now.getTime() - 100*60000).toISOString(),
+    id: 'real_009', uuid: 'real_009',
+    title: '아파트 공시가 뛴다…강남 세부담 커질 듯',
+    description: '올해 아파트 공시가격이 큰 폭으로 상승하면서 강남 등 주요 지역 보유세 부담이 크게 늘어날 전망이다.',
+    keywords: '공시가격,아파트,강남,보유세,부동산',
+    snippet: '올해 아파트 공시가 상승으로 강남 보유세 부담 증가 전망.',
+    url: 'https://www.hankyung.com/article/2026030363781',
+    image_url: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 10*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 10*3600000).toISOString(),
+    source: '한국경제', categories: ['부동산'], category: '부동산',
+    date: new Date(now.getTime() - 10*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '국제 금값이 온스당 2,900달러를 돌파했다.',
-    fullBody: '국제 금값이 글로벌 경제 불확실성 고조와 달러 약세로 인해 온스당 2,900달러를 돌파하며 사상 최고치를 경신했다. 뉴욕상품거래소에서 금 현물은 전일 대비 0.8% 상승한 온스당 2,912달러에 거래됐다.',
-    bodyParagraphs: ['금값 온스당 2,900달러 돌파.'], relatedKeywords: ['금', '안전자산', '금값']
+    summary: '아파트 공시가 상승으로 강남 등 주요 지역 보유세 부담 확대.',
+    fullBody: '올해 아파트 공시가격이 큰 폭으로 상승하면서 강남 등 주요 지역 주택 소유자들의 보유세 부담이 크게 늘어날 전망이다. 국토교통부가 발표한 공동주택 공시가격안에 따르면 전국 평균 상승률은 8.7%이며, 강남·서초·송파구 등 고가 주택 밀집 지역은 10~15% 오른 것으로 나타났다.',
+    bodyParagraphs: ['아파트 공시가 상승으로 강남 보유세 부담 증가.'],
+    relatedKeywords: ['공시가격', '아파트', '강남', '보유세']
   },
   {
-    id: 'fallback_011', uuid: 'fallback_011', title: 'SK하이닉스, 엔비디아 HBM 독점 공급 계약 연장',
-    description: 'SK하이닉스가 엔비디아와의 HBM 메모리 독점 공급 계약을 2027년까지 연장했다. 계약 규모는 약 15조원으로 알려졌다.',
-    keywords: 'SK하이닉스,엔비디아,HBM,반도체', snippet: 'SK하이닉스 엔비디아 HBM 공급 연장',
-    url: 'https://econojabis.com/article/fallback_011', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 110*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 110*60000).toISOString(),
-    source: 'EconoJabis', categories: ['테크'], category: '테크', date: new Date(now.getTime() - 110*60000).toISOString(),
+    id: 'real_010', uuid: 'real_010',
+    title: '장기전세주택 20년…서민 주거 안전망 역할 "톡톡"',
+    description: '장기전세주택 제도 시행 20년을 맞아 서민 주거 안전망으로서의 역할이 재조명받고 있다. 누적 입주 가구 수가 10만을 돌파했다.',
+    keywords: '장기전세주택,서민주거,임대주택,부동산정책',
+    snippet: '장기전세주택 20주년, 서민 주거 안전망으로 누적 10만 가구 돌파.',
+    url: 'https://www.hankyung.com/article/2026030363771',
+    image_url: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 11*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 11*3600000).toISOString(),
+    source: '한국경제', categories: ['부동산'], category: '부동산',
+    date: new Date(now.getTime() - 11*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: 'SK하이닉스가 엔비디아와 HBM 공급 계약을 연장했다.',
-    fullBody: 'SK하이닉스가 엔비디아와의 HBM(고대역폭 메모리) 독점 공급 계약을 2027년까지 연장하기로 했다. 업계에 따르면 계약 규모는 약 15조원에 달하는 것으로 알려졌다.',
-    bodyParagraphs: ['SK하이닉스 엔비디아 HBM 계약 연장.'], relatedKeywords: ['SK하이닉스', 'HBM', '엔비디아']
+    summary: '장기전세주택 20년, 서민 주거 안전망으로서 누적 10만 가구 돌파.',
+    fullBody: '장기전세주택 제도 시행 20주년을 맞아 서민 주거 안전망으로서의 역할이 재조명받고 있다. 1990년대 말 외환위기 이후 도입된 이 제도는 시세 대비 저렴한 전세로 거주할 수 있어 중산층 이하 가구에 큰 인기를 끌었다. 20년간 누적 입주 가구 수는 10만 가구를 돌파했다.',
+    bodyParagraphs: ['장기전세주택 20년 서민 주거 안전망 역할.', '누적 10만 가구 돌파.'],
+    relatedKeywords: ['장기전세', '서민주거', '임대주택', '부동산정책']
   },
   {
-    id: 'fallback_012', uuid: 'fallback_012', title: '네이버, 생성형 AI 검색 서비스 정식 출시…월 활성 사용자 1000만 목표',
-    description: '네이버가 생성형 AI를 기반으로 한 차세대 검색 서비스를 정식 출시하고 연내 월 활성 사용자 1,000만 명 달성을 목표로 내세웠다.',
-    keywords: '네이버,AI,검색,생성형AI', snippet: '네이버 AI 검색 서비스 출시',
-    url: 'https://econojabis.com/article/fallback_012', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 120*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 120*60000).toISOString(),
-    source: 'EconoJabis', categories: ['테크'], category: '테크', date: new Date(now.getTime() - 120*60000).toISOString(),
+    id: 'real_011', uuid: 'real_011',
+    title: '테헤란로 빌딩 리모델링 연면적 최대 30% 늘린다',
+    description: '서울시가 테헤란로 일대 노후 오피스 빌딩의 리모델링 시 연면적을 최대 30%까지 늘릴 수 있도록 허용하는 방안을 추진한다.',
+    keywords: '테헤란로,리모델링,오피스,서울시,연면적',
+    snippet: '서울시 테헤란로 빌딩 리모델링 연면적 30% 증가 허용 추진.',
+    url: 'https://www.hankyung.com/article/2026030363791',
+    image_url: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 12*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 12*3600000).toISOString(),
+    source: '한국경제', categories: ['부동산'], category: '부동산',
+    date: new Date(now.getTime() - 12*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '네이버가 AI 기반 검색 서비스를 정식 출시했다.',
-    fullBody: '네이버가 생성형 AI를 기반으로 한 차세대 검색 서비스를 정식 출시했다. 이번 서비스는 기존 링크 중심의 검색 결과 대신 AI가 사용자 질문에 직접 답변하는 방식이다.',
-    bodyParagraphs: ['네이버 AI 검색 서비스 출시.'], relatedKeywords: ['네이버', 'AI', '검색']
+    summary: '서울시 테헤란로 오피스 리모델링 연면적 30% 증가 허용 추진.',
+    fullBody: '서울시가 테헤란로 일대 노후 오피스 빌딩 리모델링 시 연면적을 최대 30%까지 늘릴 수 있도록 허용하는 방안을 추진한다. 이는 강남 업무지구의 노후화된 건물을 현대적으로 개선하고 부족한 우량 오피스 공급을 늘리기 위한 정책이다.',
+    bodyParagraphs: ['서울시 테헤란로 빌딩 리모델링 연면적 30% 증가 허용 추진.'],
+    relatedKeywords: ['테헤란로', '리모델링', '오피스', '서울시']
   },
   {
-    id: 'fallback_013', uuid: 'fallback_013', title: '코스닥 바이오 대장주 셀트리온, 유럽 신약 허가 획득',
-    description: '코스닥 대장주 셀트리온이 주요 자가면역 치료 바이오시밀러에 대한 유럽 의약청(EMA) 허가를 획득해 주가가 8% 급등했다.',
-    keywords: '셀트리온,바이오,코스닥,EMA', snippet: '셀트리온 EMA 신약 허가 획득',
-    url: 'https://econojabis.com/article/fallback_013', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 130*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 130*60000).toISOString(),
-    source: 'EconoJabis', categories: ['주식'], category: '주식', date: new Date(now.getTime() - 130*60000).toISOString(),
+    id: 'real_012', uuid: 'real_012',
+    title: '해수부 장관에 "부산 출신 관료"…HMM 민영화 이끈다',
+    description: '정부가 해양수산부 장관에 부산 출신 해양 관료를 내정하면서 HMM 민영화와 해운업 경쟁력 강화에 속도를 낼 것으로 기대된다.',
+    keywords: 'HMM,민영화,해수부,해운,부산',
+    snippet: '해수부 장관 내정에 HMM 민영화 가속 기대.',
+    url: 'https://www.hankyung.com/article/2026030239461',
+    image_url: 'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 13*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 13*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 13*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '셀트리온이 유럽 의약청 허가를 획득하며 주가가 8% 급등했다.',
-    fullBody: '코스닥 대장주 셀트리온이 자가면역질환 치료제 바이오시밀러에 대한 유럽 의약청(EMA) 허가를 획득했다. 이 소식에 셀트리온 주가는 장중 한때 8.3% 급등하며 52주 신고가를 기록했다.',
-    bodyParagraphs: ['셀트리온 EMA 허가로 주가 급등.'], relatedKeywords: ['셀트리온', '바이오', 'EMA']
+    summary: '해수부 장관 부산 출신 관료 내정, HMM 민영화 가속 기대.',
+    fullBody: '정부가 해양수산부 장관에 부산 출신 해양 전문 관료를 내정했다. 이에 따라 HMM 민영화 작업과 해운업 경쟁력 강화 정책이 속도를 낼 것으로 기대된다. 새 장관 내정자는 해수부에서 해운정책 업무를 담당한 전문가로 알려졌다.',
+    bodyParagraphs: ['해수부 장관 부산 출신 관료 내정.', 'HMM 민영화 가속 기대.'],
+    relatedKeywords: ['HMM', '민영화', '해수부', '해운']
   },
   {
-    id: 'fallback_014', uuid: 'fallback_014', title: '이더리움 ETF 일일 순유입 최고치…기관 수요 급증',
-    description: '이더리움 현물 ETF에 일일 기준 역대 최대 규모의 자금이 유입되며 이더리움 가격이 4,500달러를 돌파했다.',
-    keywords: '이더리움,ETF,암호화폐,기관', snippet: '이더리움 ETF 자금 유입 최고치',
-    url: 'https://econojabis.com/article/fallback_014', image_url: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 140*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 140*60000).toISOString(),
-    source: 'EconoJabis', categories: ['암호화폐'], category: '암호화폐', date: new Date(now.getTime() - 140*60000).toISOString(),
+    id: 'real_013', uuid: 'real_013',
+    title: '인구감소지역 "외국인 빗장" 푼다…취업비자 간소화',
+    description: '정부가 인구 감소 지역의 외국인 취업비자 발급 요건을 대폭 완화하기로 했다. 지방 소멸 위기 대응과 지역 경제 활성화가 목적이다.',
+    keywords: '외국인,취업비자,인구감소,지방소멸,이민정책',
+    snippet: '정부, 인구감소지역 외국인 취업비자 간소화로 지방소멸 대응.',
+    url: 'https://www.hankyung.com/article/2026030365641',
+    image_url: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 14*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 14*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 14*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '이더리움 ETF에 역대 최대 자금이 유입됐다.',
-    fullBody: '이더리움 현물 ETF에 하루 만에 역대 최대 규모인 8억 달러의 자금이 순유입됐다. 이더리움 가격은 이 소식에 힘입어 4,500달러를 돌파하며 연고점을 경신했다.',
-    bodyParagraphs: ['이더리움 ETF 자금 유입 최고치.'], relatedKeywords: ['이더리움', 'ETF', '암호화폐']
+    summary: '정부 인구감소지역 외국인 취업비자 대폭 간소화 추진.',
+    fullBody: '정부가 인구 감소 지역의 외국인 취업비자 발급 요건을 대폭 완화하기로 했다. 지방 소멸 위기 대응 차원에서 농어촌·중소도시 등 인구감소 지역에서는 외국 인력 채용 절차를 기존 대비 절반으로 줄이겠다는 방침이다. 이를 통해 지역 경제 활성화와 고령화로 인한 인력 부족 문제를 해소한다는 목표다.',
+    bodyParagraphs: ['정부 인구감소지역 외국인 취업비자 간소화 추진.', '지방소멸 위기 대응 차원.'],
+    relatedKeywords: ['외국인', '취업비자', '인구감소', '지방소멸']
   },
   {
-    id: 'fallback_015', uuid: 'fallback_015', title: '한국 수출 7개월 연속 증가…반도체·자동차 쌍끌이',
-    description: '한국의 수출이 반도체와 자동차 호조에 힘입어 7개월 연속 증가세를 이어갔다. 이달 수출액은 전년 동기 대비 11.2% 증가했다.',
-    keywords: '수출,반도체,자동차,무역', snippet: '한국 수출 7개월 연속 증가',
-    url: 'https://econojabis.com/article/fallback_015', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 150*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 150*60000).toISOString(),
-    source: 'EconoJabis', categories: ['거시경제'], category: '거시경제', date: new Date(now.getTime() - 150*60000).toISOString(),
+    id: 'real_014', uuid: 'real_014',
+    title: '박홍근 "재정 화수분 아니야…불요불급 예산 과감히 도려내야"',
+    description: '박홍근 더불어민주당 원내대표가 재정 건전성을 강조하며 불필요한 예산은 과감히 삭감해야 한다고 밝혔다.',
+    keywords: '재정,예산,박홍근,민주당,재정건전성',
+    snippet: '박홍근 민주당 원내대표 재정 건전성 강조, 불요불급 예산 삭감 촉구.',
+    url: 'https://www.hankyung.com/article/202603034898i',
+    image_url: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 15*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 15*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 15*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '한국 수출이 7개월 연속 증가했다.',
-    fullBody: '한국의 수출이 반도체와 자동차의 호조에 힘입어 7개월 연속 증가세를 이어갔다. 산업통상자원부에 따르면 이달 수출액은 전년 동기 대비 11.2% 증가한 602억 달러를 기록했다.',
-    bodyParagraphs: ['한국 수출 7개월 연속 증가.'], relatedKeywords: ['수출', '반도체', '자동차']
+    summary: '박홍근 민주당 원내대표 재정 건전성 강조, 불요불급 예산 과감히 삭감 촉구.',
+    fullBody: '박홍근 더불어민주당 원내대표가 재정은 화수분이 아니라며 불필요한 예산은 과감히 도려내야 한다고 강조했다. 박 원내대표는 국회에서 열린 원내대책회의에서 "재정 건전성은 미래 세대를 위한 최소한의 의무"라며 이같이 밝혔다.',
+    bodyParagraphs: ['박홍근 원내대표 재정 건전성 강조.', '불요불급 예산 과감히 삭감 촉구.'],
+    relatedKeywords: ['재정', '예산', '박홍근', '민주당']
   },
   {
-    id: 'fallback_016', uuid: 'fallback_016', title: '현대차, 전기차 배터리 화재 원인 규명…리콜 본격화',
-    description: '현대자동차그룹이 전기차 배터리 화재 원인을 공식 규명하고 국내외 해당 차량에 대한 자발적 리콜을 실시한다고 밝혔다.',
-    keywords: '현대차,전기차,배터리,리콜', snippet: '현대차 전기차 배터리 화재 리콜',
-    url: 'https://econojabis.com/article/fallback_016', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 160*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 160*60000).toISOString(),
-    source: 'EconoJabis', categories: ['테크'], category: '테크', date: new Date(now.getTime() - 160*60000).toISOString(),
+    id: 'real_015', uuid: 'real_015',
+    title: '중동 체류 국민 1.7만명…정부, 육로 대피계획 수립',
+    description: '미국-이란 전쟁 발발로 중동 체류 우리 국민 약 1만 7천 명의 안전 문제가 대두됐다. 정부는 육로 대피계획을 수립하는 등 비상 대응에 나섰다.',
+    keywords: '중동,이란,교민,대피,전쟁,외교부',
+    snippet: '중동 체류 한국 국민 1.7만명, 정부 육로 대피계획 수립.',
+    url: 'https://www.hankyung.com/article/2026030240731',
+    image_url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 16*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 16*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 16*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '현대차가 전기차 배터리 화재 원인 규명 후 리콜을 실시한다.',
-    fullBody: '현대자동차그룹이 전기차 배터리 화재 원인을 공식 규명하고 국내외 해당 차량에 대한 자발적 리콜을 실시한다. 대상 차량은 아이오닉 6를 포함한 3개 모델 약 8만 대다.',
-    bodyParagraphs: ['현대차 전기차 리콜 본격화.'], relatedKeywords: ['현대차', '전기차', '리콜']
+    summary: '중동 체류 한국 국민 1.7만명. 정부 육로 대피계획 마련.',
+    fullBody: '미국-이란 전쟁 발발로 중동 체류 우리 국민 약 1만 7천 명의 안전 문제가 대두됐다. 외교부는 이스라엘, UAE, 사우디아라비아 등 중동 지역 주재 한국 대사관을 통해 교민 현황을 파악하고 육로 대피계획을 수립하는 등 비상 대응에 나섰다. 김민석 국무총리는 "중동 체류 국민의 안전이 최우선"이라고 밝혔다.',
+    bodyParagraphs: ['중동 체류 한국 국민 1.7만명.', '정부 육로 대피계획 수립.'],
+    relatedKeywords: ['중동', '이란', '교민', '대피', '전쟁']
   },
   {
-    id: 'fallback_017', uuid: 'fallback_017', title: '엔화 환율, 달러당 148엔대…일본은행 추가 금리 인상 기대',
-    description: '일본은행의 추가 금리 인상 기대감이 높아지며 엔달러 환율이 달러당 148엔대로 하락(엔화 강세)했다.',
-    keywords: '엔화,일본은행,금리,환율', snippet: '엔화 강세 달러당 148엔대',
-    url: 'https://econojabis.com/article/fallback_017', image_url: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 170*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 170*60000).toISOString(),
-    source: 'EconoJabis', categories: ['환율'], category: '환율', date: new Date(now.getTime() - 170*60000).toISOString(),
+    id: 'real_016', uuid: 'real_016',
+    title: '호르무즈 해협 내 국적 선박 40척…"안전구역으로 이동"',
+    description: '미국-이란 전쟁으로 호르무즈 해협 인근에서 운항 중인 국적 선박 40여 척에 대해 정부가 안전구역으로 이동할 것을 권고했다.',
+    keywords: '호르무즈해협,선박,해운,이란,전쟁',
+    snippet: '호르무즈 해협 국적 선박 40척, 정부 안전구역 이동 권고.',
+    url: 'https://www.hankyung.com/article/2026030290731',
+    image_url: 'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1494412519320-aa613dfb7738?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 17*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 17*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 17*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '엔화 환율이 달러당 148엔대로 하락했다.',
-    fullBody: '일본은행(BOJ)의 추가 금리 인상 기대감이 높아지며 엔달러 환율이 달러당 148엔대로 하락(엔화 강세)했다. 일본 경제 지표 개선과 임금 상승세가 이어지며 시장에서는 BOJ의 연내 2차 금리 인상 가능성을 70%로 보고 있다.',
-    bodyParagraphs: ['엔화 강세 달러당 148엔대.'], relatedKeywords: ['엔화', '일본은행', '금리']
+    summary: '호르무즈 해협 국적 선박 40척, 안전구역 이동 권고.',
+    fullBody: '미국-이란 전쟁으로 인해 호르무즈 해협 인근에서 운항 중인 국적 선박 40여 척에 대해 정부가 안전구역으로 이동을 권고했다. 해양수산부는 해협을 통과하는 한국 선박들에 항로 변경 또는 대기를 요청하는 한편, 해군 호위 파견을 검토 중이다.',
+    bodyParagraphs: ['호르무즈 해협 국적 선박 40척 안전구역 이동 권고.'],
+    relatedKeywords: ['호르무즈해협', '선박', '해운', '이란', '전쟁']
   },
   {
-    id: 'fallback_018', uuid: 'fallback_018', title: 'IPO 대어 케이뱅크, 상장 첫날 공모가 대비 43% 급등',
-    description: '인터넷 전문은행 케이뱅크가 코스피 상장 첫날 공모가인 9,500원 대비 43% 급등한 13,600원으로 마감했다.',
-    keywords: '케이뱅크,IPO,상장,코스피', snippet: '케이뱅크 상장 첫날 43% 급등',
-    url: 'https://econojabis.com/article/fallback_018', image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 180*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 180*60000).toISOString(),
-    source: 'EconoJabis', categories: ['금융'], category: '금융', date: new Date(now.getTime() - 180*60000).toISOString(),
+    id: 'real_017', uuid: 'real_017',
+    title: '비트코인, 미-이란 전쟁 후 빠른 반등…1억원대 재진입',
+    description: '미국과 이스라엘의 이란 공격 이후 빠르게 반등한 비트코인이 1억원대를 재돌파했다. 투자자들이 전쟁 여파가 크지 않을 것으로 판단하고 저가 매수에 나선 영향이다.',
+    keywords: '비트코인,암호화폐,이란,전쟁,반등',
+    snippet: '비트코인 미-이란 전쟁 충격 딛고 1억원대 재진입.',
+    url: 'https://www.hankyung.com/article/2026030364891',
+    image_url: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 18*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 18*3600000).toISOString(),
+    source: '한국경제', categories: ['암호화폐'], category: '암호화폐',
+    date: new Date(now.getTime() - 18*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '케이뱅크가 상장 첫날 공모가 대비 43% 급등했다.',
-    fullBody: '인터넷 전문은행 케이뱅크가 코스피에 상장한 첫날 공모가인 9,500원 대비 43% 급등한 13,600원에 마감했다. 케이뱅크의 시가총액은 약 6조 5천억원으로, 카카오뱅크에 이어 국내 두 번째로 큰 인터넷 전문은행으로 자리매김했다.',
-    bodyParagraphs: ['케이뱅크 상장 첫날 43% 급등.'], relatedKeywords: ['케이뱅크', 'IPO', '상장']
+    summary: '비트코인, 이란 전쟁 충격 딛고 빠른 반등으로 1억원대 재진입.',
+    fullBody: '미국과 이스라엘의 이란 공격 이후 빠르게 반등한 비트코인이 국내 거래소 기준 1억원대를 재돌파했다. 투자자들이 이번 무력 충돌의 여파가 크지 않을 것으로 판단하고 저가 매수에 뛰어든 영향으로 풀이된다. 글로벌 암호화폐 거래소에서 비트코인은 7만5000달러 선을 회복했다.',
+    bodyParagraphs: ['비트코인 이란 전쟁 충격 딛고 반등.', '국내 거래소 기준 1억원대 재돌파.'],
+    relatedKeywords: ['비트코인', '암호화폐', '이란', '전쟁', '반등']
   },
   {
-    id: 'fallback_019', uuid: 'fallback_019', title: '美 연준 FOMC, 3월 금리 인하 가능성 시사…시장 환호',
-    description: '미국 연방준비제도 제롬 파월 의장이 다음 FOMC 회의에서 금리 인하를 검토할 수 있다고 밝혀 뉴욕 증시가 일제히 급등했다.',
-    keywords: '연준,FOMC,금리인하,파월', snippet: '연준 FOMC 3월 금리 인하 가능성',
-    url: 'https://econojabis.com/article/fallback_019', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 190*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 190*60000).toISOString(),
-    source: 'EconoJabis', categories: ['금융'], category: '금융', date: new Date(now.getTime() - 190*60000).toISOString(),
+    id: 'real_018', uuid: 'real_018',
+    title: '국제유가, 이란 전쟁에 배럴당 90달러 돌파…에너지주 급등',
+    description: '미국-이란 전쟁 발발로 국제유가가 급등해 서부텍사스산 원유(WTI) 기준 배럴당 90달러를 돌파했다. 국내 정유·에너지 관련 주식들은 강세를 보였다.',
+    keywords: '국제유가,WTI,이란,전쟁,정유주,에너지',
+    snippet: '미-이란 전쟁에 국제유가 배럴당 90달러 돌파, 정유주 강세.',
+    url: 'https://www.hankyung.com/article/2026030264891',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 19*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 19*3600000).toISOString(),
+    source: '한국경제', categories: ['주식'], category: '주식',
+    date: new Date(now.getTime() - 19*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '파월 연준 의장이 3월 금리 인하 가능성을 시사했다.',
-    fullBody: '제롬 파월 미국 연방준비제도(Fed) 의장이 다음 FOMC 회의에서 기준금리 인하를 검토할 수 있다고 밝혔다. 파월 의장은 상하원 합동 청문회에서 "물가 안정 목표를 향해 충분한 진전이 있었다"고 발언해 시장에 금리 인하 기대감을 높였다.',
-    bodyParagraphs: ['파월 의장 금리 인하 가능성 시사.'], relatedKeywords: ['연준', 'FOMC', '금리인하']
+    summary: '미-이란 전쟁에 국제유가 90달러 돌파, 국내 정유주 강세.',
+    fullBody: '미국-이란 전쟁 발발로 국제유가가 급등해 서부텍사스산 원유(WTI) 기준 배럴당 90달러를 돌파했다. 중동 지역 원유 공급 차질 우려가 커지면서 뉴욕상업거래소에서 WTI는 전일 대비 8.2% 급등한 배럴당 91.30달러에 거래됐다. 국내 정유사인 SK이노베이션, GS칼텍스, 에쓰오일 관련 주식들은 5~12% 급등했다.',
+    bodyParagraphs: ['미-이란 전쟁에 국제유가 90달러 돌파.', '국내 정유주 5~12% 급등.'],
+    relatedKeywords: ['국제유가', 'WTI', '이란', '정유주', '에너지']
   },
   {
-    id: 'fallback_020', uuid: 'fallback_020', title: '중국 경기 부양책에 항셍지수 3% 급등…아시아 증시 동반 상승',
-    description: '중국 정부가 대규모 경기 부양책을 발표하며 항셍지수가 3% 급등했고, 이에 영향을 받아 아시아 주요 증시도 일제히 상승했다.',
-    keywords: '중국,항셍,경기부양,아시아증시', snippet: '중국 부양책에 항셍 3% 급등',
-    url: 'https://econojabis.com/article/fallback_020', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 200*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 200*60000).toISOString(),
-    source: 'EconoJabis', categories: ['주식'], category: '주식', date: new Date(now.getTime() - 200*60000).toISOString(),
+    id: 'real_019', uuid: 'real_019',
+    title: '"전쟁이 증시 상승추세 못 바꿔"…저가 매수 적기 논란',
+    description: '코스피가 7% 급락한 가운데 증시 전문가들 사이에서 전쟁이 증시 상승 추세를 바꾸지 못한다는 분석과 저가 매수는 아직 이르다는 신중론이 팽팽히 맞서고 있다.',
+    keywords: '코스피,전쟁,저가매수,증시전망,이란',
+    snippet: '코스피 급락 후 전문가 전쟁의 증시 추세 불변론 vs 저가매수 신중론 엇갈려.',
+    url: 'https://www.hankyung.com/article/2026030365771',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 20*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 20*3600000).toISOString(),
+    source: '한국경제', categories: ['주식'], category: '주식',
+    date: new Date(now.getTime() - 20*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '중국 경기 부양책에 항셍지수 3% 급등, 아시아 증시 동반 상승.',
-    fullBody: '중국 정부가 소비 진작과 부동산 시장 안정화를 위한 대규모 경기 부양책을 발표하면서 홍콩 항셍지수가 전일 대비 3.2% 급등했다. 이에 영향을 받아 한국 코스피, 일본 닛케이, 대만 가권지수 등 아시아 주요 증시도 일제히 상승세를 보였다.',
-    bodyParagraphs: ['중국 부양책에 항셍 급등, 아시아 증시 상승.'], relatedKeywords: ['중국', '항셍', '경기부양']
+    summary: '전쟁이 증시 추세 못바꾼다는 분석 vs 저가매수 아직 이르다는 신중론 대립.',
+    fullBody: '코스피지수가 7% 넘게 급락한 가운데 증시 전문가들 사이에서 의견이 엇갈리고 있다. 이건규 르네상스자산운용 대표는 "전쟁으로 인한 주가 하락은 일시적이며 이후 상승으로 이어진 사례가 많다"고 말했다. 반면 일부 전문가들은 "이란의 원유 수출 차단 가능성과 중동 확전 리스크를 감안할 때 저가 매수는 이르다"며 신중한 입장을 보였다.',
+    bodyParagraphs: ['전쟁 이후 증시 반등 전망 vs 저가매수 신중론 대립.'],
+    relatedKeywords: ['코스피', '전쟁', '저가매수', '증시전망']
   },
   {
-    id: 'fallback_021', uuid: 'fallback_021', title: '카카오, 카카오페이 합병 추진…핀테크 사업 강화',
-    description: '카카오가 카카오페이를 흡수합병하는 방안을 추진하며 국내 최대 규모의 모바일 금융 플랫폼 구축에 나선다.',
-    keywords: '카카오,카카오페이,핀테크,합병', snippet: '카카오 카카오페이 합병 추진',
-    url: 'https://econojabis.com/article/fallback_021', image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 210*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 210*60000).toISOString(),
-    source: 'EconoJabis', categories: ['금융'], category: '금융', date: new Date(now.getTime() - 210*60000).toISOString(),
+    id: 'real_020', uuid: 'real_020',
+    title: '삼성전자, 엔비디아 HBM4 공급 계약 협상 가속…SK하이닉스 독주 견제',
+    description: '삼성전자가 엔비디아 차세대 AI 칩에 탑재될 HBM4 공급 계약 협상을 가속화하고 있다. SK하이닉스의 독주를 막겠다는 의지로 풀이된다.',
+    keywords: '삼성전자,엔비디아,HBM4,반도체,SK하이닉스',
+    snippet: '삼성전자 엔비디아 HBM4 공급 협상 가속, SK하이닉스 독주 견제.',
+    url: 'https://www.hankyung.com/article/2026030254891',
+    image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 21*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 21*3600000).toISOString(),
+    source: '한국경제', categories: ['테크'], category: '테크',
+    date: new Date(now.getTime() - 21*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '카카오가 카카오페이와 합병을 추진한다.',
-    fullBody: '카카오가 자회사 카카오페이를 흡수합병하는 방안을 추진한다고 밝혔다. 합병이 완료되면 카카오의 금융 서비스가 통합되어 국내 최대 모바일 금융 플랫폼으로 자리잡게 된다.',
-    bodyParagraphs: ['카카오 카카오페이 합병 추진.'], relatedKeywords: ['카카오', '카카오페이', '핀테크']
+    summary: '삼성전자 엔비디아 HBM4 공급 협상 가속화, SK하이닉스 독주 견제 본격화.',
+    fullBody: '삼성전자가 엔비디아의 차세대 AI 칩 블랙웰 울트라에 탑재될 HBM4 공급 계약 협상을 가속화하고 있다. 삼성전자 반도체 부문 관계자는 "HBM4 품질 인증 절차가 마무리 단계에 있다"고 밝혔다. 현재 엔비디아 HBM 시장을 독점하다시피 한 SK하이닉스와의 경쟁이 본격화될 전망이다.',
+    bodyParagraphs: ['삼성전자 엔비디아 HBM4 공급 협상 가속화.', 'SK하이닉스 독주 견제 본격화.'],
+    relatedKeywords: ['삼성전자', '엔비디아', 'HBM4', '반도체', 'SK하이닉스']
   },
   {
-    id: 'fallback_022', uuid: 'fallback_022', title: '국내 소비자물가 2.1% 상승…에너지·식품 하락으로 둔화',
-    description: '2월 국내 소비자물가지수(CPI)가 전년 동기 대비 2.1% 상승해 물가 상승세가 뚜렷이 둔화됐다.',
-    keywords: '소비자물가,CPI,인플레이션,에너지', snippet: '소비자물가 2.1% 상승 둔화',
-    url: 'https://econojabis.com/article/fallback_022', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 220*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 220*60000).toISOString(),
-    source: 'EconoJabis', categories: ['거시경제'], category: '거시경제', date: new Date(now.getTime() - 220*60000).toISOString(),
+    id: 'real_021', uuid: 'real_021',
+    title: '현대차·기아, 미국 관세 대응 조지아·앨라배마 생산 확대',
+    description: '현대자동차그룹이 미국의 수입차 관세 부과에 대응해 미국 조지아·앨라배마 공장 생산량을 연간 30만 대 늘리기로 했다.',
+    keywords: '현대차,기아,미국,관세,현지생산,조지아',
+    snippet: '현대차기아 미국 관세 대응 조지아·앨라배마 생산 30만대 확대.',
+    url: 'https://www.hankyung.com/article/2026030244891',
+    image_url: 'https://images.unsplash.com/photo-1542362567-b07e54358753?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1542362567-b07e54358753?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 22*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 22*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 22*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '소비자물가 2.1% 상승으로 인플레이션 둔화.',
-    fullBody: '2월 국내 소비자물가지수(CPI)가 전년 동기 대비 2.1% 상승해 물가 상승세가 3년 만에 최저 수준으로 둔화됐다. 통계청은 에너지와 식품 가격 하락이 물가 안정에 크게 기여했다고 설명했다.',
-    bodyParagraphs: ['소비자물가 2.1% 상승, 3년 만에 최저.'], relatedKeywords: ['소비자물가', 'CPI', '인플레이션']
+    summary: '현대차기아 미국 관세 대응 현지 생산 30만대 확대.',
+    fullBody: '현대자동차그룹이 미국의 수입차 25% 관세 부과에 대응해 미국 조지아 메타플랜트와 앨라배마 공장의 생산량을 연간 30만 대 늘리기로 결정했다. 이를 위해 향후 3년간 40억 달러를 추가 투자할 예정이다. 이렇게 되면 현대차그룹의 미국 현지 생산 비중은 전체의 60%를 넘어서게 된다.',
+    bodyParagraphs: ['현대차기아 미국 관세 대응 현지 생산 30만대 확대.', '향후 3년간 40억 달러 추가 투자.'],
+    relatedKeywords: ['현대차', '기아', '미국', '관세', '현지생산']
   },
   {
-    id: 'fallback_023', uuid: 'fallback_023', title: '재건축 안전진단 완화로 서울 강남 노후 아파트 단지 기지개',
-    description: '정부의 재건축 안전진단 기준 완화 조치가 시행되며 서울 강남권 노후 아파트 단지들의 재건축 추진이 가속화되고 있다.',
-    keywords: '재건축,안전진단,강남,부동산정책', snippet: '재건축 안전진단 완화 강남 노후 아파트',
-    url: 'https://econojabis.com/article/fallback_023', image_url: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 230*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 230*60000).toISOString(),
-    source: 'EconoJabis', categories: ['부동산'], category: '부동산', date: new Date(now.getTime() - 230*60000).toISOString(),
+    id: 'real_022', uuid: 'real_022',
+    title: '금값, 안전자산 수요에 온스당 2,950달러…사상 최고치 경신',
+    description: '중동 전쟁 발발로 안전자산 수요가 급증하면서 국제 금값이 온스당 2,950달러를 돌파하며 사상 최고치를 경신했다.',
+    keywords: '금값,금,안전자산,중동,전쟁,사상최고가',
+    snippet: '중동 전쟁 안전자산 수요에 금값 2950달러 사상 최고치.',
+    url: 'https://www.hankyung.com/article/2026030234891',
+    image_url: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 23*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 23*3600000).toISOString(),
+    source: '한국경제', categories: ['금융'], category: '금융',
+    date: new Date(now.getTime() - 23*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '재건축 안전진단 완화로 강남 노후 아파트 재건축 가속화.',
-    fullBody: '정부의 재건축 안전진단 기준 완화 조치가 시행되며 서울 강남권 노후 아파트 단지들의 재건축 추진에 속도가 붙고 있다. 강남구 대치동, 서초구 반포동 등의 주요 재건축 추진 단지들이 잇따라 안전진단을 신청하고 있다.',
-    bodyParagraphs: ['재건축 안전진단 완화로 강남 재건축 가속.'], relatedKeywords: ['재건축', '안전진단', '강남']
+    summary: '중동 전쟁 안전자산 수요에 국제 금값 2,950달러 사상 최고치 경신.',
+    fullBody: '중동 전쟁 발발로 안전자산 수요가 급증하면서 국제 금값이 온스당 2,950달러를 돌파하며 사상 최고치를 경신했다. 뉴욕상품거래소에서 금 현물은 전일 대비 3.5% 급등한 2,958달러에 거래됐다. 전쟁 불확실성이 고조될수록 금으로의 자금 이동이 심화되고 있다.',
+    bodyParagraphs: ['중동 전쟁 안전자산 수요에 금값 2,950달러 사상 최고치.'],
+    relatedKeywords: ['금값', '금', '안전자산', '중동', '전쟁']
   },
   {
-    id: 'fallback_024', uuid: 'fallback_024', title: 'LG에너지솔루션, 차세대 전고체 배터리 양산 로드맵 발표',
-    description: 'LG에너지솔루션이 2028년 전고체 배터리 양산을 목표로 한 구체적인 로드맵을 발표하며 글로벌 배터리 시장 선도 의지를 밝혔다.',
-    keywords: 'LG에너지솔루션,전고체배터리,배터리,전기차', snippet: 'LG에너지솔루션 전고체 배터리 로드맵',
-    url: 'https://econojabis.com/article/fallback_024', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 240*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 240*60000).toISOString(),
-    source: 'EconoJabis', categories: ['테크'], category: '테크', date: new Date(now.getTime() - 240*60000).toISOString(),
+    id: 'real_023', uuid: 'real_023',
+    title: '코스닥 방산株 대거 상한가…LIG넥스원·한화에어로스페이스 급등',
+    description: '미국-이란 전쟁 발발로 코스닥 방산 관련주들이 대거 상한가를 기록했다. LIG넥스원과 한화에어로스페이스는 장중 30% 이상 급등했다.',
+    keywords: '코스닥,방산주,LIG넥스원,한화에어로스페이스,전쟁',
+    snippet: '미-이란 전쟁에 방산주 대거 상한가, LIG넥스원·한화에어로스페이스 급등.',
+    url: 'https://www.hankyung.com/article/2026030224891',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 24*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 24*3600000).toISOString(),
+    source: '한국경제', categories: ['주식'], category: '주식',
+    date: new Date(now.getTime() - 24*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: 'LG에너지솔루션이 2028년 전고체 배터리 양산 로드맵을 발표했다.',
-    fullBody: 'LG에너지솔루션이 2028년 전고체 배터리 양산을 목표로 한 구체적인 기술 개발 및 생산 로드맵을 발표했다. 전고체 배터리는 기존 리튬이온 배터리 대비 에너지 밀도가 2배 높고 화재 위험이 없어 차세대 전기차 배터리로 주목받고 있다.',
-    bodyParagraphs: ['LG에너지솔루션 2028년 전고체 배터리 양산 목표.'], relatedKeywords: ['LG에너지솔루션', '전고체배터리', '배터리']
+    summary: '미-이란 전쟁에 방산주 대거 상한가, LIG넥스원·한화에어로스페이스 급등.',
+    fullBody: '미국-이란 전쟁 발발로 코스닥 방산 관련주들이 대거 상한가를 기록했다. LIG넥스원과 한화에어로스페이스는 장중 한때 30% 이상 급등했으며, 이외에도 퍼스텍, 빅텍, 한국항공우주 등 방산 관련주들이 일제히 강세를 보였다. 전문가들은 방산 수출 확대 기대감이 반영된 것이라고 분석했다.',
+    bodyParagraphs: ['미-이란 전쟁에 방산주 대거 상한가.', 'LIG넥스원·한화에어로스페이스 급등.'],
+    relatedKeywords: ['코스닥', '방산주', 'LIG넥스원', '한화에어로스페이스']
   },
   {
-    id: 'fallback_025', uuid: 'fallback_025', title: '포스코퓨처엠, 양극재 해외공장 첫 흑자 달성…배터리 소재 성장세',
-    description: '포스코퓨처엠의 캐나다 현지 양극재 공장이 설립 3년 만에 처음으로 흑자 전환에 성공하며 배터리 소재 사업의 성장세를 입증했다.',
-    keywords: '포스코퓨처엠,양극재,배터리소재,캐나다', snippet: '포스코퓨처엠 해외 공장 흑자',
-    url: 'https://econojabis.com/article/fallback_025', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 250*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 250*60000).toISOString(),
-    source: 'EconoJabis', categories: ['주식'], category: '주식', date: new Date(now.getTime() - 250*60000).toISOString(),
+    id: 'real_024', uuid: 'real_024',
+    title: '엔화, 달러당 147엔대…안전자산 수요에 강세 전환',
+    description: '중동 전쟁 발발로 안전자산인 엔화 수요가 급증하면서 엔달러 환율이 달러당 147엔대로 하락(엔화 강세)했다.',
+    keywords: '엔화,일본,환율,안전자산,엔달러',
+    snippet: '중동 전쟁 안전자산 수요에 엔화 강세, 달러당 147엔대.',
+    url: 'https://www.hankyung.com/article/2026030214891',
+    image_url: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 25*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 25*3600000).toISOString(),
+    source: '한국경제', categories: ['환율'], category: '환율',
+    date: new Date(now.getTime() - 25*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '포스코퓨처엠 해외 양극재 공장 첫 흑자 달성.',
-    fullBody: '포스코퓨처엠의 캐나다 현지 양극재 생산 법인이 설립 3년 만에 처음으로 분기 흑자 전환에 성공했다. 이는 북미 전기차 시장의 성장과 함께 현지 배터리 소재 수요가 크게 증가한 덕분이다.',
-    bodyParagraphs: ['포스코퓨처엠 해외 양극재 공장 첫 흑자.'], relatedKeywords: ['포스코퓨처엠', '양극재', '배터리소재']
+    summary: '중동 전쟁 안전자산 수요에 엔화 강세, 달러당 147엔대.',
+    fullBody: '중동 전쟁 발발로 안전자산인 엔화 수요가 급증하면서 엔달러 환율이 달러당 147엔대로 하락(엔화 강세)했다. 전쟁 리스크가 고조될 때마다 투자자들이 안전자산인 엔화로 몰리는 전통적 패턴이 재현됐다. 일본은행의 금리 인상 기조와 맞물려 엔화 강세가 당분간 이어질 것으로 전망된다.',
+    bodyParagraphs: ['중동 전쟁 안전자산 수요에 엔화 강세.', '달러당 147엔대.'],
+    relatedKeywords: ['엔화', '일본', '환율', '안전자산']
   },
   {
-    id: 'fallback_026', uuid: 'fallback_026', title: '솔라나, NFT 거래량 급증에 가격 250달러 돌파',
-    description: '솔라나 블록체인 기반 NFT 거래량이 사상 최고치를 경신하며 솔라나(SOL) 가격이 250달러를 돌파했다.',
-    keywords: '솔라나,NFT,암호화폐,블록체인', snippet: '솔라나 NFT 급증에 250달러 돌파',
-    url: 'https://econojabis.com/article/fallback_026', image_url: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 260*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 260*60000).toISOString(),
-    source: 'EconoJabis', categories: ['암호화폐'], category: '암호화폐', date: new Date(now.getTime() - 260*60000).toISOString(),
+    id: 'real_025', uuid: 'real_025',
+    title: '서울 아파트 전세가 3개월 연속 상승…강남 전세 품귀 현상',
+    description: '서울 아파트 전세가격이 3개월 연속 상승세를 이어가며 강남권에서는 전세 물건 품귀 현상이 빚어지고 있다.',
+    keywords: '아파트,전세,강남,부동산,서울',
+    snippet: '서울 아파트 전세가 3개월 연속 상승, 강남 품귀 현상.',
+    url: 'https://www.hankyung.com/article/2026030204891',
+    image_url: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 26*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 26*3600000).toISOString(),
+    source: '한국경제', categories: ['부동산'], category: '부동산',
+    date: new Date(now.getTime() - 26*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '솔라나 NFT 거래량 최고치에 가격 250달러 돌파.',
-    fullBody: '솔라나 블록체인 기반 NFT 거래량이 월간 기준 사상 최고치를 기록하며 솔라나(SOL) 가격이 250달러를 돌파했다. 솔라나 생태계에서는 하루 평균 100만 건 이상의 NFT 거래가 발생하고 있다.',
-    bodyParagraphs: ['솔라나 NFT 거래량 최고치, 가격 250달러 돌파.'], relatedKeywords: ['솔라나', 'NFT', '블록체인']
+    summary: '서울 아파트 전세가 3개월 연속 상승, 강남권 전세 품귀 현상.',
+    fullBody: '서울 아파트 전세가격이 3개월 연속 상승세를 이어가며 강남권에서는 전세 물건 품귀 현상이 빚어지고 있다. 한국부동산원에 따르면 이번 주 서울 아파트 전세가격은 전주 대비 0.08% 올랐다. 재건축·재개발 이주 수요와 신규 입주 물량 감소가 맞물리면서 전세 공급이 크게 줄었다.',
+    bodyParagraphs: ['서울 아파트 전세가 3개월 연속 상승.', '강남권 전세 품귀 현상.'],
+    relatedKeywords: ['아파트', '전세', '강남', '부동산', '서울']
   },
   {
-    id: 'fallback_027', uuid: 'fallback_027', title: '정부, 2026년 추경 예산 35조원 편성…경기 부양 총력',
-    description: '정부가 국내 경기 침체 우려에 대응하기 위해 35조원 규모의 추가경정예산을 편성하기로 했다.',
-    keywords: '추경,예산,경기부양,재정정책', snippet: '2026년 추경 35조원 편성',
-    url: 'https://econojabis.com/article/fallback_027', image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 270*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 270*60000).toISOString(),
-    source: 'EconoJabis', categories: ['거시경제'], category: '거시경제', date: new Date(now.getTime() - 270*60000).toISOString(),
+    id: 'real_026', uuid: 'real_026',
+    title: '미 증시 급락…S&P500 3% 하락, 방산주 나홀로 강세',
+    description: '미국 증시가 이란 전쟁 발발 충격에 S&P500이 3% 급락했다. 록히드마틴, 레이시온 등 방산주는 강세를 보였다.',
+    keywords: 'S&P500,미국증시,이란,방산주,급락',
+    snippet: '미국 이란 전쟁 충격에 S&P500 3% 급락, 방산주 나홀로 강세.',
+    url: 'https://www.hankyung.com/article/2026030194891',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 27*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 27*3600000).toISOString(),
+    source: '한국경제', categories: ['주식'], category: '주식',
+    date: new Date(now.getTime() - 27*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '정부 2026년 추경 35조원 편성 결정.',
-    fullBody: '정부가 2026년 추가경정예산(추경)을 35조원 규모로 편성하기로 결정했다. 이번 추경은 내수 경기 침체 대응과 취약계층 지원, 인공지능·반도체 등 미래 산업 육성에 집중 투입될 예정이다.',
-    bodyParagraphs: ['정부 2026년 추경 35조원 편성 결정.'], relatedKeywords: ['추경', '예산', '경기부양']
+    summary: '이란 전쟁에 미국 S&P500 3% 급락, 방산주만 강세.',
+    fullBody: '미국 증시가 이란 전쟁 발발 충격에 S&P500이 3% 급락했다. 에너지주와 방산주를 제외한 대부분의 섹터가 하락했다. 록히드마틴, 레이시온 테크놀로지스 등 방산 대형주는 각각 8%, 6% 급등하며 강세를 보였다. 증시 전문가들은 과거 사례를 보면 전쟁 이후 6개월 내 증시가 반등한 경우가 많다고 분석했다.',
+    bodyParagraphs: ['이란 전쟁 충격에 S&P500 3% 급락.', '방산주만 강세.'],
+    relatedKeywords: ['S&P500', '미국증시', '이란', '방산주']
   },
   {
-    id: 'fallback_028', uuid: 'fallback_028', title: '국내 은행 예금금리 일제히 인하…수신 경쟁 완화',
-    description: '주요 시중은행들이 기준금리 안정화 기대감을 반영해 정기예금 금리를 일제히 0.1~0.2%포인트 인하했다.',
-    keywords: '예금금리,은행,금리인하,수신', snippet: '은행 예금금리 일제히 인하',
-    url: 'https://econojabis.com/article/fallback_028', image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 280*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 280*60000).toISOString(),
-    source: 'EconoJabis', categories: ['금융'], category: '금융', date: new Date(now.getTime() - 280*60000).toISOString(),
-    relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '주요 은행들이 예금금리를 일제히 인하했다.',
-    fullBody: '국민·신한·하나·우리 등 주요 시중은행들이 정기예금 금리를 일제히 0.1~0.2%포인트 인하했다. 이번 인하로 1년 만기 정기예금 최고 금리는 연 3.5%대에서 3.3%대로 낮아졌다.',
-    bodyParagraphs: ['주요 은행 예금금리 0.1~0.2%p 인하.'], relatedKeywords: ['예금금리', '은행', '금리인하']
+    id: 'real_027', uuid: 'real_027',
+    title: '트럼프 "이란 핵시설 타격 성공"…이스라엘과 공동 작전',
+    description: '도널드 트럼프 미국 대통령이 이란 핵시설 타격 작전이 성공적으로 마무리됐다고 발표했다. 이스라엘과의 공동 군사 작전이었다.',
+    keywords: '트럼프,이란,핵시설,미국,이스라엘,전쟁',
+    snippet: '트럼프 이란 핵시설 타격 성공 발표, 미국·이스라엘 공동 작전.',
+    url: 'https://www.hankyung.com/article/2026030184891',
+    image_url: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 28*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 28*3600000).toISOString(),
+    source: '한국경제', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now.getTime() - 28*3600000).toISOString(),
+    relevance_score: null, locale: 'ko', isBreaking: true, isFeatured: false,
+    summary: '트럼프 이란 핵시설 타격 성공 발표. 미국·이스라엘 공동 작전.',
+    fullBody: '도널드 트럼프 미국 대통령이 이란 핵시설 타격 작전이 성공적으로 마무리됐다고 발표했다. 트럼프 대통령은 "이번 작전으로 이란의 핵무기 개발 능력이 심각하게 훼손됐다"고 밝혔다. 이스라엘과의 공동 군사 작전으로 진행됐으며, 이란은 즉각적인 보복을 예고했다.',
+    bodyParagraphs: ['트럼프 이란 핵시설 타격 성공 발표.', '미국·이스라엘 공동 작전.'],
+    relatedKeywords: ['트럼프', '이란', '핵시설', '미국', '이스라엘', '전쟁']
   },
   {
-    id: 'fallback_029', uuid: 'fallback_029', title: '현대·기아차, 미국 관세 회피 위해 현지 생산 확대 결정',
-    description: '현대자동차그룹이 미국의 수입차 관세 부과에 대응해 미국 조지아·앨라배마 공장의 생산량을 연 40만 대 증가시키기로 했다.',
-    keywords: '현대차,기아차,미국,관세,현지생산', snippet: '현대기아차 미국 현지 생산 확대',
-    url: 'https://econojabis.com/article/fallback_029', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 290*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 290*60000).toISOString(),
-    source: 'EconoJabis', categories: ['거시경제'], category: '거시경제', date: new Date(now.getTime() - 290*60000).toISOString(),
+    id: 'real_028', uuid: 'real_028',
+    title: '이더리움, 전쟁 충격 딛고 3,200달러 회복…디파이 TVL 급증',
+    description: '이더리움이 이란 전쟁 충격에서 빠르게 회복하며 3,200달러를 재돌파했다. 탈중앙금융(DeFi) 예치금(TVL)도 역대 최고치를 경신했다.',
+    keywords: '이더리움,DeFi,TVL,암호화폐,디파이',
+    snippet: '이더리움 전쟁 충격 딛고 3,200달러 회복, 디파이 TVL 역대 최고.',
+    url: 'https://www.hankyung.com/article/2026030174891',
+    image_url: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 29*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 29*3600000).toISOString(),
+    source: '한국경제', categories: ['암호화폐'], category: '암호화폐',
+    date: new Date(now.getTime() - 29*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '현대·기아차가 미국 관세에 대응해 현지 생산을 확대한다.',
-    fullBody: '현대자동차그룹이 미국의 수입차 25% 관세 부과에 대응해 미국 조지아 메타플랜트와 앨라배마 공장의 생산량을 연간 40만 대 늘리기로 결정했다. 이를 위해 향후 3년간 총 50억 달러를 추가 투자할 예정이다.',
-    bodyParagraphs: ['현대기아차 미국 관세 대응 현지 생산 확대.'], relatedKeywords: ['현대차', '기아차', '관세']
+    summary: '이더리움 3,200달러 회복. 디파이 TVL 역대 최고치 경신.',
+    fullBody: '이더리움이 이란 전쟁 충격에서 빠르게 회복하며 3,200달러를 재돌파했다. 탈중앙금융(DeFi) 예치금(TVL)도 2,800억 달러로 역대 최고치를 경신했다. 분석가들은 전쟁 불확실성 속에서도 암호화폐 시장이 빠르게 회복하는 것은 이 시장의 구조적 성장을 반영한다고 분석했다.',
+    bodyParagraphs: ['이더리움 3,200달러 회복.', '디파이 TVL 역대 최고치.'],
+    relatedKeywords: ['이더리움', 'DeFi', 'TVL', '암호화폐']
   },
   {
-    id: 'fallback_030', uuid: 'fallback_030', title: '2026 다보스포럼, 올해의 최대 경제 리스크로 AI 거버넌스 지목',
-    description: '세계경제포럼(WEF) 다보스에서 열린 2026년 연차총회에서 글로벌 경제 지도자들이 AI 거버넌스 부재를 올해 최대 경제 리스크로 꼽았다.',
-    keywords: '다보스,WEF,AI거버넌스,글로벌경제', snippet: '다보스포럼 AI 거버넌스 최대 경제 리스크',
-    url: 'https://econojabis.com/article/fallback_030', image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800',
-    language: 'ko', published_at: new Date(now.getTime() - 300*60000).toISOString(),
-    publishedAt: new Date(now.getTime() - 300*60000).toISOString(),
-    source: 'EconoJabis', categories: ['거시경제'], category: '거시경제', date: new Date(now.getTime() - 300*60000).toISOString(),
+    id: 'real_029', uuid: 'real_029',
+    title: '원화, 중동 전쟁에 약세…원달러 1,490원대 거래',
+    description: '중동 전쟁으로 달러 강세가 이어지면서 원달러 환율이 1,490원대로 올랐다. 외환당국이 시장 안정 조치를 시사했다.',
+    keywords: '원화,원달러,환율,달러,중동전쟁,외환당국',
+    snippet: '중동 전쟁 달러 강세에 원달러 1,490원대. 외환당국 시장 안정 시사.',
+    url: 'https://www.hankyung.com/article/2026030164891',
+    image_url: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 30*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 30*3600000).toISOString(),
+    source: '한국경제', categories: ['환율'], category: '환율',
+    date: new Date(now.getTime() - 30*3600000).toISOString(),
     relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
-    summary: '다보스포럼이 AI 거버넌스 부재를 올해 최대 경제 리스크로 지목했다.',
-    fullBody: '세계경제포럼(WEF)이 주최하는 2026년 다보스 연차총회에서 전 세계 경제·정치 지도자들이 AI 거버넌스 부재를 올해 최대 경제 리스크로 꼽았다. WEF가 120개국 1만여 명의 전문가를 대상으로 실시한 글로벌 리스크 설문조사에서도 AI 관련 리스크가 1위를 차지했다.',
-    bodyParagraphs: ['다보스포럼, AI 거버넌스를 최대 경제 리스크로 지목.'], relatedKeywords: ['다보스', 'WEF', 'AI거버넌스']
+    summary: '중동 전쟁 달러 강세에 원달러 1,490원대, 외환당국 시장 안정 시사.',
+    fullBody: '중동 전쟁으로 달러 강세가 이어지면서 원달러 환율이 1,490원대로 올랐다. 한국 외환당국은 급격한 환율 변동을 막기 위해 시장 안정 조치를 시사했다. 기획재정부 관계자는 "과도한 외환 변동성에 대해 적절한 조치를 취할 것"이라고 밝혔다.',
+    bodyParagraphs: ['중동 전쟁 달러 강세에 원달러 1,490원대.', '외환당국 시장 안정 조치 시사.'],
+    relatedKeywords: ['원화', '원달러', '환율', '달러', '중동전쟁']
+  },
+  {
+    id: 'real_030', uuid: 'real_030',
+    title: 'LG전자, AI 가전 구독 서비스 가입자 500만 돌파…수익성 개선',
+    description: 'LG전자의 AI 가전 구독 서비스 누적 가입자가 500만 명을 돌파했다. 이에 따라 LG전자의 서비스 부문 매출이 처음으로 하드웨어 매출을 앞섰다.',
+    keywords: 'LG전자,AI가전,구독서비스,수익성',
+    snippet: 'LG전자 AI 가전 구독 서비스 500만 돌파, 서비스 매출이 하드웨어 첫 추월.',
+    url: 'https://www.hankyung.com/article/2026030154891',
+    image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&auto=format&fit=crop',
+    language: 'ko', published_at: new Date(now.getTime() - 31*3600000).toISOString(),
+    publishedAt: new Date(now.getTime() - 31*3600000).toISOString(),
+    source: '한국경제', categories: ['테크'], category: '테크',
+    date: new Date(now.getTime() - 31*3600000).toISOString(),
+    relevance_score: null, locale: 'ko', isBreaking: false, isFeatured: false,
+    summary: 'LG전자 AI 가전 구독 서비스 500만 돌파, 서비스 매출 하드웨어 첫 추월.',
+    fullBody: 'LG전자의 AI 가전 구독 서비스 누적 가입자가 500만 명을 돌파했다. 냉장고, 세탁기, 에어컨 등 주요 제품에 AI 기능을 탑재하고 월정액 구독 모델을 도입한 지 3년 만의 성과다. 이에 따라 LG전자의 서비스 부문 분기 매출이 처음으로 하드웨어 매출을 앞질렀다.',
+    bodyParagraphs: ['LG전자 AI 가전 구독 서비스 500만 돌파.', '서비스 매출이 하드웨어 첫 추월.'],
+    relatedKeywords: ['LG전자', 'AI가전', '구독서비스', '수익성']
   }
 ];
 
@@ -536,7 +681,7 @@ function classifyCategory(title: string, body: string): string {
 }
 
 // ============================================================
-// 카테고리별 Unsplash 이미지
+// 카테고리별 이미지
 // ============================================================
 const CATEGORY_IMAGES: Record<string, string> = {
   '주식': 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
@@ -589,7 +734,6 @@ function getNewsImageUrl(title: string, category: string): string {
 // ============================================================
 async function fetchGeminiNews(query: string, _apiKey: string): Promise<NewsArticle[]> {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
-  
   try {
     const res = await fetch(`${backendUrl}/api/news?query=${encodeURIComponent(query)}`);
     if (!res.ok) {
@@ -598,48 +742,35 @@ async function fetchGeminiNews(query: string, _apiKey: string): Promise<NewsArti
     }
     const data = await res.json();
     const raw: Record<string, unknown>[] = data.articles || [];
-    
     const articles: NewsArticle[] = [];
     for (const item of raw) {
       const title = String(item.title || '').trim();
       const url = String(item.url || `https://econojabis.com/article/${Date.now()}`).trim();
       const body = String(item.body || '').trim();
-      
       if (!title || title.length < 5) continue;
       if (isDuplicateArticle(title, url)) continue;
-      
       const paragraphs = body
         .split(/\n\n+/)
         .map(p => p.trim())
         .filter(p => p.length > 20);
-      
       const category = String(item.category || classifyCategory(title, body));
       const id = `gemini_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
       const publishedAt = String(item.published_at || new Date().toISOString());
       const imageUrl = getNewsImageUrl(title, category);
-      
       registerArticle(title, url);
       articles.push({
-        id,
-        uuid: id,
-        title,
+        id, uuid: id, title,
         description: paragraphs[0] || '',
         keywords: String(item.keywords || ''),
         snippet: paragraphs[0] || '',
-        url,
-        image_url: imageUrl,
-        imageUrl,
+        url, image_url: imageUrl, imageUrl,
         language: 'ko',
-        published_at: publishedAt,
-        publishedAt,
+        published_at: publishedAt, publishedAt,
         source: String(item.source || 'EconoJabis'),
-        categories: [category],
-        category,
+        categories: [category], category,
         date: publishedAt,
-        relevance_score: null,
-        locale: 'ko',
-        isBreaking: false,
-        isFeatured: false,
+        relevance_score: null, locale: 'ko',
+        isBreaking: false, isFeatured: false,
         summary: paragraphs[0] || '',
         fullBody: body,
         bodyParagraphs: paragraphs,
@@ -655,10 +786,9 @@ async function fetchGeminiNews(query: string, _apiKey: string): Promise<NewsArti
 }
 
 // ============================================================
-// 메인 훅 - 폴백 기사로 즉시 로딩, API로 실시간 갱신
+// 메인 훅 - 실제 뉴스 30개로 즉시 로딩, API로 실시간 갱신
 // ============================================================
 export const useTheNewsApi = (_language = 'ko') => {
-  // 폴백 기사로 초기화 → 로딩 없이 즉시 30개 표시
   const [articles, setArticles] = useState<NewsArticle[]>(FALLBACK_ARTICLES);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -666,14 +796,12 @@ export const useTheNewsApi = (_language = 'ko') => {
   const fetchingRef = useRef(false);
   const articleCacheRef = useRef<Map<string, NewsArticle>>(new Map());
 
-  // 폴백 기사를 캐시에 초기 등록
   useEffect(() => {
     for (const a of FALLBACK_ARTICLES) {
       articleCacheRef.current.set(a.id, a);
     }
   }, []);
 
-  // API 키는 환경변수에서만 로드
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
 
   const fetchNews = useCallback(async () => {
@@ -681,18 +809,14 @@ export const useTheNewsApi = (_language = 'ko') => {
     fetchingRef.current = true;
     setIsLoading(true);
     setError(null);
-
     console.log('[EconoJabis] Starting news fetch via backend:', backendUrl);
-
     try {
       const shuffled = [...NEWS_QUERIES].sort(() => Math.random() - 0.5);
       const selectedQueries = shuffled.slice(0, 5);
       console.log('[EconoJabis] Selected queries:', selectedQueries);
-
       const results = await Promise.allSettled(
         selectedQueries.map(q => fetchGeminiNews(q, backendUrl))
       );
-
       const newArticles: NewsArticle[] = [];
       for (const result of results) {
         if (result.status === 'fulfilled') {
@@ -701,39 +825,30 @@ export const useTheNewsApi = (_language = 'ko') => {
           console.warn('[EconoJabis] Query failed:', result.reason);
         }
       }
-
       console.log('[EconoJabis] Total new articles fetched:', newArticles.length);
-
       newArticles.sort((a, b) =>
         new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
       );
-
       if (newArticles.length > 0) {
         newArticles[0].isFeatured = true;
         newArticles[0].isBreaking = true;
       }
-
-      // 새로운 실시간 기사를 캐시에 추가 (폴백보다 앞에 표시)
       for (const a of newArticles) {
         articleCacheRef.current.set(a.id, a);
       }
-
       const allCached = Array.from(articleCacheRef.current.values())
         .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
-
       if (allCached.length > 0) {
         setArticles(allCached);
         setLastFetched(new Date());
         setError(null);
         console.log('[EconoJabis] Articles set:', allCached.length);
       } else {
-        // 캐시도 비었으면 폴백으로 복구
         setArticles(FALLBACK_ARTICLES);
         setError('실시간 뉴스를 불러오지 못했습니다. 기본 뉴스를 표시합니다.');
       }
     } catch (e) {
       console.error('[EconoJabis] fetchNews error:', e);
-      // 에러가 나도 폴백 기사는 유지
       setError('실시간 업데이트 중 오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
@@ -742,9 +857,7 @@ export const useTheNewsApi = (_language = 'ko') => {
   }, [backendUrl]);
 
   useEffect(() => {
-    // 마운트 후 1초 뒤에 API 호출 (UI 먼저 렌더링)
     const timer = setTimeout(fetchNews, 1000);
-    // 5분마다 갱신
     const interval = setInterval(fetchNews, 5 * 60 * 1000);
     return () => {
       clearTimeout(timer);
@@ -752,13 +865,24 @@ export const useTheNewsApi = (_language = 'ko') => {
     };
   }, [fetchNews]);
 
+  // ============================================================
+  // 급상승 검색어 추출 로직
+  // 뉴스 제목 + 키워드에서 단어 빈도수를 계산하여 상위 10개 반환
+  // 최신 기사(최근 2시간)에 가중치 부여, 불용어 제거
+  // ============================================================
   const extractTrendingKeywords = useCallback(() => {
     const freq: Record<string, number> = {};
+    const recentCutoff = Date.now() - 2 * 60 * 60 * 1000; // 최근 2시간
+    const STOPWORDS = new Set(['있다', '했다', '이다', '하다', '것이다', '것으로', '위해', '대해', '따라', '통해', '관련', '경우', '이후', '이전', '현재', '국내', '국제', '글로벌', '대한', '한국']);
     for (const article of articles) {
-      const words = (article.title + ' ' + article.keywords).split(/[\s,]+/);
+      const isRecent = new Date(article.published_at).getTime() > recentCutoff;
+      const weight = isRecent ? 2 : 1; // 최근 기사 가중치 2배
+      const words = (article.title + ' ' + article.keywords).split(/[\s,·…]+/);
       for (const w of words) {
-        const cleaned = w.replace(/[^\w가-힣]/g, '');
-        if (cleaned.length > 1) freq[cleaned] = (freq[cleaned] || 0) + 1;
+        const cleaned = w.replace(/[^\w가-힣A&P]/g, '').trim();
+        if (cleaned.length > 1 && !STOPWORDS.has(cleaned)) {
+          freq[cleaned] = (freq[cleaned] || 0) + weight;
+        }
       }
     }
     return Object.entries(freq)
