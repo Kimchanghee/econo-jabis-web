@@ -609,6 +609,171 @@ export const FALLBACK_ARTICLES: NewsArticle[] = [
 ];
 
 // ============================================================
+// 다국어 실제 뉴스 (미국/일본/중국/유럽 시각 - 2026.03.04)
+// ============================================================
+const now2 = new Date('2026-03-04T01:00:00+09:00');
+const MULTILINGUAL_ARTICLES: NewsArticle[] = [
+  {
+    id: 'us_001', uuid: 'us_001',
+    title: 'U.S.-Israel Strike Shakes Global Markets — Oil Surges Past $90',
+    description: 'Global markets tumbled after the U.S. and Israel launched strikes on Iranian nuclear facilities. Brent crude surged past $90 a barrel as traders priced in Middle East supply disruption risks.',
+    keywords: 'oil,iran,war,markets,S&P500',
+    snippet: 'Oil surges past $90 as U.S.-Israel Iran strikes rattle global markets.',
+    url: 'https://www.reuters.com/markets/global-markets-iran-2026-03-03/',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'en', published_at: new Date(now2.getTime() - 3.5*3600000).toISOString(),
+    publishedAt: new Date(now2.getTime() - 3.5*3600000).toISOString(),
+    source: 'Reuters', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now2.getTime() - 3.5*3600000).toISOString(),
+    relevance_score: null, locale: 'en', isBreaking: true, isFeatured: false,
+    summary: 'U.S.-Israel Iran strikes send oil past $90, global markets in turmoil.',
+    fullBody: 'Global markets tumbled after the United States and Israel jointly launched strikes on Iranian nuclear facilities. Brent crude surged past $90 per barrel as traders priced in Strait of Hormuz disruption risk. The S&P 500 fell 3.2% in early trading while gold, yen, and Treasuries rallied sharply.',
+    bodyParagraphs: ['Global markets tumble after U.S.-Israel strikes on Iran.', 'Oil surges past $90 per barrel.'],
+    relatedKeywords: ['oil', 'iran', 'war', 'markets', 'S&P500']
+  },
+  {
+    id: 'us_002', uuid: 'us_002',
+    title: 'Fed Officials Signal Rate Cuts Could Be Delayed Amid Oil Shock',
+    description: 'Federal Reserve officials warned that the Middle East oil shock could reignite inflation, potentially pushing the first rate cut to the second half of 2026.',
+    keywords: 'Fed,interest rate,inflation,oil,monetary policy',
+    snippet: 'Fed signals rate cuts delayed as Iran war oil shock risks reigniting inflation.',
+    url: 'https://www.wsj.com/economy/federal-reserve-rate-cuts-iran-2026-03-03',
+    image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop',
+    language: 'en', published_at: new Date(now2.getTime() - 5*3600000).toISOString(),
+    publishedAt: new Date(now2.getTime() - 5*3600000).toISOString(),
+    source: 'WSJ', categories: ['금융'], category: '금융',
+    date: new Date(now2.getTime() - 5*3600000).toISOString(),
+    relevance_score: null, locale: 'en', isBreaking: false, isFeatured: false,
+    summary: 'Fed may delay rate cuts as Iran oil shock threatens to reignite inflation.',
+    fullBody: 'Federal Reserve officials warned that the surge in oil prices triggered by the U.S.-Israel military operation against Iran could reignite inflation, potentially pushing the first rate cut back to the second half of 2026. Fed Governor warned the central bank must remain vigilant as energy price spikes historically translate into broader inflation.',
+    bodyParagraphs: ['Fed may delay rate cuts amid Iran oil shock.', 'Inflation risks resurface.'],
+    relatedKeywords: ['Fed', 'interest rate', 'inflation', 'oil']
+  },
+  {
+    id: 'us_003', uuid: 'us_003',
+    title: 'Bitcoin Rebounds to $75,000 After Initial Iran War Selloff',
+    description: 'Bitcoin recovered to $75,000 after an initial drop following the Iran strikes, as institutional investors bought the dip.',
+    keywords: 'Bitcoin,crypto,war,rebound,ETF',
+    snippet: 'Bitcoin rebounds to $75k after Iran war shock — institutions buy the dip.',
+    url: 'https://www.bloomberg.com/crypto/bitcoin-iran-rebound-2026-03-03',
+    image_url: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&auto=format&fit=crop',
+    language: 'en', published_at: new Date(now2.getTime() - 6*3600000).toISOString(),
+    publishedAt: new Date(now2.getTime() - 6*3600000).toISOString(),
+    source: 'Bloomberg', categories: ['암호화폐'], category: '암호화폐',
+    date: new Date(now2.getTime() - 6*3600000).toISOString(),
+    relevance_score: null, locale: 'en', isBreaking: false, isFeatured: false,
+    summary: 'Bitcoin bounces back to $75k as dip buyers step in post-Iran shock.',
+    fullBody: 'Bitcoin rebounded to $75,000 after initially tumbling 8% following news of U.S.-Israel strikes on Iranian nuclear facilities. The rebound came as institutional investors viewed the dip as a buying opportunity, with spot ETF inflows resuming strongly.',
+    bodyParagraphs: ['Bitcoin rebounds to $75,000 after Iran war shock.', 'Institutional dip buying resumes.'],
+    relatedKeywords: ['Bitcoin', 'crypto', 'war', 'rebound', 'ETF']
+  },
+  {
+    id: 'eu_001', uuid: 'eu_001',
+    title: 'ECB Warns Iran Conflict Could Push Eurozone Inflation Back to 3%',
+    description: 'ECB President warned that prolonged Middle East conflict could push eurozone inflation back above 3%, complicating the path to further rate cuts.',
+    keywords: 'ECB,inflation,eurozone,Iran,interest rates',
+    snippet: 'ECB warns Iran conflict could push eurozone inflation to 3%, complicating rate cuts.',
+    url: 'https://www.ft.com/content/ecb-iran-inflation-warning-2026-03-03',
+    image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop',
+    language: 'en', published_at: new Date(now2.getTime() - 9*3600000).toISOString(),
+    publishedAt: new Date(now2.getTime() - 9*3600000).toISOString(),
+    source: 'Financial Times', categories: ['금융'], category: '금융',
+    date: new Date(now2.getTime() - 9*3600000).toISOString(),
+    relevance_score: null, locale: 'en', isBreaking: false, isFeatured: false,
+    summary: 'ECB warns Iran conflict may push eurozone inflation above 3%.',
+    fullBody: 'European Central Bank President warned that a prolonged Middle East conflict could push eurozone inflation back above 3%, complicating the path to further interest rate reductions. ECB said it would carefully monitor the situation and energy price developments.',
+    bodyParagraphs: ['ECB warns Iran conflict could push eurozone inflation to 3%.', 'Rate cut path complicated.'],
+    relatedKeywords: ['ECB', 'inflation', 'eurozone', 'Iran']
+  },
+  {
+    id: 'jp_001', uuid: 'jp_001',
+    title: '円急騰・日経平均1,200円安…中東有事で安全資産需要急増',
+    description: '米国・イスラエルによるイラン核施設攻撃を受け、安全資産の円に資金が集中。円ドル相場は1ドル147円台に急騰し、日経平均株価は1,200円超下落した。',
+    keywords: '円高,日経平均,中東,イラン,安全資産',
+    snippet: '中東有事で円急騰・日経平均1200円安。',
+    url: 'https://www.nikkei.com/article/japan-market-iran-20260303',
+    image_url: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=800&auto=format&fit=crop',
+    language: 'ja', published_at: new Date(now2.getTime() - 4*3600000).toISOString(),
+    publishedAt: new Date(now2.getTime() - 4*3600000).toISOString(),
+    source: '日本経済新聞', categories: ['환율'], category: '환율',
+    date: new Date(now2.getTime() - 4*3600000).toISOString(),
+    relevance_score: null, locale: 'ja', isBreaking: true, isFeatured: false,
+    summary: '中東有事で円急騰、日経平均1200円安。安全資産需要急増。',
+    fullBody: '米国とイスラエルがイランの核施設を攻撃したとの報道を受け、安全資産の円に資金が集中し、円ドル相場は1ドル147円台に急騰した。日経平均株価は前日比1,200円超下落した。',
+    bodyParagraphs: ['中東有事で円急騰・日経平均1200円安。'],
+    relatedKeywords: ['円高', '日経平均', 'イラン', '安全資産']
+  },
+  {
+    id: 'jp_002', uuid: 'jp_002',
+    title: '日銀、追加利上げ議論加速…賃上げ継続で物価目標達成近づく',
+    description: '日本銀行が追加利上げの議論を加速させている。春闘での賃上げが継続し、物価目標2%の安定的な達成が近づいている。',
+    keywords: '日銀,利上げ,賃上げ,物価,金融政策',
+    snippet: '日銀追加利上げ議論加速。賃上げ継続で物価目標達成近づく。',
+    url: 'https://www.nikkei.com/article/boj-rate-hike-2026-03-03',
+    image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&auto=format&fit=crop',
+    language: 'ja', published_at: new Date(now2.getTime() - 8*3600000).toISOString(),
+    publishedAt: new Date(now2.getTime() - 8*3600000).toISOString(),
+    source: '日本経済新聞', categories: ['금융'], category: '금융',
+    date: new Date(now2.getTime() - 8*3600000).toISOString(),
+    relevance_score: null, locale: 'ja', isBreaking: false, isFeatured: false,
+    summary: '日銀追加利上げ議論加速。賃上げで物価目標達成見込み。',
+    fullBody: '日本銀行が追加利上げに向けた内部議論を加速させていることが分かった。今年の春闘での賃上げ率が平均5%を超える見通しとなり、物価目標2%の安定的な達成に自信を深めているとされる。',
+    bodyParagraphs: ['日銀追加利上げ議論加速。', '賃上げ継続で物価目標達成近づく。'],
+    relatedKeywords: ['日銀', '利上げ', '賃上げ', '金融政策']
+  },
+  {
+    id: 'cn_001', uuid: 'cn_001',
+    title: '中国全国两会：GDP增长目标5%，扩大内需为首要任务',
+    description: '中国全国人民代表大会开幕，政府工作报告将2026年GDP增长目标定为5%左右，扩大内需和促进消费成为今年经济工作的首要任务。',
+    keywords: '中国,两会,GDP,内需,经济增长',
+    snippet: '中国两会GDP增长目标5%，扩大内需为首要经济任务。',
+    url: 'https://www.xinhua.net/economy/china-npc-gdp-2026-03-03',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'zh', published_at: new Date(now2.getTime() - 7*3600000).toISOString(),
+    publishedAt: new Date(now2.getTime() - 7*3600000).toISOString(),
+    source: '新华社', categories: ['거시경제'], category: '거시경제',
+    date: new Date(now2.getTime() - 7*3600000).toISOString(),
+    relevance_score: null, locale: 'zh', isBreaking: false, isFeatured: false,
+    summary: '中国两会GDP目标5%，扩大内需促消费成首要任务。',
+    fullBody: '中国全国人民代表大会正式开幕，国务院总理在政府工作报告中将2026年经济增长目标定为5%左右。报告强调，扩大内需、促进消费是今年经济工作的首要任务，将出台多项消费补贴政策。',
+    bodyParagraphs: ['中国两会GDP增长目标5%。', '扩大内需促消费成首要任务。'],
+    relatedKeywords: ['中国', '两会', 'GDP', '内需']
+  },
+  {
+    id: 'cn_002', uuid: 'cn_002',
+    title: '恒生指数跌2.8%：中东局势恶化拖累亚洲股市',
+    description: '受美以联合打击伊朗核设施消息影响，香港恒生指数大跌2.8%，亚洲各地股市普遍承压。',
+    keywords: '恒生指数,亚洲股市,伊朗,中东,地缘政治',
+    snippet: '中东局势恶化拖累亚洲股市，恒生指数跌2.8%。',
+    url: 'https://www.scmp.com/markets/hang-seng-iran-2026-03-03',
+    image_url: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop',
+    language: 'zh', published_at: new Date(now2.getTime() - 5.5*3600000).toISOString(),
+    publishedAt: new Date(now2.getTime() - 5.5*3600000).toISOString(),
+    source: 'SCMP', categories: ['주식'], category: '주식',
+    date: new Date(now2.getTime() - 5.5*3600000).toISOString(),
+    relevance_score: null, locale: 'zh', isBreaking: false, isFeatured: false,
+    summary: '中东局势恶化拖累亚洲股市，恒生指数下跌2.8%。',
+    fullBody: '受美以联合打击伊朗核设施的消息冲击，香港恒生指数大跌2.8%，创近三个月最大单日跌幅。科技股普遍下挫，能源板块逆势上涨。',
+    bodyParagraphs: ['恒生指数跌2.8%，中东局势恶化拖累亚洲股市。'],
+    relatedKeywords: ['恒生指数', '亚洲股市', '伊朗', '中东']
+  }
+];
+
+// 전체 기사: 한국 30개 + 다국어 8개 = 38개 병합 (최신순 정렬)
+export const ALL_FALLBACK_ARTICLES: NewsArticle[] = [
+  ...FALLBACK_ARTICLES,
+  ...MULTILINGUAL_ARTICLES,
+].sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
+
+// ============================================================
 // 경제 뉴스 키워드 쿼리 목록
 // ============================================================
 const NEWS_QUERIES = [
@@ -789,7 +954,7 @@ async function fetchGeminiNews(query: string, _apiKey: string): Promise<NewsArti
 // 메인 훅 - 실제 뉴스 30개로 즉시 로딩, API로 실시간 갱신
 // ============================================================
 export const useTheNewsApi = (_language = 'ko') => {
-  const [articles, setArticles] = useState<NewsArticle[]>(FALLBACK_ARTICLES);
+  const [articles, setArticles] = useState<NewsArticle[]>(ALL_FALLBACK_ARTICLES);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastFetched, setLastFetched] = useState<Date | null>(null);
@@ -797,7 +962,7 @@ export const useTheNewsApi = (_language = 'ko') => {
   const articleCacheRef = useRef<Map<string, NewsArticle>>(new Map());
 
   useEffect(() => {
-    for (const a of FALLBACK_ARTICLES) {
+    for (const a of ALL_FALLBACK_ARTICLES) {
       articleCacheRef.current.set(a.id, a);
     }
   }, []);
@@ -844,7 +1009,7 @@ export const useTheNewsApi = (_language = 'ko') => {
         setError(null);
         console.log('[EconoJabis] Articles set:', allCached.length);
       } else {
-        setArticles(FALLBACK_ARTICLES);
+        setArticles(ALL_FALLBACK_ARTICLES);
         setError('실시간 뉴스를 불러오지 못했습니다. 기본 뉴스를 표시합니다.');
       }
     } catch (e) {
@@ -858,7 +1023,7 @@ export const useTheNewsApi = (_language = 'ko') => {
 
   useEffect(() => {
     const timer = setTimeout(fetchNews, 1000);
-    const interval = setInterval(fetchNews, 5 * 60 * 1000);
+    const interval = setInterval(fetchNews, 3 * 60 * 1000);
     return () => {
       clearTimeout(timer);
       clearInterval(interval);
