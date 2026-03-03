@@ -25,15 +25,18 @@ const AdBar728 = ({ uid }: { uid: string }) => {
     iframe.srcdoc = html;
   }, []);
   return (
-    <iframe
-      ref={ref}
-      key={uid}
-      title="ad-bar"
-      scrolling="no"
-      frameBorder="0"
-      style={{ width: '728px', maxWidth: '100%', height: '90px', border: 'none', display: 'block' }}
-      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-    />
+    <div style={{ position: 'relative', overflow: 'hidden' }}
+      onWheel={(e) => { e.stopPropagation(); window.scrollBy(0, e.deltaY); }}>
+      <iframe
+        ref={ref}
+        key={uid}
+        title="ad-bar"
+        scrolling="no"
+        frameBorder="0"
+        style={{ width: '728px', maxWidth: '100%', height: '90px', border: 'none', display: 'block' }}
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+      />
+    </div>
   );
 };
 
