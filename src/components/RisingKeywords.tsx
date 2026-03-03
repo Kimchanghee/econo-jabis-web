@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
-import { Flame, ArrowUp, RefreshCw } from "lucide-react";
+import { Flame, ArrowUp, ArrowDown, RefreshCw } from "lucide-react";
 import { NewsArticle } from "../data/newsData";
 
 interface RisingKeyword {
   rank: number;
   keyword: string;
-  change: "new" | "up" | "same";
+  change: "new" | "up" | "down" | "same";
   score: number;
+  prevRank?: number;
 }
 
 const KEYWORD_POOL: Record<string, { display: string; weight: number }> = {
@@ -34,9 +35,13 @@ const KEYWORD_POOL: Record<string, { display: string; weight: number }> = {
   "수출": { display: "수출", weight: 1.1 },
   "ETF": { display: "ETF", weight: 1.2 },
   "IPO": { display: "IPO", weight: 1.2 },
+  "이란": { display: "이란", weight: 1.6 },
+  "전쟁": { display: "전쟁", weight: 1.6 },
+  "방산": { display: "방산", weight: 1.4 },
+  "관세": { display: "관세", weight: 1.4 },
+  "트럼프": { display: "트럼프", weight: 1.3 },
   "공매도": { display: "공매도", weight: 1.1 },
   "실업률": { display: "실업률", weight: 1.1 },
-  "미중무역": { display: "미중무역", weight: 1.3 },
   "전기차": { display: "전기차", weight: 1.2 },
   "배당": { display: "배당", weight: 1.0 },
   "연금": { display: "연금", weight: 1.0 },
@@ -48,11 +53,12 @@ function computeRisingKeywords(articles: NewsArticle[]): RisingKeyword[] {
   const scores: Record<string, number> = {};
   const now = Date.now();
   articles.forEach((article) => {
-    const text = ((article.title || "") + " " + (article.description || "")).toLowerCase();
+    const text = ((article.title || "") + " " + (article.description || "") + " " + (article.keywords || "")).toLowerCase();
     const articleTime = new Date(article.publishedAt || Date.now()).getTime();
     const hoursAgo = (now - articleTime) / (1000 * 60 * 60);
     let recencyBoost = 1;
-    if (hoursAgo < 2) recencyBoost = 2.0;
+    if (hoursAgo < 1) recencyBoost = 3.0;
+    else if (hoursAgo < 2) recencyBoost = 2.0;
     else if (hoursAgo < 6) recencyBoost = 1.5;
     else if (hoursAgo < 12) recencyBoost = 1.2;
     Object.entries(KEYWORD_POOL).forEach(([key, { weight }]) => {
@@ -73,15 +79,17 @@ function computeRisingKeywords(articles: NewsArticle[]): RisingKeyword[] {
   const results: RisingKeyword[] = sorted.map(([key, score], idx) => {
     const rank = idx + 1;
     newRankings[key] = rank;
-    let change: "new" | "up" | "same" = "new";
+    let change: "new" | "up" | "down" | "same" = "new";
+    let prevRank: number | undefined = undefined;
     if (prevRankings[key] !== undefined) {
-      change = prevRankings[key] > rank ? "up" : "same";
+      prevRank = prevRankings[key];
+      if (prevRankings[key] > rank) change = "up";
+      else if (prevRankings[key] < rank) change = "down";
+      else change = "same";
     }
-    return { rank, keyword: KEYWORD_POOL[key]?.display || key, change, score };
+    return { rank, keyword: KEYWORD_POOL[key]?.display || key, change, score, prevRank };
   });
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newRankings));
-  } catch {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(newRankings)); } catch {}
   return results;
 }
 
@@ -92,65 +100,124 @@ interface RisingKeywordsProps {
 
 const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
   const [keywords, setKeywords] = useState<RisingKeyword[]>([]);
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [now, setNow] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [animatingRanks, setAnimatingRanks] = useState<Set<number>>(new Set());
+
+  // 1분마다 시계 업데이트
+  useEffect(() => {
+    const clockInterval = setInterval(() => setNow(new Date()), 60 * 1000);
+    return () => clearInterval(clockInterval);
+  }, []);
 
   const refresh = useCallback(() => {
     setIsRefreshing(true);
+    const prev = keywords.map(k => k.rank);
     const results = computeRisingKeywords(articles);
+    // 순위 변동 있는 항목 애니메이션
+    const changed = new Set<number>();
+    results.forEach((r, i) => {
+      if (!prev[i] || prev[i] !== r.rank) changed.add(r.rank);
+    });
+    setAnimatingRanks(changed);
     setKeywords(results);
-    setLastUpdated(new Date());
-    setTimeout(() => setIsRefreshing(false), 500);
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setAnimatingRanks(new Set());
+    }, 800);
+  }, [articles, keywords]);
+
+  // 기사 변경시 & 1분마다 키워드 갱신
+  useEffect(() => {
+    refresh();
   }, [articles]);
 
   useEffect(() => {
-    refresh();
-    const interval = setInterval(refresh, 10 * 60 * 1000);
+    const interval = setInterval(refresh, 60 * 1000);
     return () => clearInterval(interval);
   }, [refresh]);
 
   const getRankColor = (rank: number) => {
-    if (rank === 1) return "text-destructive font-bold";
+    if (rank === 1) return "text-destructive font-bold text-base";
     if (rank === 2) return "text-orange-500 font-bold";
     if (rank === 3) return "text-yellow-600 font-bold";
     return "text-muted-foreground";
   };
 
-  const getChangeIcon = (change: string) => {
+  const getChangeIcon = (change: string, prevRank?: number, rank?: number) => {
     if (change === "new") {
-      return <span className="text-xs bg-destructive/10 text-destructive px-1 rounded font-bold">NEW</span>;
+      return <span className="text-xs bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-bold animate-pulse">NEW</span>;
     }
-    if (change === "up") {
-      return <ArrowUp className="w-3 h-3 text-destructive" />;
+    if (change === "up" && prevRank !== undefined && rank !== undefined) {
+      const diff = prevRank - rank;
+      return (
+        <span className="flex items-center gap-0.5 text-emerald-500">
+          <ArrowUp className="w-3 h-3" />
+          <span className="text-xs font-bold">{diff}</span>
+        </span>
+      );
+    }
+    if (change === "down" && prevRank !== undefined && rank !== undefined) {
+      const diff = rank - prevRank;
+      return (
+        <span className="flex items-center gap-0.5 text-blue-400">
+          <ArrowDown className="w-3 h-3" />
+          <span className="text-xs font-bold">{diff}</span>
+        </span>
+      );
     }
     return <span className="text-xs text-muted-foreground">—</span>;
   };
 
   if (keywords.length === 0) return null;
 
+  const dateStr = now.toLocaleDateString("ko-KR", { month: "numeric", day: "numeric", weekday: "short" });
+  const timeStr = now.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
+
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Flame className="w-5 h-5 text-destructive" />
+          <Flame className="w-5 h-5 text-destructive animate-pulse" />
           <h3 className="font-bold text-foreground">급상승 검색어</h3>
         </div>
-        <button onClick={refresh} className="p-1 hover:bg-muted rounded-full transition-colors" title="새로고침">
-          <RefreshCw className={`w-4 h-4 text-muted-foreground ${isRefreshing ? "animate-spin" : ""}`} />
-        </button>
+        <div className="flex items-center gap-2">
+          {/* 현재 날짜 + 시간 */}
+          <div className="flex flex-col items-end">
+            <span className="text-xs font-semibold text-primary">{dateStr}</span>
+            <span className="text-xs text-muted-foreground tabular-nums">{timeStr}</span>
+          </div>
+          <button
+            onClick={refresh}
+            className="p-1 hover:bg-muted rounded-full transition-colors"
+            title="새로고침"
+          >
+            <RefreshCw className={`w-4 h-4 text-muted-foreground ${isRefreshing ? "animate-spin" : ""}`} />
+          </button>
+        </div>
       </div>
-      <div className="space-y-1">
+
+      <div className="space-y-0.5">
         {keywords.map((kw) => (
-          <div key={kw.rank} className="flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-muted cursor-pointer transition-colors" onClick={() => onKeywordClick?.(kw.keyword)}>
-            <span className={`w-6 text-center text-sm ${getRankColor(kw.rank)}`}>{kw.rank}</span>
-            <span className="flex-1 text-sm text-foreground truncate">{kw.keyword}</span>
-            <div className="flex items-center w-8 justify-end">{getChangeIcon(kw.change)}</div>
+          <div
+            key={kw.rank}
+            className={`flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-muted cursor-pointer transition-all duration-300 ${
+              animatingRanks.has(kw.rank) ? "bg-primary/5 scale-[1.01]" : ""
+            }`}
+            onClick={() => onKeywordClick?.(kw.keyword)}
+          >
+            <span className={`w-5 text-center text-sm ${getRankColor(kw.rank)}`}>{kw.rank}</span>
+            <span className="flex-1 text-sm text-foreground truncate font-medium">{kw.keyword}</span>
+            <div className="flex items-center w-10 justify-end">
+              {getChangeIcon(kw.change, kw.prevRank, kw.rank)}
+            </div>
           </div>
         ))}
       </div>
+
       <div className="mt-3 pt-2 border-t border-border">
         <p className="text-xs text-muted-foreground text-right">
-          {lastUpdated.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })} 기준
+          {dateStr} {timeStr} 기준 · 1분마다 갱신
         </p>
       </div>
     </div>
