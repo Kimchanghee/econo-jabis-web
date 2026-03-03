@@ -85,7 +85,6 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
                 })
               : ''}
           </span>
-          {article.source && <span className="text-primary/70">· {article.source}</span>}
         </div>
       </div>
     </Link>
