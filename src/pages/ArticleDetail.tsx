@@ -302,7 +302,7 @@ const ArticleDetail = () => {
             </div>
 
             {imageUrl && (
-              <div ref={imgWrapperRef} className="mb-5 overflow-hidden rounded-xl bg-muted" style={{ position: "relative" }}>
+              <div ref={imgWrapperRef} className="mb-5 rounded-xl bg-muted" style={{ position: "relative", overflow: "clip" }}>
                 <img src={imageUrl} alt={article.title} className="w-full object-cover max-h-[300px] pointer-events-none"
                   onError={() => { if (!imgError) { setImgError(true); setImageUrl("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop"); }}} />
                   <div style={{ position: "absolute", inset: 0, zIndex: 10 }} onWheel={(e) => { e.preventDefault(); window.scrollBy(0, e.deltaY); }} />
