@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { translateArticlesPreview } from "../lib/runtimeTranslation";
 
 // ============================================================
 // Gemini API 기반 실시간 경제뉴스 훅
@@ -949,36 +950,65 @@ const localizeArticle = (article: NewsArticle, lang: string): NewsArticle => {
     ...article,
     category: localizedCategory,
     categories: (article.categories || [article.category]).map((category) => localizeCategory(category, normalizedLang)),
-    language: normalizedLang,
-    locale: normalizedLang,
+    language: normalizeLanguage(article.language || article.locale || "en"),
+    locale: normalizeLanguage(article.language || article.locale || "en"),
   };
 };
 
 const getFallbackArticlesByLanguage = (lang: string): NewsArticle[] => {
   const normalizedLang = normalizeLanguage(lang);
-  const filtered = ALL_FALLBACK_ARTICLES.filter((article) => {
-    const articleLang = normalizeLanguage(article.language || article.locale || "");
-    return articleLang === normalizedLang;
-  });
-  const baseArticles = filtered.length > 0
-    ? filtered
-    : ALL_FALLBACK_ARTICLES.filter((article) => normalizeLanguage(article.language || article.locale || "") === "en");
-  return baseArticles.map((article) => localizeArticle(article, normalizedLang));
+  return ALL_FALLBACK_ARTICLES.map((article) => localizeArticle(article, normalizedLang));
 };
 
 const getNewsErrorMessage = (lang: string, kind: "load_failed" | "update_failed"): string => {
   const normalizedLang = normalizeLanguage(lang);
   const messages = {
     ko: {
-      load_failed: "실시간 뉴스를 불러오지 못했습니다. 기본 뉴스를 표시합니다.",
-      update_failed: "실시간 업데이트 중 오류가 발생했습니다.",
+      load_failed: "??? ??? ??? ? ????. ?? ??? ?????.",
+      update_failed: "??? ???? ?? ??? ??????.",
     },
     en: {
       load_failed: "Unable to load live news. Showing fallback news.",
       update_failed: "An error occurred during live updates.",
     },
+    es: {
+      load_failed: "No se pueden cargar noticias en vivo. Mostrando noticias alternativas.",
+      update_failed: "Se produjo un error durante las actualizaciones en vivo.",
+    },
+    ja: {
+      load_failed: "???????????????????????????????",
+      update_failed: "??????????????????????",
+    },
+    zh: {
+      load_failed: "????????????????",
+      update_failed: "???????????",
+    },
+    fr: {
+      load_failed: "Impossible de charger les actualit?s en direct. Affichage des nouvelles de secours.",
+      update_failed: "Une erreur s'est produite lors des mises ? jour en direct.",
+    },
+    de: {
+      load_failed: "Live-Nachrichten k?nnen nicht geladen werden. Fallback-News werden angezeigt.",
+      update_failed: "Bei Live-Updates ist ein Fehler aufgetreten.",
+    },
+    pt: {
+      load_failed: "N?o foi poss?vel carregar not?cias ao vivo. Mostrando not?cias alternativas.",
+      update_failed: "Ocorreu um erro durante as atualiza??es ao vivo.",
+    },
+    id: {
+      load_failed: "Tidak dapat memuat berita langsung. Menampilkan berita mundur.",
+      update_failed: "Terjadi kesalahan selama pembaruan langsung.",
+    },
+    ar: {
+      load_failed: "??? ???? ??? ????? ??????? ?????. ??? ??????? ??????????.",
+      update_failed: "??? ??? ????? ????????? ????????.",
+    },
+    hi: {
+      load_failed: "???? ?????? ??? ???? ??? ??????. ??????? ?????? ?????? ?? ??? ??.",
+      update_failed: "???? ????? ?? ????? ?? ?????? ??????? ???.",
+    },
   };
-  return (messages[normalizedLang as "ko" | "en"] || messages.en)[kind];
+  return (messages[normalizedLang as keyof typeof messages] || messages.en)[kind];
 };
 
 // ============================================================
@@ -1173,12 +1203,14 @@ export const useTheNewsApi = (language = 'ko') => {
   const [error, setError] = useState<string | null>(null);
   const [lastFetched, setLastFetched] = useState<Date | null>(null);
   const fetchingRef = useRef(false);
+  const hasLiveNewsRef = useRef(false);
   const articleCacheRef = useRef<Map<string, NewsArticle>>(new Map());
   const requestTokenRef = useRef(0);
 
   useEffect(() => {
     requestTokenRef.current += 1;
     fetchingRef.current = false;
+    hasLiveNewsRef.current = false;
     const localizedFallbacks = getFallbackArticlesByLanguage(language);
     articleCacheRef.current = new Map();
     seenTitles.clear();
@@ -1194,6 +1226,16 @@ export const useTheNewsApi = (language = 'ko') => {
   }, [language]);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
+
+  const translateFallback = useCallback(
+    async (baseArticles: NewsArticle[], requestToken: number) => {
+      const translated = await translateArticlesPreview(baseArticles, language, 4);
+      if (requestToken !== requestTokenRef.current) return;
+      setArticles(translated);
+      articleCacheRef.current = new Map(translated.map((article) => [article.id, article]));
+    },
+    [language],
+  );
 
   const fetchNews = useCallback(async () => {
     if (fetchingRef.current) return;
@@ -1223,6 +1265,7 @@ export const useTheNewsApi = (language = 'ko') => {
         new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
       );
       if (newArticles.length > 0) {
+        hasLiveNewsRef.current = true;
         newArticles[0].isFeatured = true;
         newArticles[0].isBreaking = true;
       }
@@ -1231,7 +1274,7 @@ export const useTheNewsApi = (language = 'ko') => {
       }
       const allCached = Array.from(articleCacheRef.current.values())
         .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
-      if (allCached.length > 0) {
+      if (allCached.length > 0 && hasLiveNewsRef.current) {
         setArticles(allCached);
         setLastFetched(new Date());
         setError(null);
@@ -1239,11 +1282,17 @@ export const useTheNewsApi = (language = 'ko') => {
       } else {
         const localizedFallbacks = getFallbackArticlesByLanguage(language);
         setArticles(localizedFallbacks);
+        void translateFallback(localizedFallbacks, requestToken);
         setError(getNewsErrorMessage(language, "load_failed"));
       }
     } catch (e) {
       if (requestToken !== requestTokenRef.current) return;
       console.error('[EconoJabis] fetchNews error:', e);
+      if (!hasLiveNewsRef.current) {
+        const localizedFallbacks = getFallbackArticlesByLanguage(language);
+        setArticles(localizedFallbacks);
+        void translateFallback(localizedFallbacks, requestToken);
+      }
       setError(getNewsErrorMessage(language, "update_failed"));
     } finally {
       if (requestToken === requestTokenRef.current) {
@@ -1251,7 +1300,7 @@ export const useTheNewsApi = (language = 'ko') => {
         fetchingRef.current = false;
       }
     }
-  }, [backendUrl, language]);
+  }, [backendUrl, language, translateFallback]);
 
   useEffect(() => {
     const timer = setTimeout(fetchNews, 1000);

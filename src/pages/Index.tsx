@@ -1,4 +1,3 @@
-// EconoJabis - Main page
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
@@ -22,7 +21,6 @@ import {
   getAdNativeScriptUrl,
 } from "../lib/adsterra";
 
-// --- Adsterra Ad Components (srcdoc iframe) ---
 const Ad728x90 = ({ uid }: { uid: string }) => {
   const ref = useRef<HTMLIFrameElement>(null);
   useEffect(() => {
@@ -118,9 +116,7 @@ const Index = () => {
       next.set("lang", language);
     }
 
-    const currentSearch = location.search.startsWith("?")
-      ? location.search.slice(1)
-      : location.search;
+    const currentSearch = location.search.startsWith("?") ? location.search.slice(1) : location.search;
     const nextSearch = next.toString();
 
     if (nextSearch !== currentSearch) {
@@ -154,24 +150,17 @@ const Index = () => {
     return buildPageUrl("/", { lang: langParam, category: categoryParam });
   }, [language, selectedCategory]);
 
-  const isKorean = language === "ko";
-  const seoTitle = isKorean ? "글로벌 경제 및 시장 뉴스" : "Global Economy & Market News";
-
   const seoDescription = useMemo(() => {
     if (searchQuery.trim()) {
-      return isKorean
-        ? `"${searchQuery}" 검색 결과 - ${t("siteName")}의 글로벌 시장 및 경제 이슈 뉴스`
-        : `Search results for "${searchQuery}" on ${t("siteName")} covering global markets and economic developments.`;
+      return t("searchResultsDescription").replace("{query}", searchQuery).replace("{siteName}", t("siteName"));
     }
-    return isKorean
-      ? "시장 변동 이슈, 금리 결정, 주식, 환율, 암호화폐 뉴스를 실시간으로 제공합니다."
-      : "Live global economic coverage with market-moving headlines, rate decisions, stocks, forex, and crypto updates.";
-  }, [isKorean, searchQuery, t]);
+    return t("defaultSeoDescription");
+  }, [searchQuery, t]);
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title={seoTitle}
+        title={t("globalEconomyMarketNews")}
         description={seoDescription}
         canonicalUrl={seoCanonicalUrl}
         language={language}
@@ -179,14 +168,12 @@ const Index = () => {
         noindex={searchQuery.trim().length > 0}
       />
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onCategoryChange={setSelectedCategory} />
-      {/* Header Banner Ad 728x90 */}
       <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2" style={{ minHeight: 94 }}>
         <Ad728x90 uid="index-header" />
       </div>
       <MarketTicker />
       <main className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-6 items-start">
-          {/* Main content */}
           <div className="flex-1 min-w-0 space-y-6">
             <FeaturedNews articles={filteredArticles} />
             <div className="sticky top-16 z-20 bg-background/95 backdrop-blur-sm py-2 border-b border-border">
@@ -204,25 +191,19 @@ const Index = () => {
               lastFetched={lastFetched}
             />
           </div>
-          {/* Sidebar */}
           <aside className="hidden lg:block w-72 flex-shrink-0">
             <div className="sticky top-20 space-y-4">
-              {/* Sidebar Top Ad 300x250 */}
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
                 <Ad300x250 uid="sidebar-top" />
               </div>
-              {/* Rising Keywords */}
               <RisingKeywords articles={articles} onKeywordClick={(kw) => setSearchQuery(kw)} />
-              {/* Ad between keywords and market widget */}
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
                 <Ad300x250 uid="sidebar-mid" />
               </div>
-              {/* Market Widget */}
               <MarketWidget />
-              {/* Trending keywords */}
               <div className="rounded-xl border border-border bg-card p-4">
                 <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
-                  <span className="text-orange-500">🔥</span>
+                  <span className="text-orange-500">*</span>
                   <span>{t("trending")}</span>
                 </h3>
                 <div className="flex flex-wrap gap-1.5">
@@ -248,14 +229,12 @@ const Index = () => {
                       ))}
                 </div>
               </div>
-              {/* Sidebar Bottom Ad 300x250 */}
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
                 <Ad300x250 uid="sidebar-bottom" />
               </div>
             </div>
           </aside>
         </div>
-        {/* Native Banner Ad at bottom */}
         <div className="mt-8 pt-4 border-t border-border">
           <AdNative />
         </div>

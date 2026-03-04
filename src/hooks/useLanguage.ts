@@ -1,6 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+﻿import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Language } from "../data/newsData";
 import { DEFAULT_LANGUAGE, isSupportedLanguage } from "../lib/seo";
+import { TRANSLATIONS } from "../i18n/translations.generated";
 
 interface LanguageContextType {
   language: Language;
@@ -8,146 +9,18 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
-const baseDictionary: Record<string, string> = {
-  siteName: "EconoJabis",
-  siteTagline: "Real-time Global Economic News",
-  breaking: "Breaking",
-  featured: "Featured",
-  latest: "Latest",
-  latestNews: "Latest News",
-  updated: "Updated",
-  markets: "Markets",
-  stocks: "Stocks",
-  crypto: "Crypto",
-  forex: "Forex",
-  economy: "Economy",
-  finance: "Finance",
-  realestate: "Real Estate",
-  all: "All",
-  readMore: "Read More",
-  loading: "Loading...",
-  error: "An error occurred",
-  refresh: "Refresh",
-  lastUpdated: "Last Updated",
-  advertisement: "Advertisement",
-  search: "Search",
-  trending: "Trending",
-  more: "More",
-  close: "Close",
-  share: "Share",
-  save: "Save",
-  home: "Home",
-  news: "News",
-  analysis: "Analysis",
-  opinion: "Opinion",
-  articleLoading: "Loading article content...",
-  articleNotFound: "Article not found.",
-  back: "Back",
-  copyLink: "Copy link",
-  copied: "Copied!",
-  backToList: "Back to list",
-  relatedArticles: "Related Articles",
-  readAlso: "Read this also",
-  moreEconomicNews: "More Economic News",
-  allNews: "All News",
-  categories: "Categories",
-  new: "NEW",
-  footerDescription: "See real-time economic news, stocks, and crypto at a glance.",
-  quickLinks: "Quick Links",
-  about: "About",
-  contact: "Contact",
-  legalInfo: "Legal",
-  privacyPolicy: "Privacy Policy",
-  copyrightNotice: "All rights reserved.",
-  newsCopyrightNotice: "News is automatically collected, and copyright belongs to each publisher.",
-  globalIndices: "Global Indices",
-  risingKeywords: "Rising Keywords",
-  basedAt: "as of",
-  updatesEveryMinute: "updated every minute",
-};
-
-const translations: Record<Language, Record<string, string>> = {
-  ko: {
-    ...baseDictionary,
-    siteTagline: "실시간 글로벌 경제 뉴스",
-    breaking: "속보",
-    featured: "주요뉴스",
-    latest: "최신뉴스",
-    latestNews: "최신뉴스",
-    updated: "업데이트",
-    markets: "시장",
-    stocks: "주식",
-    crypto: "암호화폐",
-    forex: "환율",
-    economy: "경제",
-    finance: "금융",
-    realestate: "부동산",
-    all: "전체",
-    readMore: "더 보기",
-    loading: "로딩 중...",
-    error: "오류가 발생했습니다",
-    refresh: "새로고침",
-    lastUpdated: "마지막 업데이트",
-    advertisement: "광고",
-    search: "검색",
-    trending: "트렌딩",
-    more: "더보기",
-    close: "닫기",
-    share: "공유",
-    save: "저장",
-    home: "홈",
-    news: "뉴스",
-    analysis: "분석",
-    opinion: "오피니언",
-    articleLoading: "기사 내용을 불러오는 중입니다.",
-    articleNotFound: "기사를 찾을 수 없습니다.",
-    back: "뒤로",
-    copyLink: "링크복사",
-    copied: "복사됨!",
-    backToList: "목록으로",
-    relatedArticles: "관련 기사",
-    readAlso: "이 기사도 읽어보세요",
-    moreEconomicNews: "더 많은 경제 뉴스",
-    allNews: "전체 뉴스",
-    categories: "카테고리",
-    new: "NEW",
-    footerDescription: "실시간 경제뉴스, 주식, 암호화폐 정보를 한눈에 확인하세요.",
-    quickLinks: "바로가기",
-    about: "소개",
-    contact: "문의하기",
-    legalInfo: "법적 정보",
-    privacyPolicy: "개인정보처리방침",
-    copyrightNotice: "모든 권리 보유.",
-    newsCopyrightNotice: "본 사이트의 뉴스는 자동으로 수집되며, 각 뉴스의 저작권은 해당 언론사에 있습니다.",
-    globalIndices: "글로벌 지수",
-    risingKeywords: "급상승 검색어",
-    basedAt: "기준",
-    updatesEveryMinute: "1분마다 갱신",
-  },
-  en: { ...baseDictionary },
-  es: { ...baseDictionary, siteTagline: "Noticias económicas globales en tiempo real", search: "Buscar" },
-  ja: { ...baseDictionary, siteTagline: "リアルタイムグローバル経済ニュース", search: "検索" },
-  zh: { ...baseDictionary, siteTagline: "实时全球经济新闻", search: "搜索" },
-  fr: { ...baseDictionary, siteTagline: "Actualités économiques mondiales en temps réel", search: "Recherche" },
-  de: { ...baseDictionary, siteTagline: "Globale Wirtschaftsnachrichten in Echtzeit", search: "Suche" },
-  pt: { ...baseDictionary, siteTagline: "Notícias econômicas globais em tempo real", search: "Buscar" },
-  id: { ...baseDictionary, siteTagline: "Berita ekonomi global real-time", search: "Cari" },
-  ar: { ...baseDictionary, siteTagline: "أخبار الاقتصاد العالمي لحظة بلحظة", search: "بحث" },
-  hi: { ...baseDictionary, siteTagline: "रियल-टाइम वैश्विक आर्थिक समाचार", search: "खोजें" },
-};
-
 const languageNames: Record<Language, string> = {
-  ko: "한국어",
+  ko: "Korean",
   en: "English",
-  es: "Español",
-  ja: "日本語",
-  zh: "中文",
-  fr: "Français",
+  es: "Spanish",
+  ja: "Japanese",
+  zh: "Chinese",
+  fr: "French",
   de: "Deutsch",
-  pt: "Português",
+  pt: "Portuguese",
   id: "Bahasa Indonesia",
-  ar: "العربية",
-  hi: "हिन्दी",
+  ar: "Arabic",
+  hi: "Hindi",
 };
 
 const detectBrowserLanguage = (): Language => {
@@ -199,13 +72,16 @@ export const useLanguageState = () => {
     localStorage.setItem("econojabis-language", lang);
   }, []);
 
-  const t = useCallback((key: string): string => {
-    return translations[language][key] || translations.en[key] || key;
-  }, [language]);
+  const t = useCallback(
+    (key: string): string => {
+      return TRANSLATIONS[language]?.[key] || TRANSLATIONS.en[key] || key;
+    },
+    [language],
+  );
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = `${baseDictionary.siteName} - ${languageNames[language]}`;
+    document.title = `${TRANSLATIONS.en.siteName} - ${languageNames[language]}`;
   }, [language]);
 
   return { language, setLanguage, t };

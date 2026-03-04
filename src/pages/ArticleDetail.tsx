@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock, Share2, Link, Twitter, ChevronRight, BookOpen, Tag } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Header from "../components/Header";
 import SEOHead from "../components/SEOHead";
 import { FALLBACK_ARTICLES, type NewsArticle } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
+import { translateArticleDetail, translateArticlesPreview } from "../lib/runtimeTranslation";
 import {
   ADSTERRA_300_KEY,
   ADSTERRA_728_KEY,
@@ -179,7 +180,9 @@ const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { language, t } = useLanguage();
-  const article = id ? getArticleFromStore(id) : null;
+  const rawArticle = useMemo(() => (id ? getArticleFromStore(id) : null), [id]);
+  const [article, setArticle] = useState<NewsArticle | null>(rawArticle);
+  const [all, setAll] = useState<NewsArticle[]>(() => getAllArticlesFromStore());
   const [imageUrl, setImageUrl] = useState("");
   const [imgError, setImgError] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -197,6 +200,43 @@ const ArticleDetail = () => {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!rawArticle) {
+      setArticle(null);
+      return;
+    }
+    setArticle(rawArticle);
+  }, [rawArticle]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!rawArticle) return;
+
+    void translateArticleDetail(rawArticle, language).then((translated) => {
+      if (cancelled) return;
+      setArticle(translated);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [rawArticle, language]);
+
+  useEffect(() => {
+    const stored = getAllArticlesFromStore();
+    setAll(stored);
+
+    let cancelled = false;
+    void translateArticlesPreview(stored, language, 4).then((translated) => {
+      if (cancelled) return;
+      setAll(translated);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id, language]);
 
   useEffect(() => {
     if (!article) return;
@@ -245,7 +285,6 @@ const ArticleDetail = () => {
   }
 
   const body = buildBody(article, t("articleLoading"));
-  const all = getAllArticlesFromStore();
   const related = all.filter(a => a.id !== article.id && a.category === article.category).slice(0, 6);
   const more = all.filter(a => a.id !== article.id && a.category !== article.category).slice(0, 4);
   const dynamicKeywords = Array.from(
