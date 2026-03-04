@@ -217,12 +217,18 @@ const ArticleDetail = () => {
           noindex
         />
         <Header searchQuery="" onSearchChange={() => {}} />
+        <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2 min-h-[94px]">
+          <AdBanner slotType="header" uid="article-not-found-top" />
+        </div>
         <div className="mx-auto max-w-3xl px-4 py-20 text-center">
           <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
           <p className="text-lg text-muted-foreground mb-6">{t("articleNotFound")}</p>
           <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
             <ArrowLeft className="h-4 w-4" /> {t("home")}
           </button>
+        </div>
+        <div className="w-full flex justify-center items-center bg-card border-t border-border py-2 min-h-[94px]">
+          <AdBanner slotType="footer" uid="article-not-found-bottom" />
         </div>
       </div>
     );

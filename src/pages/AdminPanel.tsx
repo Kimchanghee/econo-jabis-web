@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Trash2, Edit3, ArrowLeft, Save, X, Shield, Key } from "lucide-react";
 import Header from "../components/Header";
+import AdBanner from "../components/AdBanner";
 import { NewsArticle } from "../data/newsData";
 import { getApiKey, setApiKey, hasApiKey } from "../hooks/useSeedreamImage";
 import { useLanguage } from "../hooks/useLanguage";
@@ -120,6 +121,9 @@ const AdminPanel = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header searchQuery="" onSearchChange={() => {}} />
+        <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2 min-h-[94px]">
+          <AdBanner slotType="header" uid="admin-login-top" />
+        </div>
         <div className="mx-auto max-w-md px-4 py-20">
           <div className="rounded-xl border border-border bg-card p-8 text-center">
             <Shield className="h-12 w-12 mx-auto mb-4 text-primary" />
@@ -141,6 +145,9 @@ const AdminPanel = () => {
             </button>
           </div>
         </div>
+        <div className="w-full flex justify-center items-center bg-card border-t border-border py-2 min-h-[94px]">
+          <AdBanner slotType="footer" uid="admin-login-bottom" />
+        </div>
       </div>
     );
   }
@@ -148,6 +155,9 @@ const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header searchQuery="" onSearchChange={() => {}} />
+      <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2 min-h-[94px]">
+        <AdBanner slotType="header" uid="admin-top" />
+      </div>
       <main className="mx-auto max-w-6xl px-4 py-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -341,6 +351,9 @@ const AdminPanel = () => {
           {filtered.length === 0 && <div className="text-center py-12 text-muted-foreground">{t("adminEmpty")}</div>}
         </div>
       </main>
+      <div className="w-full flex justify-center items-center bg-card border-t border-border py-2 min-h-[94px]">
+        <AdBanner slotType="footer" uid="admin-bottom" />
+      </div>
     </div>
   );
 };
