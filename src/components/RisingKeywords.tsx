@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Flame, ArrowUp, ArrowDown, RefreshCw } from "lucide-react";
 import { NewsArticle } from "../data/newsData";
 import { useLanguage } from "../hooks/useLanguage";
@@ -105,6 +105,7 @@ const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
   const [now, setNow] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [animatingRanks, setAnimatingRanks] = useState<Set<number>>(new Set());
+  const previousRanksRef = useRef<number[]>([]);
 
   // 1분마다 시계 업데이트
   useEffect(() => {
@@ -114,7 +115,7 @@ const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
 
   const refresh = useCallback(() => {
     setIsRefreshing(true);
-    const prev = keywords.map(k => k.rank);
+    const prev = previousRanksRef.current;
     const results = computeRisingKeywords(articles);
     // 순위 변동 있는 항목 애니메이션
     const changed = new Set<number>();
@@ -123,11 +124,12 @@ const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
     });
     setAnimatingRanks(changed);
     setKeywords(results);
+    previousRanksRef.current = results.map((keyword) => keyword.rank);
     setTimeout(() => {
       setIsRefreshing(false);
       setAnimatingRanks(new Set());
     }, 800);
-  }, [articles, keywords]);
+  }, [articles]);
 
   // 기사 변경시 & 1분마다 키워드 갱신
   useEffect(() => {

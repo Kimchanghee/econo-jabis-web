@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import type { Language } from "../data/newsData";
 import { DEFAULT_LANGUAGE, isSupportedLanguage } from "../lib/seo";
 
@@ -194,21 +194,13 @@ export const useLanguageState = () => {
     return detectBrowserLanguage();
   });
 
-  const setLanguage = (lang: Language) => {
+  const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem("econojabis-language", lang);
-  };
+  }, []);
 
-  const t = (key: string): string => {
+  const t = useCallback((key: string): string => {
     return translations[language][key] || translations.en[key] || key;
-  };
-
-  useEffect(() => {
-    const fromUrl = getLanguageFromUrl();
-    if (fromUrl && fromUrl !== language) {
-      setLanguageState(fromUrl);
-      localStorage.setItem("econojabis-language", fromUrl);
-    }
   }, [language]);
 
   useEffect(() => {

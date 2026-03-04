@@ -1174,8 +1174,11 @@ export const useTheNewsApi = (language = 'ko') => {
   const [lastFetched, setLastFetched] = useState<Date | null>(null);
   const fetchingRef = useRef(false);
   const articleCacheRef = useRef<Map<string, NewsArticle>>(new Map());
+  const requestTokenRef = useRef(0);
 
   useEffect(() => {
+    requestTokenRef.current += 1;
+    fetchingRef.current = false;
     const localizedFallbacks = getFallbackArticlesByLanguage(language);
     articleCacheRef.current = new Map();
     seenTitles.clear();
@@ -1185,6 +1188,7 @@ export const useTheNewsApi = (language = 'ko') => {
       registerArticle(a.title, a.url);
     }
     setArticles(localizedFallbacks);
+    setIsLoading(false);
     setError(null);
     setLastFetched(null);
   }, [language]);
@@ -1193,6 +1197,7 @@ export const useTheNewsApi = (language = 'ko') => {
 
   const fetchNews = useCallback(async () => {
     if (fetchingRef.current) return;
+    const requestToken = requestTokenRef.current;
     fetchingRef.current = true;
     setIsLoading(true);
     setError(null);
@@ -1204,6 +1209,7 @@ export const useTheNewsApi = (language = 'ko') => {
       const results = await Promise.allSettled(
         selectedQueries.map(q => fetchGeminiNews(q, backendUrl, language))
       );
+      if (requestToken !== requestTokenRef.current) return;
       const newArticles: NewsArticle[] = [];
       for (const result of results) {
         if (result.status === 'fulfilled') {
@@ -1236,11 +1242,14 @@ export const useTheNewsApi = (language = 'ko') => {
         setError(getNewsErrorMessage(language, "load_failed"));
       }
     } catch (e) {
+      if (requestToken !== requestTokenRef.current) return;
       console.error('[EconoJabis] fetchNews error:', e);
       setError(getNewsErrorMessage(language, "update_failed"));
     } finally {
-      setIsLoading(false);
-      fetchingRef.current = false;
+      if (requestToken === requestTokenRef.current) {
+        setIsLoading(false);
+        fetchingRef.current = false;
+      }
     }
   }, [backendUrl, language]);
 

@@ -95,37 +95,35 @@ const Index = () => {
     const nextCategory = params.get("category") || "all";
     const nextLang = params.get("lang");
 
-    if (nextQuery !== searchQuery) setSearchQuery(nextQuery);
-    if (nextCategory !== selectedCategory) setSelectedCategory(nextCategory);
-    if (nextLang && isSupportedLanguage(nextLang) && nextLang !== language) {
+    setSearchQuery((prev) => (prev === nextQuery ? prev : nextQuery));
+    setSelectedCategory((prev) => (prev === nextCategory ? prev : nextCategory));
+    if (nextLang && isSupportedLanguage(nextLang)) {
       setLanguage(nextLang);
     }
-  }, [language, location.search, searchQuery, selectedCategory, setLanguage]);
+  }, [location.search, setLanguage]);
 
   useEffect(() => {
-    const current = new URLSearchParams(location.search);
-    const next = new URLSearchParams(location.search);
+    const next = new URLSearchParams();
     const trimmedQuery = searchQuery.trim();
 
     if (trimmedQuery) {
       next.set("q", trimmedQuery);
-    } else {
-      next.delete("q");
     }
 
     if (selectedCategory !== "all") {
       next.set("category", selectedCategory);
-    } else {
-      next.delete("category");
     }
 
-    if (language === DEFAULT_LANGUAGE) {
-      next.delete("lang");
-    } else {
+    if (language !== DEFAULT_LANGUAGE) {
       next.set("lang", language);
     }
 
-    if (next.toString() !== current.toString()) {
+    const currentSearch = location.search.startsWith("?")
+      ? location.search.slice(1)
+      : location.search;
+    const nextSearch = next.toString();
+
+    if (nextSearch !== currentSearch) {
       setSearchParams(next, { replace: true });
     }
   }, [language, location.search, searchQuery, selectedCategory, setSearchParams]);
