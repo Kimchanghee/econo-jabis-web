@@ -10,15 +10,30 @@ interface HeaderProps {
 }
 
 const Header = ({ searchQuery, onSearchChange, onCategoryChange }: HeaderProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const normalizedLang = language.toLowerCase().split("-")[0];
+  const navCategoryMap: Record<string, { economy: string; markets: string; realestate: string; crypto: string }> = {
+    ko: { economy: "거시경제", markets: "주식", realestate: "부동산", crypto: "암호화폐" },
+    en: { economy: "Macro Economy", markets: "Stocks", realestate: "Real Estate", crypto: "Crypto" },
+    es: { economy: "Macroeconomía", markets: "Acciones", realestate: "Inmobiliario", crypto: "Cripto" },
+    ja: { economy: "マクロ経済", markets: "株式", realestate: "不動産", crypto: "暗号資産" },
+    zh: { economy: "宏观经济", markets: "股票", realestate: "房地产", crypto: "加密货币" },
+    fr: { economy: "Macroéconomie", markets: "Actions", realestate: "Immobilier", crypto: "Crypto" },
+    de: { economy: "Makroökonomie", markets: "Aktien", realestate: "Immobilien", crypto: "Krypto" },
+    pt: { economy: "Macroeconomia", markets: "Ações", realestate: "Imobiliário", crypto: "Cripto" },
+    id: { economy: "Makroekonomi", markets: "Saham", realestate: "Properti", crypto: "Kripto" },
+    ar: { economy: "اقتصاد كلي", markets: "أسهم", realestate: "عقارات", crypto: "عملات رقمية" },
+    hi: { economy: "व्यापक अर्थव्यवस्था", markets: "शेयर", realestate: "रियल एस्टेट", crypto: "क्रिप्टो" },
+  };
+  const navCategory = navCategoryMap[normalizedLang] || navCategoryMap.en;
 
   const navItems = [
     { key: 'home', label: t('home'), category: 'all' },
-    { key: 'economy', label: t('economy'), category: '전체' },
-    { key: 'markets', label: t('markets'), category: '주식' },
-    { key: 'realestate', label: t('realestate'), category: '부동산' },
-    { key: 'crypto', label: t('crypto'), category: '암호화폐' },
+    { key: 'economy', label: t('economy'), category: navCategory.economy },
+    { key: 'markets', label: t('markets'), category: navCategory.markets },
+    { key: 'realestate', label: t('realestate'), category: navCategory.realestate },
+    { key: 'crypto', label: t('crypto'), category: navCategory.crypto },
   ];
 
   const handleNavClick = (category: string) => {

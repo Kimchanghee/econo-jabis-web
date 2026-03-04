@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import { useRef, useEffect } from 'react';
 import type { NewsArticle } from '../hooks/useTheNewsApi';
+import { ADSTERRA_728_KEY, getAdIframeSrcdoc } from '../lib/adsterra';
 
 interface NewsListProps {
   articles: NewsArticle[];
@@ -18,11 +19,7 @@ const AdBar728 = ({ uid }: { uid: string }) => {
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
-    const html = '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;}</style></head><body>'
-      + '<script type="text/javascript">atOptions={"key":"cab28a3c8ec96edb306ab13e7af5944b","format":"iframe","height":90,"width":728,"params":{}}</script>'
-      + '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"></script>'
-      + '</body></html>';
-    iframe.srcdoc = html;
+    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_728_KEY, 728, 90);
   }, []);
   return (
     <div style={{ position: 'relative', overflow: 'hidden' }}

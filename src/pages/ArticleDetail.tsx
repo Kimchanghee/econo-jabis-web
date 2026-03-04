@@ -6,6 +6,13 @@ import SEOHead from "../components/SEOHead";
 import { FALLBACK_ARTICLES, type NewsArticle } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
+import {
+  ADSTERRA_300_KEY,
+  ADSTERRA_728_KEY,
+  getAdIframeSrcdoc,
+  getAdNativeContainerId,
+  getAdNativeScriptUrl,
+} from "../lib/adsterra";
 
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
 
@@ -79,11 +86,7 @@ const Ad728x90 = ({ uid }: { uid: string }) => {
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
-    iframe.srcdoc =
-      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
-      '<script type="text/javascript">atOptions={"key":"cab28a3c8ec96edb306ab13e7af5944b","format":"iframe","height":90,"width":728,"params":{}}<\/script>' +
-      '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"><\/script>' +
-      '</body></html>';
+    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_728_KEY, 728, 90);
   }, []);
   return (
     <div style={{ overflow: "hidden" }}>
@@ -99,11 +102,7 @@ const Ad300x250 = ({ uid }: { uid: string }) => {
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
-    iframe.srcdoc =
-      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent}</style></head><body>' +
-      '<script type="text/javascript">atOptions={"key":"333406d0aacce2e565463f8c1d21d1bd","format":"iframe","height":250,"width":300,"params":{}}<\/script>' +
-      '<script type="text/javascript" src="//highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js"><\/script>' +
-      '</body></html>';
+    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_300_KEY, 300, 250);
   }, []);
   return (
     <div style={{ overflow: "hidden" }}>
@@ -121,12 +120,12 @@ const AdNative = () => {
     if (loaded.current || !ref.current) return;
     loaded.current = true;
     const c = document.createElement("div");
-    c.id = "container-native-" + Date.now();
+    c.id = getAdNativeContainerId();
     ref.current.appendChild(c);
     const s = document.createElement("script");
     s.async = true;
     s.setAttribute("data-cfasync", "false");
-    s.src = "https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js";
+    s.src = getAdNativeScriptUrl();
     ref.current.appendChild(s);
   }, []);
   return <div ref={ref} className="w-full min-h-[90px]" />;
@@ -185,6 +184,7 @@ const ArticleDetail = () => {
   const [imgError, setImgError] = useState(false);
   const [copied, setCopied] = useState(false);
   const [readPct, setReadPct] = useState(0);
+  const [now, setNow] = useState<Date>(new Date());
   const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -204,6 +204,11 @@ const ArticleDetail = () => {
     setImgError(false);
     window.scrollTo({ top: 0, behavior: "auto" });
   }, [article]);
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -252,6 +257,9 @@ const ArticleDetail = () => {
     ? dynamicKeywords
     : (DEFAULT_POPULAR_KEYWORDS[language] || DEFAULT_POPULAR_KEYWORDS.en);
   const sidebarCategories = Array.from(new Set(all.map((a) => a.category).filter(Boolean))).slice(0, 8);
+  const locale = LOCALE_BY_LANGUAGE[language] || LOCALE_BY_LANGUAGE.en;
+  const keywordDate = now.toLocaleDateString(locale, { month: "2-digit", day: "2-digit" });
+  const keywordTime = now.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
   const canonicalUrl = buildPageUrl(`/article/${encodeURIComponent(article.id)}`, {
     lang: language === DEFAULT_LANGUAGE ? undefined : language,
   });
@@ -431,8 +439,9 @@ const ArticleDetail = () => {
               <Ad300x250 uid="art-side-top" />
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
-              <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/50">
-                <span className="text-orange-500 text-sm">{t("trending")}</span>
+              <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border bg-muted/50">
+                <span className="text-orange-500 text-sm">{t("risingKeywords")}</span>
+                <span className="text-[11px] text-muted-foreground tabular-nums">{keywordDate} {keywordTime}</span>
               </div>
               <ul className="divide-y divide-border">
                 {sidebarKeywords.map((kw, idx) => (

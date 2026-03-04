@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { getAdNativeContainerId, getAdNativeScriptUrl } from '../lib/adsterra';
 
-const ADSTERRA_SCRIPT = 'https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js';
-const BASE_CONTAINER_ID = 'container-ea5bbfe829e07e03a26eddac6389273b';
+const ADSTERRA_SCRIPT = getAdNativeScriptUrl();
+const BASE_CONTAINER_ID = getAdNativeContainerId();
 
 let scriptLoaded = false;
 let scriptLoading = false;

@@ -960,7 +960,10 @@ const getFallbackArticlesByLanguage = (lang: string): NewsArticle[] => {
     const articleLang = normalizeLanguage(article.language || article.locale || "");
     return articleLang === normalizedLang;
   });
-  return filtered.map((article) => localizeArticle(article, normalizedLang));
+  const baseArticles = filtered.length > 0
+    ? filtered
+    : ALL_FALLBACK_ARTICLES.filter((article) => normalizeLanguage(article.language || article.locale || "") === "en");
+  return baseArticles.map((article) => localizeArticle(article, normalizedLang));
 };
 
 const getNewsErrorMessage = (lang: string, kind: "load_failed" | "update_failed"): string => {

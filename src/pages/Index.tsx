@@ -14,6 +14,13 @@ import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
 import { DEFAULT_LANGUAGE, buildPageUrl, isSupportedLanguage } from "../lib/seo";
+import {
+  ADSTERRA_300_KEY,
+  ADSTERRA_728_KEY,
+  getAdIframeSrcdoc,
+  getAdNativeContainerId,
+  getAdNativeScriptUrl,
+} from "../lib/adsterra";
 
 // --- Adsterra Ad Components (srcdoc iframe) ---
 const Ad728x90 = ({ uid }: { uid: string }) => {
@@ -21,12 +28,7 @@ const Ad728x90 = ({ uid }: { uid: string }) => {
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
-    const html =
-      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent;}</style></head><body>' +
-      '<script type="text/javascript">atOptions={"key":"cab28a3c8ec96edb306ab13e7af5944b","format":"iframe","height":90,"width":728,"params":{}}<\/script>' +
-      '<script type="text/javascript" src="//highperformanceformat.com/cab28a3c8ec96edb306ab13e7af5944b/invoke.js"><\/script>' +
-      '</body></html>';
-    iframe.srcdoc = html;
+    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_728_KEY, 728, 90);
   }, []);
   return (
     <iframe
@@ -45,12 +47,7 @@ const Ad300x250 = ({ uid }: { uid: string }) => {
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe) return;
-    const html =
-      '<!DOCTYPE html><html><head><style>body{margin:0;padding:0;overflow:hidden;background:transparent;}</style></head><body>' +
-      '<script type="text/javascript">atOptions={"key":"333406d0aacce2e565463f8c1d21d1bd","format":"iframe","height":250,"width":300,"params":{}}<\/script>' +
-      '<script type="text/javascript" src="//highperformanceformat.com/333406d0aacce2e565463f8c1d21d1bd/invoke.js"><\/script>' +
-      '</body></html>';
-    iframe.srcdoc = html;
+    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_300_KEY, 300, 250);
   }, []);
   return (
     <iframe
@@ -72,12 +69,12 @@ const AdNative = () => {
     loaded.current = true;
     const el = ref.current;
     const c = document.createElement("div");
-    c.id = "container-ea5bbfe829e07e03a26eddac6389273b";
+    c.id = getAdNativeContainerId();
     el.appendChild(c);
     const s = document.createElement("script");
     s.async = true;
     s.setAttribute("data-cfasync", "false");
-    s.src = "https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js";
+    s.src = getAdNativeScriptUrl();
     el.appendChild(s);
   }, []);
   return <div ref={ref} className="w-full" />;
