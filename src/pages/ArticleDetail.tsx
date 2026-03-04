@@ -60,10 +60,11 @@ const Ad728x90 = ({ uid }: { uid: string }) => {
       '</body></html>';
   }, []);
   return (
-    <div style={{ overflow: "hidden" }}>
+    <div style={{ position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, zIndex: 10 }} />
       <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
-        style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block", pointerEvents: "none" }}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
+        style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block" }}
+        sandbox="allow-scripts allow-popups allow-forms" />
     </div>
   );
 };
@@ -80,10 +81,11 @@ const Ad300x250 = ({ uid }: { uid: string }) => {
       '</body></html>';
   }, []);
   return (
-    <div style={{ overflow: "hidden" }}>
+    <div style={{ position: "relative", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, zIndex: 10 }} />
       <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
-        style={{ width: "300px", height: "250px", border: "none", display: "block", pointerEvents: "none" }}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
+        style={{ width: "300px", height: "250px", border: "none", display: "block" }}
+        sandbox="allow-scripts allow-popups allow-forms" />
     </div>
   );
 };
@@ -103,7 +105,12 @@ const AdNative = () => {
     s.src = "https://pl28800200.effectivegatecpm.com/ea5bbfe829e07e03a26eddac6389273b/invoke.js";
     ref.current.appendChild(s);
   }, []);
-  return <div ref={ref} className="w-full min-h-[90px]" />;
+  return (
+    <div style={{ position: "relative" }}>
+      <div style={{ position: "absolute", inset: 0, zIndex: 10 }} />
+      <div ref={ref} className="w-full min-h-[90px]" />
+    </div>
+  );
 };
 
 const buildBody = (article: NewsArticle): string[] => {
