@@ -3,7 +3,10 @@ import AdBanner from "./AdBanner";
 import { useLanguage } from "../hooks/useLanguage";
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const dataSourceLine = language === "ko"
+    ? "뉴스: RSS | 시세: Binance, Yahoo Finance | 환율: open.er-api.com"
+    : "News: RSS | Market Data: Binance, Yahoo Finance | FX: open.er-api.com";
 
   return (
     <footer className="mt-12 border-t border-border bg-card">
@@ -29,14 +32,14 @@ const Footer = () => {
           <div>
             <h3 className="text-foreground font-semibold mb-3">{t("legalInfo")}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><Link to="/privacy-policy" className="hover:text-foreground transition-colors">{t("privacyPolicy")}</Link></li>
+              <li><Link to="/privacy" className="hover:text-foreground transition-colors">{t("privacyPolicy")}</Link></li>
             </ul>
           </div>
         </div>
         <div className="border-t border-border mt-8 pt-6 text-center text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} EconoJabis. {t("copyrightNotice")}</p>
           <p className="mt-1">{t("newsCopyrightNotice")}</p>
-          <p className="mt-1">News: RSS | Market Data: Binance, Yahoo Finance | FX: open.er-api.com</p>
+          <p className="mt-1">{dataSourceLine}</p>
         </div>
       </div>
     </footer>

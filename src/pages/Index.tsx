@@ -154,17 +154,24 @@ const Index = () => {
     return buildPageUrl("/", { lang: langParam, category: categoryParam });
   }, [language, selectedCategory]);
 
+  const isKorean = language === "ko";
+  const seoTitle = isKorean ? "글로벌 경제 및 시장 뉴스" : "Global Economy & Market News";
+
   const seoDescription = useMemo(() => {
     if (searchQuery.trim()) {
-      return `Search results for "${searchQuery}" on ${t("siteName")} covering global markets and economic developments.`;
+      return isKorean
+        ? `"${searchQuery}" 검색 결과 - ${t("siteName")}의 글로벌 시장 및 경제 이슈 뉴스`
+        : `Search results for "${searchQuery}" on ${t("siteName")} covering global markets and economic developments.`;
     }
-    return "Live global economic coverage with market-moving headlines, rate decisions, stocks, forex, and crypto updates.";
-  }, [searchQuery, t]);
+    return isKorean
+      ? "시장 변동 이슈, 금리 결정, 주식, 환율, 암호화폐 뉴스를 실시간으로 제공합니다."
+      : "Live global economic coverage with market-moving headlines, rate decisions, stocks, forex, and crypto updates.";
+  }, [isKorean, searchQuery, t]);
 
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
-        title="Global Economy & Market News"
+        title={seoTitle}
         description={seoDescription}
         canonicalUrl={seoCanonicalUrl}
         language={language}

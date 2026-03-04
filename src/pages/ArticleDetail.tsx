@@ -226,8 +226,8 @@ const ArticleDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <SEOHead
-          title="Article Not Found"
-          description="The requested article could not be found."
+          title={t("articleNotFound")}
+          description={t("articleNotFound")}
           canonicalUrl={fallbackCanonical}
           language={language}
           noindex

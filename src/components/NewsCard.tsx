@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
-import type { NewsArticle } from '../hooks/useTheNewsApi';
+import type { NewsArticle } from "../hooks/useTheNewsApi";
 import CategoryBadge from "./CategoryBadge";
+import { useLanguage } from "../hooks/useLanguage";
 
 const NewsCard = ({ article }: { article: NewsArticle }) => {
+  const { t } = useLanguage();
+
   return (
     <Link
       to={`/article/${encodeURIComponent(article.id)}`}
@@ -12,7 +15,9 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
         <div className="flex items-center gap-2">
           <CategoryBadge category={article.category as any} />
           {article.isBreaking && (
-            <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">속보</span>
+            <span className="rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
+              {t("breaking")}
+            </span>
           )}
         </div>
         <h3 className="mt-2 text-sm sm:text-base font-bold text-card-foreground line-clamp-2 group-hover:text-primary transition-colors">
@@ -20,8 +25,6 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
         </h3>
         <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{article.summary}</p>
         <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-          
-          
           <span>{article.date}</span>
         </div>
       </div>
