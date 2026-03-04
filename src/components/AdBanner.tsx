@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { type AdSlotType, getAdIframeSrcdoc, getAdSlotKey } from "../lib/adsterra";
+import { ADSTERRA_IFRAME_HOST, type AdSlotType, getAdSlotKey } from "../lib/adsterra";
 
 interface AdBannerProps {
   slotType: AdSlotType;
@@ -12,6 +12,13 @@ const getAdSize = (slotType: AdSlotType) => {
     return { width: 300, height: 250 };
   }
   return { width: 728, height: 90 };
+};
+
+let adRenderQueue: Promise<void> = Promise.resolve();
+
+const enqueueAdRender = (job: () => Promise<void>): Promise<void> => {
+  adRenderQueue = adRenderQueue.then(job).catch(() => undefined);
+  return adRenderQueue;
 };
 
 const AdBanner = ({ slotType, className = "", uid }: AdBannerProps) => {
@@ -29,22 +36,41 @@ const AdBanner = ({ slotType, className = "", uid }: AdBannerProps) => {
     const adKey = getAdSlotKey(slotType);
     if (!adKey) return;
 
-    const iframe = document.createElement("iframe");
-    iframe.title = title;
-    iframe.scrolling = "no";
-    iframe.setAttribute("frameBorder", "0");
-    iframe.setAttribute("loading", "lazy");
-    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups allow-forms");
-    iframe.style.width = `${width}px`;
-    iframe.style.maxWidth = "100%";
-    iframe.style.height = `${height}px`;
-    iframe.style.border = "none";
-    iframe.style.display = "block";
-    iframe.srcdoc = getAdIframeSrcdoc(adKey, width, height);
+    let cancelled = false;
 
-    container.replaceChildren(iframe);
+    void enqueueAdRender(
+      () =>
+        new Promise<void>((resolve) => {
+          if (cancelled) {
+            resolve();
+            return;
+          }
+
+          const optionsScript = document.createElement("script");
+          optionsScript.type = "text/javascript";
+          optionsScript.text = `window.atOptions={"key":"${adKey}","format":"iframe","height":${height},"width":${width},"params":{}};`;
+
+          const invokeScript = document.createElement("script");
+          invokeScript.type = "text/javascript";
+          invokeScript.src = `https://${ADSTERRA_IFRAME_HOST}/${adKey}/invoke.js`;
+          invokeScript.async = false;
+          invokeScript.setAttribute("data-cfasync", "false");
+          invokeScript.setAttribute("data-ad-title", title);
+
+          const complete = () => resolve();
+          invokeScript.onload = complete;
+          invokeScript.onerror = complete;
+
+          container.replaceChildren();
+          container.appendChild(optionsScript);
+          container.appendChild(invokeScript);
+
+          window.setTimeout(complete, 3000);
+        }),
+    );
 
     return () => {
+      cancelled = true;
       container.replaceChildren();
     };
   }, [slotType, width, height, title]);

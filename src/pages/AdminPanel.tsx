@@ -190,6 +190,9 @@ const AdminPanel = () => {
             </a>{" "}
             {t("adminAdsterraDescPrefix")}
           </p>
+          <p className="text-[11px] text-muted-foreground mb-3">
+            숫자 Zone ID(예: 28706840)가 아니라 코드의 Zone Key(예: cab28a...)를 입력해야 광고가 노출됩니다.
+          </p>
           {[
             { slot: "header", label: t("adminAdHeader") },
             { slot: "sidebar", label: t("adminAdSidebar") },

@@ -7,17 +7,17 @@ export const ADSTERRA_PROJECT_ID = 5630856;
 
 export const ADSTERRA_728_KEY = defaultString(
   import.meta.env.VITE_ADSTERRA_728_KEY,
-  "28706840",
+  "cab28a3c8ec96edb306ab13e7af5944b",
 );
 
 export const ADSTERRA_300_KEY = defaultString(
   import.meta.env.VITE_ADSTERRA_300_KEY,
-  "28706845",
+  "333406d0aacce2e565463f8c1d21d1bd",
 );
 
 export const ADSTERRA_NATIVE_KEY = defaultString(
   import.meta.env.VITE_ADSTERRA_NATIVE_KEY,
-  "28699701",
+  "ea5bbfe829e07e03a26eddac6389273b",
 );
 
 export const ADSTERRA_IFRAME_HOST = defaultString(
@@ -31,6 +31,9 @@ export const ADSTERRA_NATIVE_HOST = defaultString(
 );
 
 export type AdSlotType = "header" | "sidebar" | "in-article" | "footer" | "native";
+
+const isLikelyZoneKey = (value: string): boolean =>
+  /^[a-zA-Z0-9]{16,64}$/.test(value) && !/^\d+$/.test(value);
 
 const safeReadLocalStorage = (key: string): string => {
   if (typeof window === "undefined") return "";
@@ -68,11 +71,11 @@ const slotStorageKey: Record<Exclude<AdSlotType, "native">, string> = {
 export const getAdSlotKey = (slot: AdSlotType): string => {
   if (slot === "native") {
     const storedNative = extractAdKey(safeReadLocalStorage("adsterra_native_key"));
-    return defaultString(storedNative, ADSTERRA_NATIVE_KEY);
+    return isLikelyZoneKey(storedNative) ? storedNative : ADSTERRA_NATIVE_KEY;
   }
 
   const stored = extractAdKey(safeReadLocalStorage(slotStorageKey[slot]));
-  if (stored) return stored;
+  if (isLikelyZoneKey(stored)) return stored;
 
   if (slot === "sidebar") return ADSTERRA_300_KEY;
   return ADSTERRA_728_KEY;
