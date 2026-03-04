@@ -28,7 +28,7 @@ const COPY = {
     contactBodyPrefix: "서비스 문의는 ",
     contactBodyLink: "문의하기",
     contactBodySuffix: " 페이지를 이용해 주세요.",
-    copyright: "All rights reserved.",
+    copyright: "모든 권리 보유.",
   },
   en: {
     seoTitle: "About EconoJabis",

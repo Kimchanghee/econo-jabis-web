@@ -29,7 +29,7 @@ const COPY = {
     sec5Body: "이용자는 열람, 정정, 삭제, 처리정지를 요청할 수 있습니다.",
     sec6Title: "6. 문의",
     sec6Body: "개인정보 관련 문의: contact@econojabis.com",
-    copyright: "All rights reserved.",
+    copyright: "모든 권리 보유.",
   },
   en: {
     seoTitle: "Privacy Policy",

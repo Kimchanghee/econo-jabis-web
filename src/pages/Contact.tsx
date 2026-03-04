@@ -23,7 +23,7 @@ const COPY = {
     contactInfo: "연락처 정보",
     emailInfo: "이메일: contact@econojabis.com",
     webInfo: "웹사이트: https://econojabis.com",
-    copyright: "All rights reserved.",
+    copyright: "모든 권리 보유.",
   },
   en: {
     seoTitle: "Contact EconoJabis",

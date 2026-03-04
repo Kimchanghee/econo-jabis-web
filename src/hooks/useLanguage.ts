@@ -117,7 +117,7 @@ const translations: Record<Language, Record<string, string>> = {
     contact: "문의하기",
     legalInfo: "법적 정보",
     privacyPolicy: "개인정보처리방침",
-    copyrightNotice: "All rights reserved.",
+    copyrightNotice: "모든 권리 보유.",
     newsCopyrightNotice: "본 사이트의 뉴스는 자동으로 수집되며, 각 뉴스의 저작권은 해당 언론사에 있습니다.",
     globalIndices: "글로벌 지수",
     risingKeywords: "급상승 검색어",
