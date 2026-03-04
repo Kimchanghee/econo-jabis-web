@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
 import FeaturedNews from "../components/FeaturedNews";
@@ -8,75 +8,12 @@ import MarketTicker from "../components/MarketTicker";
 import MarketWidget from "../components/MarketWidget";
 import RisingKeywords from "../components/RisingKeywords";
 import Footer from "../components/Footer";
+import AdBanner from "../components/AdBanner";
 import SEOHead from "../components/SEOHead";
 import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { saveArticlesToStore } from "./ArticleDetail";
 import { DEFAULT_LANGUAGE, buildPageUrl, isSupportedLanguage } from "../lib/seo";
-import {
-  ADSTERRA_300_KEY,
-  ADSTERRA_728_KEY,
-  getAdIframeSrcdoc,
-  getAdNativeContainerId,
-  getAdNativeScriptUrl,
-} from "../lib/adsterra";
-
-const Ad728x90 = ({ uid }: { uid: string }) => {
-  const ref = useRef<HTMLIFrameElement>(null);
-  useEffect(() => {
-    const iframe = ref.current;
-    if (!iframe) return;
-    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_728_KEY, 728, 90);
-  }, []);
-  return (
-    <iframe
-      ref={ref}
-      title={"ad-" + uid}
-      scrolling="no"
-      frameBorder="0"
-      style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block" }}
-      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-    />
-  );
-};
-
-const Ad300x250 = ({ uid }: { uid: string }) => {
-  const ref = useRef<HTMLIFrameElement>(null);
-  useEffect(() => {
-    const iframe = ref.current;
-    if (!iframe) return;
-    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_300_KEY, 300, 250);
-  }, []);
-  return (
-    <iframe
-      ref={ref}
-      title={"ad-" + uid}
-      scrolling="no"
-      frameBorder="0"
-      style={{ width: "300px", height: "250px", border: "none", display: "block" }}
-      sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-    />
-  );
-};
-
-const AdNative = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const loaded = useRef(false);
-  useEffect(() => {
-    if (loaded.current || !ref.current) return;
-    loaded.current = true;
-    const el = ref.current;
-    const c = document.createElement("div");
-    c.id = getAdNativeContainerId();
-    el.appendChild(c);
-    const s = document.createElement("script");
-    s.async = true;
-    s.setAttribute("data-cfasync", "false");
-    s.src = getAdNativeScriptUrl();
-    el.appendChild(s);
-  }, []);
-  return <div ref={ref} className="w-full" />;
-};
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -169,7 +106,7 @@ const Index = () => {
       />
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onCategoryChange={setSelectedCategory} />
       <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2" style={{ minHeight: 94 }}>
-        <Ad728x90 uid="index-header" />
+        <AdBanner slotType="header" uid="index-header" />
       </div>
       <MarketTicker />
       <main className="mx-auto max-w-7xl px-4 py-6">
@@ -194,11 +131,11 @@ const Index = () => {
           <aside className="hidden lg:block w-72 flex-shrink-0">
             <div className="sticky top-20 space-y-4">
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
-                <Ad300x250 uid="sidebar-top" />
+                <AdBanner slotType="sidebar" uid="index-sidebar-top" />
               </div>
               <RisingKeywords articles={articles} onKeywordClick={(kw) => setSearchQuery(kw)} />
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
-                <Ad300x250 uid="sidebar-mid" />
+                <AdBanner slotType="sidebar" uid="index-sidebar-mid" />
               </div>
               <MarketWidget />
               <div className="rounded-xl border border-border bg-card p-4">
@@ -230,13 +167,13 @@ const Index = () => {
                 </div>
               </div>
               <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
-                <Ad300x250 uid="sidebar-bottom" />
+                <AdBanner slotType="sidebar" uid="index-sidebar-bottom" />
               </div>
             </div>
           </aside>
         </div>
         <div className="mt-8 pt-4 border-t border-border">
-          <AdNative />
+          <AdBanner slotType="in-article" uid="index-bottom" />
         </div>
       </main>
       <Footer />

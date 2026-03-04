@@ -1,9 +1,8 @@
 import { Clock, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
-import { useRef, useEffect } from 'react';
+import AdBanner from './AdBanner';
 import type { NewsArticle } from '../hooks/useTheNewsApi';
-import { ADSTERRA_728_KEY, getAdIframeSrcdoc } from '../lib/adsterra';
 
 interface NewsListProps {
   articles: NewsArticle[];
@@ -12,30 +11,6 @@ interface NewsListProps {
   onRefresh?: () => void;
   lastFetched?: Date | null;
 }
-
-// Adsterra 728x90 bar ad via srcdoc iframe
-const AdBar728 = ({ uid }: { uid: string }) => {
-  const ref = useRef<HTMLIFrameElement>(null);
-  useEffect(() => {
-    const iframe = ref.current;
-    if (!iframe) return;
-    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_728_KEY, 728, 90);
-  }, []);
-  return (
-    <div style={{ position: 'relative', overflow: 'hidden' }}
-      onWheel={(e) => { e.stopPropagation(); window.scrollBy(0, e.deltaY); }}>
-      <iframe
-        ref={ref}
-        key={uid}
-        title="ad-bar"
-        scrolling="no"
-        frameBorder="0"
-        style={{ width: '728px', maxWidth: '100%', height: '90px', border: 'none', display: 'block' }}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
-      />
-    </div>
-  );
-};
 
 const NewsCard = ({ article, locale, breakingLabel }: { article: NewsArticle; locale: string; breakingLabel: string }) => {
   const dateStr = article.publishedAt || (article as any).published_at || article.date;
@@ -134,7 +109,7 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
 
       {/* Top bar ad */}
       <div className="flex justify-center my-3 bg-muted/30 rounded-lg py-1.5">
-        <AdBar728 uid="newslist-top" />
+        <AdBanner slotType="in-article" uid="newslist-top" />
       </div>
 
       {error && <div className="text-center py-4 text-destructive text-sm">{error}</div>}
@@ -160,7 +135,7 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
             <NewsCard article={article} locale={locale} breakingLabel={t("breaking")} />
             {(index + 1) % 5 === 0 && (
               <div className="flex justify-center py-2 bg-muted/20 border-t border-b border-dashed border-border">
-                <AdBar728 uid={`newslist-mid-${index}`} />
+                <AdBanner slotType="in-article" uid={`newslist-mid-${index}`} />
               </div>
             )}
           </div>

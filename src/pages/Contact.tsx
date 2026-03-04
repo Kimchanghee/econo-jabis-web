@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import SEOHead from "../components/SEOHead";
+import AdBanner from "../components/AdBanner";
 import { useLanguage } from "../hooks/useLanguage";
 import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
 
@@ -31,6 +32,9 @@ const Contact = () => {
           </Link>
         </div>
       </header>
+      <div className="w-full flex justify-center items-center bg-white border-b py-2" style={{ minHeight: 94 }}>
+        <AdBanner slotType="header" uid="contact-top" />
+      </div>
       <main className="max-w-4xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">{t("contactTitle")}</h1>
         <div className="bg-white rounded-lg shadow p-6">
@@ -92,6 +96,9 @@ const Contact = () => {
             <p>{t("contactInfoEmail")}</p>
             <p>{t("contactInfoWeb")}</p>
           </div>
+        </div>
+        <div className="mt-8 flex justify-center rounded-lg bg-white shadow p-2">
+          <AdBanner slotType="footer" uid="contact-bottom" />
         </div>
       </main>
       <footer className="bg-gray-800 text-gray-400 py-6 mt-12">

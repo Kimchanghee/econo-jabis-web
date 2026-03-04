@@ -1,75 +1,63 @@
-import { useEffect, useRef, useState } from 'react';
-import { getAdNativeContainerId, getAdNativeScriptUrl } from '../lib/adsterra';
-
-const ADSTERRA_SCRIPT = getAdNativeScriptUrl();
-const BASE_CONTAINER_ID = getAdNativeContainerId();
-
-let scriptLoaded = false;
-let scriptLoading = false;
-const pendingCallbacks: (() => void)[] = [];
-
-function loadAdsterraScript(callback: () => void) {
-  if (scriptLoaded) { callback(); return; }
-  pendingCallbacks.push(callback);
-  if (scriptLoading) return;
-  scriptLoading = true;
-  const script = document.createElement('script');
-  script.id = 'adsterra-native-script';
-  script.async = true;
-  script.setAttribute('data-cfasync', 'false');
-  script.src = ADSTERRA_SCRIPT;
-  script.onload = () => {
-    scriptLoaded = true;
-    scriptLoading = false;
-    pendingCallbacks.forEach(cb => cb());
-    pendingCallbacks.length = 0;
-  };
-  document.body.appendChild(script);
-}
+import { useEffect, useMemo, useRef } from "react";
+import { type AdSlotType, getAdIframeSrcdoc, getAdSlotKey } from "../lib/adsterra";
 
 interface AdBannerProps {
-  slotType?: string;
+  slotType: AdSlotType;
   className?: string;
+  uid?: string;
 }
 
-let instanceCounter = 0;
+const getAdSize = (slotType: AdSlotType) => {
+  if (slotType === "sidebar") {
+    return { width: 300, height: 250 };
+  }
+  return { width: 728, height: 90 };
+};
 
-const AdBanner = ({ slotType = 'banner', className = '' }: AdBannerProps) => {
-  const [uniqueId] = useState(() => {
-    instanceCounter++;
-    return `${BASE_CONTAINER_ID}-${slotType}-${instanceCounter}-${Math.random().toString(36).slice(2,6)}`;
-  });
+const AdBanner = ({ slotType, className = "", uid }: AdBannerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const initialized = useRef(false);
-  const [hasContent, setHasContent] = useState(false);
+  const { width, height } = useMemo(() => getAdSize(slotType), [slotType]);
+  const title = useMemo(
+    () => (uid ? `ad-${slotType}-${uid}` : `ad-${slotType}`),
+    [slotType, uid],
+  );
 
   useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-    loadAdsterraScript(() => {
-      const container = containerRef.current;
-      if (!container) return;
-      setTimeout(() => {
-        if (container && (window as any).adsterra) {
-          try { (window as any).adsterra.init(); } catch (e) {}
-        }
-        // Check if content was inserted
-        setTimeout(() => {
-          if (container && container.children.length > 0) {
-            setHasContent(true);
-          }
-        }, 1000);
-      }, 500);
-    });
-  }, [uniqueId]);
+    const container = containerRef.current;
+    if (!container) return;
+
+    const adKey = getAdSlotKey(slotType);
+    if (!adKey) return;
+
+    const iframe = document.createElement("iframe");
+    iframe.title = title;
+    iframe.scrolling = "no";
+    iframe.setAttribute("frameBorder", "0");
+    iframe.setAttribute("loading", "lazy");
+    iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups allow-forms");
+    iframe.style.width = `${width}px`;
+    iframe.style.maxWidth = "100%";
+    iframe.style.height = `${height}px`;
+    iframe.style.border = "none";
+    iframe.style.display = "block";
+    iframe.srcdoc = getAdIframeSrcdoc(adKey, width, height);
+
+    container.replaceChildren(iframe);
+
+    return () => {
+      container.replaceChildren();
+    };
+  }, [slotType, width, height, title]);
 
   return (
-    <div className={`adsterra-wrapper w-full ${className}`} style={{ height: hasContent ? 'auto' : 0, overflow: 'hidden' }}>
+    <div
+      className={`adsterra-wrapper w-full ${className}`}
+      style={{ minHeight: `${height}px` }}
+    >
       <div
         ref={containerRef}
-        id={uniqueId}
         data-slot={slotType}
-        className="adsterra-container flex items-center justify-center"
+        className="adsterra-container flex items-center justify-center overflow-hidden"
       />
     </div>
   );

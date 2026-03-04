@@ -3,17 +3,11 @@ import { ArrowLeft, Clock, Share2, Link, Twitter, ChevronRight, BookOpen, Tag } 
 import { useState, useEffect, useMemo, useRef } from "react";
 import Header from "../components/Header";
 import SEOHead from "../components/SEOHead";
+import AdBanner from "../components/AdBanner";
 import { FALLBACK_ARTICLES, type NewsArticle } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
 import { translateArticleDetail, translateArticlesPreview } from "../lib/runtimeTranslation";
-import {
-  ADSTERRA_300_KEY,
-  ADSTERRA_728_KEY,
-  getAdIframeSrcdoc,
-  getAdNativeContainerId,
-  getAdNativeScriptUrl,
-} from "../lib/adsterra";
 
 const ARTICLE_STORE_KEY = "econojabis_articles_v1";
 
@@ -80,56 +74,6 @@ const fmtDate = (s: string, language: string) => {
       minute: "2-digit",
     });
   } catch { return s; }
-};
-
-const Ad728x90 = ({ uid }: { uid: string }) => {
-  const ref = useRef<HTMLIFrameElement>(null);
-  useEffect(() => {
-    const iframe = ref.current;
-    if (!iframe) return;
-    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_728_KEY, 728, 90);
-  }, []);
-  return (
-    <div style={{ overflow: "hidden" }}>
-      <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
-        style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block", pointerEvents: "none" }}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
-    </div>
-  );
-};
-
-const Ad300x250 = ({ uid }: { uid: string }) => {
-  const ref = useRef<HTMLIFrameElement>(null);
-  useEffect(() => {
-    const iframe = ref.current;
-    if (!iframe) return;
-    iframe.srcdoc = getAdIframeSrcdoc(ADSTERRA_300_KEY, 300, 250);
-  }, []);
-  return (
-    <div style={{ overflow: "hidden" }}>
-      <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
-        style={{ width: "300px", height: "250px", border: "none", display: "block", pointerEvents: "none" }}
-        sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
-    </div>
-  );
-};
-
-const AdNative = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const loaded = useRef(false);
-  useEffect(() => {
-    if (loaded.current || !ref.current) return;
-    loaded.current = true;
-    const c = document.createElement("div");
-    c.id = getAdNativeContainerId();
-    ref.current.appendChild(c);
-    const s = document.createElement("script");
-    s.async = true;
-    s.setAttribute("data-cfasync", "false");
-    s.src = getAdNativeScriptUrl();
-    ref.current.appendChild(s);
-  }, []);
-  return <div ref={ref} className="w-full min-h-[90px]" />;
 };
 
 const buildBody = (article: NewsArticle, loadingText: string): string[] => {
@@ -336,7 +280,7 @@ const ArticleDetail = () => {
       <Header searchQuery="" onSearchChange={() => {}} />
 
       <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2 min-h-[94px]">
-        <Ad728x90 uid="article-top" />
+        <AdBanner slotType="header" uid="article-top" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-6">
@@ -377,7 +321,7 @@ const ArticleDetail = () => {
             )}
 
             <div className="flex justify-center my-4 bg-muted/20 rounded-lg py-1.5">
-              <Ad728x90 uid="article-after-img" />
+              <AdBanner slotType="in-article" uid="article-after-image" />
             </div>
 
             <article className="text-[15px] leading-[1.9] text-foreground/90">
@@ -386,17 +330,17 @@ const ArticleDetail = () => {
                   <p className="mb-4">{para}</p>
                   {i === 2 && (
                     <div className="flex justify-center my-5 bg-muted/20 rounded-lg py-1.5">
-                      <Ad728x90 uid="article-mid1" />
+                      <AdBanner slotType="in-article" uid="article-mid-1" />
                     </div>
                   )}
                   {i === 5 && (
                     <div className="flex justify-center my-5 bg-muted/20 rounded-lg py-1.5">
-                      <Ad728x90 uid="article-mid2" />
+                      <AdBanner slotType="in-article" uid="article-mid-2" />
                     </div>
                   )}
                   {i === 8 && (
                     <div className="flex justify-center my-5 bg-muted/20 rounded-lg py-1.5">
-                      <Ad728x90 uid="article-mid3" />
+                      <AdBanner slotType="in-article" uid="article-mid-3" />
                     </div>
                   )}
                 </div>
@@ -431,7 +375,7 @@ const ArticleDetail = () => {
             </div>
 
             <div className="flex justify-center my-6 bg-muted/20 rounded-lg py-1.5">
-              <Ad728x90 uid="article-bottom" />
+              <AdBanner slotType="footer" uid="article-bottom" />
             </div>
 
             {related.length > 0 && (
@@ -448,7 +392,7 @@ const ArticleDetail = () => {
             )}
 
             <div className="mt-5 pt-4">
-              <AdNative />
+              <AdBanner slotType="in-article" uid="article-related-bottom" />
             </div>
 
             {more.length > 0 && (
@@ -475,7 +419,7 @@ const ArticleDetail = () => {
 
           <aside className="hidden lg:block w-72 flex-shrink-0" style={{ position: "sticky", top: "80px", alignSelf: "flex-start" }}>
             <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1 mb-4">
-              <Ad300x250 uid="art-side-top" />
+              <AdBanner slotType="sidebar" uid="article-sidebar-top" />
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="flex items-center justify-between gap-2 px-4 py-3 border-b border-border bg-muted/50">
@@ -493,7 +437,7 @@ const ArticleDetail = () => {
               </ul>
             </div>
             <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1 mb-4">
-              <Ad300x250 uid="art-side-mid" />
+              <AdBanner slotType="sidebar" uid="article-sidebar-mid" />
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/50">
@@ -523,7 +467,7 @@ const ArticleDetail = () => {
               </div>
             </div>
             <div className="flex justify-center bg-muted/20 rounded-xl border border-border p-1">
-              <Ad300x250 uid="art-side-bottom" />
+              <AdBanner slotType="sidebar" uid="article-sidebar-bottom" />
             </div>
           </aside>
         </div>
