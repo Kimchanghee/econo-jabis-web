@@ -12,7 +12,7 @@ import AdBanner from "../components/AdBanner";
 import SEOHead from "../components/SEOHead";
 import { useTheNewsApi } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
-import { saveArticlesToStore } from "./ArticleDetail";
+import { saveArticlesToStore } from "../lib/articleStore";
 import { DEFAULT_LANGUAGE, buildPageUrl, isSupportedLanguage } from "../lib/seo";
 
 const Index = () => {
@@ -62,7 +62,7 @@ const Index = () => {
   }, [language, location.search, searchQuery, selectedCategory, setSearchParams]);
 
   useEffect(() => {
-    if (articles.length > 0) saveArticlesToStore(articles);
+    if (articles.length > 0) saveArticlesToStore(articles, { mergeExisting: true });
   }, [articles]);
 
   const categories = useMemo(() => {

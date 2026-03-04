@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../hooks/useLanguage";
 import AdBanner from "./AdBanner";
 import type { NewsArticle } from "../hooks/useTheNewsApi";
+import { prefetchArticleDetailPage } from "../lib/prefetch";
 
 interface FeaturedNewsProps {
   articles: NewsArticle[];
@@ -54,6 +55,10 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
         <div className="lg:col-span-2">
           <Link
             to={`/article/${encodeURIComponent(mainArticle.id)}`}
+            state={{ article: mainArticle }}
+            onMouseEnter={prefetchArticleDetailPage}
+            onFocus={prefetchArticleDetailPage}
+            onTouchStart={prefetchArticleDetailPage}
             className="group block relative overflow-hidden rounded-xl bg-foreground/90 aspect-video"
           >
             <img
@@ -95,6 +100,10 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
               <Link
                 key={article.id}
                 to={`/article/${encodeURIComponent(article.id)}`}
+                state={{ article }}
+                onMouseEnter={prefetchArticleDetailPage}
+                onFocus={prefetchArticleDetailPage}
+                onTouchStart={prefetchArticleDetailPage}
                 className="group flex gap-3 p-2 rounded-lg hover:bg-muted transition-colors"
               >
                 <div className="flex-shrink-0 w-20 h-16 overflow-hidden rounded-md">

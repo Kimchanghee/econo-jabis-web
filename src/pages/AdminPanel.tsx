@@ -325,7 +325,7 @@ const AdminPanel = () => {
                     </div>
                     <h3
                       className="font-medium text-sm cursor-pointer hover:text-primary truncate"
-                      onClick={() => navigate("/article/" + encodeURIComponent(article.id))}
+                      onClick={() => navigate("/article/" + encodeURIComponent(article.id), { state: { article } })}
                     >
                       {article.title}
                     </h3>

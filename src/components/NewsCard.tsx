@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import type { NewsArticle } from "../hooks/useTheNewsApi";
 import CategoryBadge from "./CategoryBadge";
 import { useLanguage } from "../hooks/useLanguage";
+import { prefetchArticleDetailPage } from "../lib/prefetch";
 
 const NewsCard = ({ article }: { article: NewsArticle }) => {
   const { t } = useLanguage();
@@ -9,6 +10,10 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
   return (
     <Link
       to={`/article/${encodeURIComponent(article.id)}`}
+      state={{ article }}
+      onMouseEnter={prefetchArticleDetailPage}
+      onFocus={prefetchArticleDetailPage}
+      onTouchStart={prefetchArticleDetailPage}
       className="group block rounded-xl overflow-hidden border border-border bg-card hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
     >
       <div className="flex-1 min-w-0">

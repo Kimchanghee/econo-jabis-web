@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../hooks/useLanguage';
 import AdBanner from './AdBanner';
 import type { NewsArticle } from '../hooks/useTheNewsApi';
+import { prefetchArticleDetailPage } from '../lib/prefetch';
 
 interface NewsListProps {
   articles: NewsArticle[];
@@ -19,6 +20,10 @@ const NewsCard = ({ article, locale, breakingLabel }: { article: NewsArticle; lo
   return (
     <Link
       to={`/article/${encodeURIComponent(article.id)}`}
+      state={{ article }}
+      onMouseEnter={prefetchArticleDetailPage}
+      onFocus={prefetchArticleDetailPage}
+      onTouchStart={prefetchArticleDetailPage}
       className="group flex gap-4 p-3 rounded-lg hover:bg-muted transition-colors border-b border-border last:border-0"
     >
       {imgSrc && (

@@ -1132,6 +1132,23 @@ function getNewsImageUrl(title: string, category: string): string {
   return `https://source.unsplash.com/800x450/?${titleKeyword}&sig=${seed}`;
 }
 
+function createStableArticleId(url: string, title: string, publishedAt: string): string {
+  const normalizedSource = [url.trim().toLowerCase(), title.trim().toLowerCase(), publishedAt.trim()]
+    .filter(Boolean)
+    .join("|");
+  let hash = 0;
+  for (let i = 0; i < normalizedSource.length; i++) {
+    hash = (hash * 31 + normalizedSource.charCodeAt(i)) >>> 0;
+  }
+  const safeTitle = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 24);
+  const slug = safeTitle || "news";
+  return `gemini_${slug}_${hash.toString(36)}`;
+}
+
 // ============================================================
 // Gemini API 호출 - Google Search Grounding으로 실시간 뉴스
 // ============================================================
@@ -1162,9 +1179,9 @@ async function fetchGeminiNews(query: string, _apiKey: string, lang = 'ko'): Pro
         .split(/\n\n+/)
         .map(p => p.trim())
         .filter(p => p.length > 20);
-      const category = localizeCategory(String(item.category || classifyCategory(title, body)), normalizedLang);
-      const id = `gemini_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
       const publishedAt = String(item.published_at || new Date().toISOString());
+      const category = localizeCategory(String(item.category || classifyCategory(title, body)), normalizedLang);
+      const id = createStableArticleId(url, title, publishedAt);
       const imageUrl = getNewsImageUrl(title, category);
       registerArticle(title, url);
       articles.push({

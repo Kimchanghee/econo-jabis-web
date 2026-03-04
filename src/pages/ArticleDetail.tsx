@@ -1,48 +1,14 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft, Clock, Share2, Link, Twitter, ChevronRight, BookOpen, Tag } from "lucide-react";
 import { useState, useEffect, useMemo, useRef } from "react";
 import Header from "../components/Header";
 import SEOHead from "../components/SEOHead";
 import AdBanner from "../components/AdBanner";
-import { FALLBACK_ARTICLES, type NewsArticle } from "../hooks/useTheNewsApi";
+import { type NewsArticle } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
 import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
 import { translateArticleDetail, translateArticlesPreview } from "../lib/runtimeTranslation";
-
-const ARTICLE_STORE_KEY = "econojabis_articles_v1";
-
-export const saveArticlesToStore = (articles: NewsArticle[]) => {
-  try { localStorage.setItem(ARTICLE_STORE_KEY, JSON.stringify(articles)); } catch {}
-};
-
-const getArticleFromStore = (id: string): NewsArticle | null => {
-  try {
-    const decoded = decodeURIComponent(id);
-    const raw = localStorage.getItem(ARTICLE_STORE_KEY);
-    if (!raw) {
-      return FALLBACK_ARTICLES.find((a) => a.id === decoded) || null;
-    }
-    const all: NewsArticle[] = JSON.parse(raw);
-    return all.find((a) => a.id === decoded) || FALLBACK_ARTICLES.find((a) => a.id === decoded) || null;
-  } catch {
-    return null;
-  }
-};
-
-const getAllArticlesFromStore = (): NewsArticle[] => {
-  try {
-    const raw = localStorage.getItem(ARTICLE_STORE_KEY);
-    if (!raw) return FALLBACK_ARTICLES;
-    const saved: NewsArticle[] = JSON.parse(raw);
-    const byId = new Map(saved.map((article) => [article.id, article]));
-    FALLBACK_ARTICLES.forEach((article) => {
-      if (!byId.has(article.id)) byId.set(article.id, article);
-    });
-    return Array.from(byId.values());
-  } catch {
-    return FALLBACK_ARTICLES;
-  }
-};
+import { getAllArticlesFromStore, getArticleFromStore, normalizeArticleId, upsertArticleToStore } from "../lib/articleStore";
 
 const LOCALE_BY_LANGUAGE: Record<string, string> = {
   ko: "ko-KR",
@@ -123,8 +89,17 @@ const RelatedCard = ({ article, onClick, language }: { article: NewsArticle; onC
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { language, t } = useLanguage();
-  const rawArticle = useMemo(() => (id ? getArticleFromStore(id) : null), [id]);
+  const routeStateArticle = useMemo(() => {
+    const state = location.state as { article?: NewsArticle } | null;
+    if (!state?.article || !id) return null;
+    return normalizeArticleId(state.article.id) === normalizeArticleId(id) ? state.article : null;
+  }, [id, location.state]);
+  const rawArticle = useMemo(() => {
+    if (!id) return null;
+    return routeStateArticle || getArticleFromStore(id);
+  }, [id, routeStateArticle]);
   const [article, setArticle] = useState<NewsArticle | null>(rawArticle);
   const [all, setAll] = useState<NewsArticle[]>(() => getAllArticlesFromStore());
   const [imageUrl, setImageUrl] = useState("");
@@ -154,6 +129,11 @@ const ArticleDetail = () => {
   }, [rawArticle]);
 
   useEffect(() => {
+    if (!routeStateArticle) return;
+    upsertArticleToStore(routeStateArticle);
+  }, [routeStateArticle]);
+
+  useEffect(() => {
     let cancelled = false;
     if (!rawArticle) return;
 
@@ -180,7 +160,7 @@ const ArticleDetail = () => {
     return () => {
       cancelled = true;
     };
-  }, [id, language]);
+  }, [language]);
 
   useEffect(() => {
     if (!article) return;
@@ -193,6 +173,10 @@ const ArticleDetail = () => {
     const interval = setInterval(() => setNow(new Date()), 60 * 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const openArticle = (nextArticle: NewsArticle) => {
+    navigate("/article/" + encodeURIComponent(nextArticle.id), { state: { article: nextArticle } });
+  };
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -391,7 +375,7 @@ const ArticleDetail = () => {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {related.map(rel => (
-                    <RelatedCard key={rel.id} article={rel} language={language} onClick={() => navigate("/article/" + encodeURIComponent(rel.id))} />
+                    <RelatedCard key={rel.id} article={rel} language={language} onClick={() => openArticle(rel)} />
                   ))}
                 </div>
               </section>
@@ -408,7 +392,7 @@ const ArticleDetail = () => {
                 </h2>
                 <div className="space-y-2">
                   {more.map(rel => (
-                    <RelatedCard key={rel.id} article={rel} language={language} onClick={() => navigate("/article/" + encodeURIComponent(rel.id))} />
+                    <RelatedCard key={rel.id} article={rel} language={language} onClick={() => openArticle(rel)} />
                   ))}
                 </div>
               </section>
@@ -452,7 +436,7 @@ const ArticleDetail = () => {
               </div>
               <div className="divide-y divide-border">
                 {all.slice(0, 6).map(a => (
-                  <div key={a.id} className="p-3 hover:bg-muted/50 cursor-pointer transition-colors group" onClick={() => navigate("/article/" + encodeURIComponent(a.id))}>
+                  <div key={a.id} className="p-3 hover:bg-muted/50 cursor-pointer transition-colors group" onClick={() => openArticle(a)}>
                     <p className="text-xs font-semibold text-primary mb-0.5">{a.category}</p>
                     <p className="text-sm font-medium line-clamp-2 text-foreground group-hover:text-primary transition-colors">{a.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{fmtDate(a.publishedAt || (a as any).date || "", language)}</p>
