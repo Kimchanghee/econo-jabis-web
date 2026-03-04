@@ -60,10 +60,9 @@ const Ad728x90 = ({ uid }: { uid: string }) => {
       '</body></html>';
   }, []);
   return (
-    <div style={{ position: "relative", overflow: "hidden" }}
-      onWheel={(e) => { e.stopPropagation(); window.scrollBy(0, e.deltaY); }}>
+    <div style={{ overflow: "hidden" }}>
       <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
-        style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block" }}
+        style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block", pointerEvents: "none" }}
         sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
     </div>
   );
@@ -81,10 +80,9 @@ const Ad300x250 = ({ uid }: { uid: string }) => {
       '</body></html>';
   }, []);
   return (
-    <div style={{ position: "relative", overflow: "hidden" }}
-      onWheel={(e) => { e.stopPropagation(); window.scrollBy(0, e.deltaY); }}>
+    <div style={{ overflow: "hidden" }}>
       <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
-        style={{ width: "300px", height: "250px", border: "none", display: "block" }}
+        style={{ width: "300px", height: "250px", border: "none", display: "block", pointerEvents: "none" }}
         sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
     </div>
   );
