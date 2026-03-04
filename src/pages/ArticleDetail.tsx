@@ -42,9 +42,35 @@ const getAllArticlesFromStore = (): NewsArticle[] => {
   }
 };
 
-const fmtDate = (s: string) => {
+const LOCALE_BY_LANGUAGE: Record<string, string> = {
+  ko: "ko-KR",
+  en: "en-US",
+  es: "es-ES",
+  ja: "ja-JP",
+  zh: "zh-CN",
+  fr: "fr-FR",
+  de: "de-DE",
+  pt: "pt-BR",
+  id: "id-ID",
+  ar: "ar-SA",
+  hi: "hi-IN",
+};
+
+const DEFAULT_POPULAR_KEYWORDS: Record<string, string[]> = {
+  ko: ["코스피", "환율", "금리", "반도체", "비트코인", "부동산", "삼성전자", "원달러"],
+  en: ["S&P500", "Forex", "Rates", "Semiconductor", "Bitcoin", "Real Estate", "NVIDIA", "USD/KRW"],
+};
+
+const fmtDate = (s: string, language: string) => {
   try {
-    return new Date(s).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    const locale = LOCALE_BY_LANGUAGE[language] || LOCALE_BY_LANGUAGE.en;
+    return new Date(s).toLocaleDateString(locale, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   } catch { return s; }
 };
 
@@ -60,7 +86,7 @@ const Ad728x90 = ({ uid }: { uid: string }) => {
       '</body></html>';
   }, []);
   return (
-    <div style={{ overflow: "hidden" }} onWheel={(e) => { e.stopPropagation(); window.scrollBy({ top: e.deltaY, behavior: "auto" }); }}>
+    <div style={{ overflow: "hidden" }}>
       <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
         style={{ width: "728px", maxWidth: "100%", height: "90px", border: "none", display: "block", pointerEvents: "none" }}
         sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
@@ -80,7 +106,7 @@ const Ad300x250 = ({ uid }: { uid: string }) => {
       '</body></html>';
   }, []);
   return (
-    <div style={{ overflow: "hidden" }} onWheel={(e) => { e.stopPropagation(); window.scrollBy({ top: e.deltaY, behavior: "auto" }); }}>
+    <div style={{ overflow: "hidden" }}>
       <iframe ref={ref} key={uid} title={"ad-" + uid} scrolling="no" frameBorder="0"
         style={{ width: "300px", height: "250px", border: "none", display: "block", pointerEvents: "none" }}
         sandbox="allow-scripts allow-same-origin allow-popups allow-forms" />
@@ -106,7 +132,7 @@ const AdNative = () => {
   return <div ref={ref} className="w-full min-h-[90px]" />;
 };
 
-const buildBody = (article: NewsArticle): string[] => {
+const buildBody = (article: NewsArticle, loadingText: string): string[] => {
   const bp = (article as any).bodyParagraphs as string[] | undefined;
   if (bp && bp.length >= 3) return bp;
   const fullBody = (article as any).fullBody as string | undefined;
@@ -115,7 +141,7 @@ const buildBody = (article: NewsArticle): string[] => {
     if (parts.length >= 3) return parts;
   }
   const raw = [article.description || "", (article as any).summary || ""].join(" ").trim();
-  if (!raw) return ["기사 내용을 불러오는 중입니다."];
+  if (!raw) return [loadingText];
   const clean = raw.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
   const sents = clean.match(/[^.!?]+[.!?]*/g) || [clean];
   const out: string[] = [];
@@ -124,12 +150,12 @@ const buildBody = (article: NewsArticle): string[] => {
     if (p.length > 20) out.push(p);
   }
   if (out.join("").length < 200) {
-    return ["기사 내용을 불러오는 중입니다."];
+    return [loadingText];
   }
   return out;
 };
 
-const RelatedCard = ({ article, onClick }: { article: NewsArticle; onClick: () => void }) => {
+const RelatedCard = ({ article, onClick, language }: { article: NewsArticle; onClick: () => void; language: string }) => {
   const img = (article as any).imageUrl || (article as any).image || "";
   return (
     <div onClick={onClick} className="flex gap-3 p-3 rounded-xl border border-border hover:bg-primary/5 hover:border-primary/30 cursor-pointer transition-all group">
@@ -142,7 +168,7 @@ const RelatedCard = ({ article, onClick }: { article: NewsArticle; onClick: () =
         <h3 className="text-sm font-semibold line-clamp-2 text-foreground group-hover:text-primary transition-colors leading-snug">{article.title}</h3>
         <div className="flex items-center gap-1 mt-1 text-xs text-muted-foreground">
           <Clock className="h-3 w-3" />
-          <span>{fmtDate(article.publishedAt || (article as any).date || "")}</span>
+          <span>{fmtDate(article.publishedAt || (article as any).date || "", language)}</span>
         </div>
       </div>
       <ChevronRight className="h-4 w-4 text-muted-foreground self-center opacity-0 group-hover:opacity-100 flex-shrink-0" />
@@ -153,7 +179,7 @@ const RelatedCard = ({ article, onClick }: { article: NewsArticle; onClick: () =
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const article = id ? getArticleFromStore(id) : null;
   const [imageUrl, setImageUrl] = useState("");
   const [imgError, setImgError] = useState(false);
@@ -176,7 +202,7 @@ const ArticleDetail = () => {
     if (!article) return;
     setImageUrl((article as any).imageUrl || (article as any).image || "");
     setImgError(false);
-    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [article]);
 
   const copyLink = () => {
@@ -204,19 +230,28 @@ const ArticleDetail = () => {
         <Header searchQuery="" onSearchChange={() => {}} />
         <div className="mx-auto max-w-3xl px-4 py-20 text-center">
           <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-          <p className="text-lg text-muted-foreground mb-6">기사를 찾을 수 없습니다.</p>
+          <p className="text-lg text-muted-foreground mb-6">{t("articleNotFound")}</p>
           <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
-            <ArrowLeft className="h-4 w-4" /> 홈
+            <ArrowLeft className="h-4 w-4" /> {t("home")}
           </button>
         </div>
       </div>
     );
   }
 
-  const body = buildBody(article);
+  const body = buildBody(article, t("articleLoading"));
   const all = getAllArticlesFromStore();
   const related = all.filter(a => a.id !== article.id && a.category === article.category).slice(0, 6);
   const more = all.filter(a => a.id !== article.id && a.category !== article.category).slice(0, 4);
+  const dynamicKeywords = Array.from(
+    new Set(
+      all.flatMap((a) => (((a as any).relatedKeywords as string[] | undefined) || []).map((kw) => kw.trim()).filter(Boolean))
+    )
+  ).slice(0, 8);
+  const sidebarKeywords = dynamicKeywords.length > 0
+    ? dynamicKeywords
+    : (DEFAULT_POPULAR_KEYWORDS[language] || DEFAULT_POPULAR_KEYWORDS.en);
+  const sidebarCategories = Array.from(new Set(all.map((a) => a.category).filter(Boolean))).slice(0, 8);
   const canonicalUrl = buildPageUrl(`/article/${encodeURIComponent(article.id)}`, {
     lang: language === DEFAULT_LANGUAGE ? undefined : language,
   });
@@ -262,26 +297,26 @@ const ArticleDetail = () => {
 
           <main className="flex-1 min-w-0 max-w-3xl" ref={articleRef}>
             <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-5 transition-colors group">
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" /> 뒤로
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" /> {t("back")}
             </button>
 
             <div className="border-b-2 border-primary pb-4 mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-primary text-primary-foreground uppercase tracking-wide">{article.category}</span>
-                {article.isBreaking && <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-red-500 text-white animate-pulse">속보</span>}
+                {article.isBreaking && <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-red-500 text-white animate-pulse">{t("breaking")}</span>}
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight text-foreground mb-3">{article.title}</h1>
               <div className="flex items-center justify-between flex-wrap gap-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <Clock className="h-3.5 w-3.5" />
-                  <span>{fmtDate(article.publishedAt || (article as any).date || "")}</span>
+                  <span>{fmtDate(article.publishedAt || (article as any).date || "", language)}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <button onClick={tweetShare} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-500 text-white text-xs font-semibold hover:bg-sky-600 transition-colors">
                     <Twitter className="h-3.5 w-3.5" /> Twitter
                   </button>
                   <button onClick={copyLink} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-muted-foreground text-xs font-semibold hover:bg-accent transition-colors border border-border">
-                    <Link className="h-3.5 w-3.5" /> {copied ? "복사됨!" : "링크복사"}
+                    <Link className="h-3.5 w-3.5" /> {copied ? t("copied") : t("copyLink")}
                   </button>
                 </div>
               </div>
@@ -338,11 +373,11 @@ const ArticleDetail = () => {
             <div className="mt-8 pt-5 border-t border-border">
               <div className="flex items-center justify-between flex-wrap gap-3">
                 <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors text-sm">
-                  <ArrowLeft className="h-4 w-4" /> 목록으로
+                  <ArrowLeft className="h-4 w-4" /> {t("backToList")}
                 </button>
                 <div className="flex gap-2">
                   <button onClick={copyLink} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-muted text-sm font-semibold hover:bg-accent transition-colors border border-border">
-                    <Share2 className="h-4 w-4" /> 공유
+                    <Share2 className="h-4 w-4" /> {t("share")}
                   </button>
                 </div>
               </div>
@@ -355,11 +390,11 @@ const ArticleDetail = () => {
             {related.length > 0 && (
               <section className="mt-4 pt-5 border-t-2 border-primary/30">
                 <h2 className="text-lg font-extrabold mb-4 text-foreground flex items-center gap-2">
-                  <span className="w-1 h-5 bg-primary rounded inline-block" /> 관련 기사
+                  <span className="w-1 h-5 bg-primary rounded inline-block" /> {t("relatedArticles")}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {related.map(rel => (
-                    <RelatedCard key={rel.id} article={rel} onClick={() => navigate("/article/" + encodeURIComponent(rel.id))} />
+                    <RelatedCard key={rel.id} article={rel} language={language} onClick={() => navigate("/article/" + encodeURIComponent(rel.id))} />
                   ))}
                 </div>
               </section>
@@ -372,21 +407,21 @@ const ArticleDetail = () => {
             {more.length > 0 && (
               <section className="mt-5 pt-5 border-t border-border">
                 <h2 className="text-base font-extrabold mb-4 text-foreground flex items-center gap-2">
-                  <span className="text-orange-500">이 기사도 읽어보세요</span>
+                  <span className="text-orange-500">{t("readAlso")}</span>
                 </h2>
                 <div className="space-y-2">
                   {more.map(rel => (
-                    <RelatedCard key={rel.id} article={rel} onClick={() => navigate("/article/" + encodeURIComponent(rel.id))} />
+                    <RelatedCard key={rel.id} article={rel} language={language} onClick={() => navigate("/article/" + encodeURIComponent(rel.id))} />
                   ))}
                 </div>
               </section>
             )}
 
             <div className="mt-10 p-6 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 text-center">
-              <p className="text-sm font-bold text-foreground mb-1">더 많은 경제 뉴스</p>
-              <p className="text-xs text-muted-foreground mb-4">실시간 글로벌 경제 업데이트</p>
+              <p className="text-sm font-bold text-foreground mb-1">{t("moreEconomicNews")}</p>
+              <p className="text-xs text-muted-foreground mb-4">{t("siteTagline")}</p>
               <button onClick={() => navigate("/")} className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors">
-                전체 뉴스 <ChevronRight className="h-4 w-4" />
+                {t("allNews")} <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </main>
@@ -397,14 +432,14 @@ const ArticleDetail = () => {
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-muted/50">
-                <span className="text-orange-500 text-sm">인기 검색어</span>
+                <span className="text-orange-500 text-sm">{t("trending")}</span>
               </div>
               <ul className="divide-y divide-border">
-                {["코스피", "환율", "금리", "반도체", "비트코인", "부동산", "삼성전자", "원달러"].map((kw, idx) => (
+                {sidebarKeywords.map((kw, idx) => (
                   <li key={kw} className="flex items-center gap-3 px-4 py-2.5 hover:bg-muted/50 cursor-pointer transition-colors" onClick={() => navigate("/?q=" + encodeURIComponent(kw))}>
                     <span className={"text-sm font-bold w-5 " + (idx < 3 ? "text-orange-500" : "text-muted-foreground")}>{idx + 1}</span>
                     <span className="text-sm flex-1">{kw}</span>
-                    {idx < 2 && <span className="text-xs font-bold text-red-500">NEW</span>}
+                    {idx < 2 && <span className="text-xs font-bold text-red-500">{t("new")}</span>}
                   </li>
                 ))}
               </ul>
@@ -414,25 +449,25 @@ const ArticleDetail = () => {
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/50">
-                <h3 className="font-bold text-sm">최신 뉴스</h3>
-                <button onClick={() => navigate("/")} className="text-xs text-primary hover:underline">더보기</button>
+                <h3 className="font-bold text-sm">{t("latestNews")}</h3>
+                <button onClick={() => navigate("/")} className="text-xs text-primary hover:underline">{t("more")}</button>
               </div>
               <div className="divide-y divide-border">
                 {all.slice(0, 6).map(a => (
                   <div key={a.id} className="p-3 hover:bg-muted/50 cursor-pointer transition-colors group" onClick={() => navigate("/article/" + encodeURIComponent(a.id))}>
                     <p className="text-xs font-semibold text-primary mb-0.5">{a.category}</p>
                     <p className="text-sm font-medium line-clamp-2 text-foreground group-hover:text-primary transition-colors">{a.title}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{fmtDate(a.publishedAt || (a as any).date || "")}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{fmtDate(a.publishedAt || (a as any).date || "", language)}</p>
                   </div>
                 ))}
               </div>
             </div>
             <div className="bg-card rounded-xl border border-border overflow-hidden mb-4">
               <div className="px-4 py-3 border-b border-border bg-muted/50">
-                <h3 className="font-bold text-sm">카테고리</h3>
+                <h3 className="font-bold text-sm">{t("categories")}</h3>
               </div>
               <div className="p-3 flex flex-wrap gap-1.5">
-                {["거시경제", "주식", "시장", "부동산", "암호화폐", "테크", "금융", "환율"].map(cat => (
+                {sidebarCategories.map(cat => (
                   <button key={cat} onClick={() => navigate("/?category=" + cat)} className="px-3 py-1 rounded-full text-xs font-medium bg-muted hover:bg-primary hover:text-primary-foreground transition-colors border border-border">
                     {cat}
                   </button>

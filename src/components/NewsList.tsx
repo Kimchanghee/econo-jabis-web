@@ -40,7 +40,7 @@ const AdBar728 = ({ uid }: { uid: string }) => {
   );
 };
 
-const NewsCard = ({ article }: { article: NewsArticle }) => {
+const NewsCard = ({ article, locale, breakingLabel }: { article: NewsArticle; locale: string; breakingLabel: string }) => {
   const dateStr = article.publishedAt || (article as any).published_at || article.date;
   const descStr = article.description || (article as any).summary || '';
   const imgSrc = article.imageUrl || (article as any).image_url || '';
@@ -65,7 +65,7 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
         <div className="flex items-center gap-2 mb-1">
           {article.isBreaking && (
             <span className="bg-destructive text-destructive-foreground text-xs px-1.5 py-0.5 rounded font-bold">
-              LIVE
+              {breakingLabel}
             </span>
           )}
           <span className="text-xs text-primary font-semibold">{article.category}</span>
@@ -80,7 +80,7 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
           <Clock className="h-3 w-3" />
           <span>
             {dateStr
-              ? new Date(dateStr).toLocaleString('ko-KR', {
+              ? new Date(dateStr).toLocaleString(locale, {
                   month: 'short',
                   day: 'numeric',
                   hour: '2-digit',
@@ -95,8 +95,22 @@ const NewsCard = ({ article }: { article: NewsArticle }) => {
 };
 
 const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsListProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const nonFeaturedArticles = articles.filter((a) => !a.isFeatured);
+  const localeMap: Record<string, string> = {
+    ko: "ko-KR",
+    en: "en-US",
+    es: "es-ES",
+    ja: "ja-JP",
+    zh: "zh-CN",
+    fr: "fr-FR",
+    de: "de-DE",
+    pt: "pt-BR",
+    id: "id-ID",
+    ar: "ar-SA",
+    hi: "hi-IN",
+  };
+  const locale = localeMap[language] || "en-US";
 
   return (
     <div>
@@ -105,7 +119,7 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
         <div className="flex items-center gap-2">
           {lastFetched && (
             <span className="text-xs text-muted-foreground">
-              {t('updated')}: {lastFetched.toLocaleTimeString()}
+              {t('updated')}: {lastFetched.toLocaleTimeString(locale)}
             </span>
           )}
           {onRefresh && (
@@ -146,7 +160,7 @@ const NewsList = ({ articles, isLoading, error, onRefresh, lastFetched }: NewsLi
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         {nonFeaturedArticles.map((article, index) => (
           <div key={article.id}>
-            <NewsCard article={article} />
+            <NewsCard article={article} locale={locale} breakingLabel={t("breaking")} />
             {(index + 1) % 5 === 0 && (
               <div className="flex justify-center py-2 bg-muted/20 border-t border-b border-dashed border-border">
                 <AdBar728 uid={`newslist-mid-${index}`} />

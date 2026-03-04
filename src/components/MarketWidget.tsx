@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../hooks/useLanguage';
 
 interface MarketItem {
   symbol: string;
@@ -26,6 +27,7 @@ const ColorVal = ({ item }: { item: MarketItem }) => (
 );
 
 const MarketWidget = () => {
+  const { t } = useLanguage();
   const [cryptoData, setCryptoData] = useState<MarketItem[]>([]);
   const [forexData, setForexData] = useState<MarketItem[]>([]);
   const [indexData, setIndexData] = useState<MarketItem[]>([]);
@@ -116,19 +118,19 @@ const MarketWidget = () => {
     <div className="space-y-4">
       {indexData.length > 0 && (
         <div>
-          <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">글로벌 지수</h3>
+          <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">{t("globalIndices")}</h3>
           {indexData.map(item => <ColorVal key={item.symbol} item={item} />)}
         </div>
       )}
       {cryptoData.length > 0 && (
         <div>
-          <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">암호화폐</h3>
+          <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">{t("crypto")}</h3>
           {cryptoData.map(item => <ColorVal key={item.symbol} item={item} />)}
         </div>
       )}
       {forexData.length > 0 && (
         <div>
-          <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">환율</h3>
+          <h3 className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">{t("forex")}</h3>
           {forexData.map(item => <ColorVal key={item.symbol} item={item} />)}
         </div>
       )}

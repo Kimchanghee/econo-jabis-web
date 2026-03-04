@@ -8,16 +8,31 @@ interface FeaturedNewsProps {
   articles: NewsArticle[];
 }
 
-const formatDate = (dateStr: string): string => {
+const LOCALE_BY_LANGUAGE: Record<string, string> = {
+  ko: "ko-KR",
+  en: "en-US",
+  es: "es-ES",
+  ja: "ja-JP",
+  zh: "zh-CN",
+  fr: "fr-FR",
+  de: "de-DE",
+  pt: "pt-BR",
+  id: "id-ID",
+  ar: "ar-SA",
+  hi: "hi-IN",
+};
+
+const formatDate = (dateStr: string, language: string): string => {
   try {
-    return new Date(dateStr).toLocaleDateString();
+    const locale = LOCALE_BY_LANGUAGE[language] || LOCALE_BY_LANGUAGE.en;
+    return new Date(dateStr).toLocaleDateString(locale);
   } catch {
     return dateStr;
   }
 };
 
 const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   if (!articles || articles.length === 0) {
     return (
@@ -65,7 +80,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
               {descStr && <p className="text-white/70 text-sm line-clamp-2 hidden sm:block">{descStr}</p>}
               <div className="flex items-center gap-3 mt-2 text-white/60 text-xs">
                 <Clock className="h-3 w-3" />
-                <span>{formatDate(dateStr)}</span>
+                <span>{formatDate(dateStr, language)}</span>
               </div>
             </div>
           </Link>
@@ -102,7 +117,7 @@ const FeaturedNews = ({ articles }: FeaturedNewsProps) => {
                   {articleDesc && <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">{articleDesc}</p>}
                   <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                     <Clock className="h-3 w-3" />
-                    <span>{formatDate(articleDate)}</span>
+                    <span>{formatDate(articleDate, language)}</span>
                   </div>
                 </div>
               </Link>

@@ -11,7 +11,8 @@ const CategoryTabs = ({ selectedCategory, onCategoryChange, categories }: Catego
 
   const getCategoryLabel = (cat: string) => {
     const key = cat.toLowerCase().replace(/\s+/g, '');
-    return t(key) || cat;
+    const translated = t(key);
+    return translated === key ? cat : translated;
   };
 
   return (

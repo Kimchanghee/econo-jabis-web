@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Flame, ArrowUp, ArrowDown, RefreshCw } from "lucide-react";
 import { NewsArticle } from "../data/newsData";
+import { useLanguage } from "../hooks/useLanguage";
 
 interface RisingKeyword {
   rank: number;
@@ -99,6 +100,7 @@ interface RisingKeywordsProps {
 }
 
 const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
+  const { t, language } = useLanguage();
   const [keywords, setKeywords] = useState<RisingKeyword[]>([]);
   const [now, setNow] = useState<Date>(new Date());
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -146,7 +148,7 @@ const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
 
   const getChangeIcon = (change: string, prevRank?: number, rank?: number) => {
     if (change === "new") {
-      return <span className="text-xs bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-bold animate-pulse">NEW</span>;
+      return <span className="text-xs bg-destructive/10 text-destructive px-1.5 py-0.5 rounded font-bold animate-pulse">{t("new")}</span>;
     }
     if (change === "up" && prevRank !== undefined && rank !== undefined) {
       const diff = prevRank - rank;
@@ -171,15 +173,29 @@ const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
 
   if (keywords.length === 0) return null;
 
-  const dateStr = now.toLocaleDateString("ko-KR", { month: "numeric", day: "numeric", weekday: "short" });
-  const timeStr = now.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
+  const localeMap: Record<string, string> = {
+    ko: "ko-KR",
+    en: "en-US",
+    es: "es-ES",
+    ja: "ja-JP",
+    zh: "zh-CN",
+    fr: "fr-FR",
+    de: "de-DE",
+    pt: "pt-BR",
+    id: "id-ID",
+    ar: "ar-SA",
+    hi: "hi-IN",
+  };
+  const locale = localeMap[language] || "en-US";
+  const dateStr = now.toLocaleDateString(locale, { month: "numeric", day: "numeric", weekday: "short" });
+  const timeStr = now.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" });
 
   return (
     <div className="bg-card rounded-xl shadow-sm border border-border p-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Flame className="w-5 h-5 text-destructive animate-pulse" />
-          <h3 className="font-bold text-foreground">급상승 검색어</h3>
+          <h3 className="font-bold text-foreground">{t("risingKeywords")}</h3>
         </div>
         <div className="flex items-center gap-2">
           {/* 현재 날짜 + 시간 */}
@@ -190,7 +206,7 @@ const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
           <button
             onClick={refresh}
             className="p-1 hover:bg-muted rounded-full transition-colors"
-            title="새로고침"
+            title={t("refresh")}
           >
             <RefreshCw className={`w-4 h-4 text-muted-foreground ${isRefreshing ? "animate-spin" : ""}`} />
           </button>
@@ -217,7 +233,7 @@ const RisingKeywords = ({ articles, onKeywordClick }: RisingKeywordsProps) => {
 
       <div className="mt-3 pt-2 border-t border-border">
         <p className="text-xs text-muted-foreground text-right">
-          {dateStr} {timeStr} 기준 · 1분마다 갱신
+          {dateStr} {timeStr} {t("basedAt")} · {t("updatesEveryMinute")}
         </p>
       </div>
     </div>

@@ -773,6 +773,211 @@ export const ALL_FALLBACK_ARTICLES: NewsArticle[] = [
   ...MULTILINGUAL_ARTICLES,
 ].sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
 
+type CategoryKey = "macro" | "stocks" | "markets" | "realestate" | "crypto" | "finance" | "forex" | "tech" | "economy";
+
+const CATEGORY_LABELS: Record<string, Record<CategoryKey, string>> = {
+  ko: {
+    macro: "거시경제",
+    stocks: "주식",
+    markets: "시장",
+    realestate: "부동산",
+    crypto: "암호화폐",
+    finance: "금융",
+    forex: "환율",
+    tech: "테크",
+    economy: "경제",
+  },
+  en: {
+    macro: "Macro Economy",
+    stocks: "Stocks",
+    markets: "Markets",
+    realestate: "Real Estate",
+    crypto: "Crypto",
+    finance: "Finance",
+    forex: "Forex",
+    tech: "Tech",
+    economy: "Economy",
+  },
+  es: {
+    macro: "Macroeconomía",
+    stocks: "Acciones",
+    markets: "Mercados",
+    realestate: "Inmobiliario",
+    crypto: "Cripto",
+    finance: "Finanzas",
+    forex: "Divisas",
+    tech: "Tecnología",
+    economy: "Economía",
+  },
+  ja: {
+    macro: "マクロ経済",
+    stocks: "株式",
+    markets: "市場",
+    realestate: "不動産",
+    crypto: "暗号資産",
+    finance: "金融",
+    forex: "為替",
+    tech: "テック",
+    economy: "経済",
+  },
+  zh: {
+    macro: "宏观经济",
+    stocks: "股票",
+    markets: "市场",
+    realestate: "房地产",
+    crypto: "加密货币",
+    finance: "金融",
+    forex: "汇率",
+    tech: "科技",
+    economy: "经济",
+  },
+  fr: {
+    macro: "Macroéconomie",
+    stocks: "Actions",
+    markets: "Marchés",
+    realestate: "Immobilier",
+    crypto: "Crypto",
+    finance: "Finance",
+    forex: "Forex",
+    tech: "Technologie",
+    economy: "Économie",
+  },
+  de: {
+    macro: "Makroökonomie",
+    stocks: "Aktien",
+    markets: "Märkte",
+    realestate: "Immobilien",
+    crypto: "Krypto",
+    finance: "Finanzen",
+    forex: "Devisen",
+    tech: "Technologie",
+    economy: "Wirtschaft",
+  },
+  pt: {
+    macro: "Macroeconomia",
+    stocks: "Ações",
+    markets: "Mercados",
+    realestate: "Imobiliário",
+    crypto: "Cripto",
+    finance: "Finanças",
+    forex: "Câmbio",
+    tech: "Tecnologia",
+    economy: "Economia",
+  },
+  id: {
+    macro: "Makroekonomi",
+    stocks: "Saham",
+    markets: "Pasar",
+    realestate: "Properti",
+    crypto: "Kripto",
+    finance: "Keuangan",
+    forex: "Valas",
+    tech: "Teknologi",
+    economy: "Ekonomi",
+  },
+  ar: {
+    macro: "اقتصاد كلي",
+    stocks: "أسهم",
+    markets: "أسواق",
+    realestate: "عقارات",
+    crypto: "عملات رقمية",
+    finance: "تمويل",
+    forex: "صرف",
+    tech: "تقنية",
+    economy: "اقتصاد",
+  },
+  hi: {
+    macro: "व्यापक अर्थव्यवस्था",
+    stocks: "शेयर",
+    markets: "बाजार",
+    realestate: "रियल एस्टेट",
+    crypto: "क्रिप्टो",
+    finance: "वित्त",
+    forex: "विनिमय दर",
+    tech: "टेक",
+    economy: "अर्थव्यवस्था",
+  },
+};
+
+const CATEGORY_ALIASES: Record<string, CategoryKey> = {
+  "거시경제": "macro",
+  "macro economy": "macro",
+  "macroeconomy": "macro",
+  "주식": "stocks",
+  stocks: "stocks",
+  stock: "stocks",
+  "시장": "markets",
+  markets: "markets",
+  market: "markets",
+  "부동산": "realestate",
+  "real estate": "realestate",
+  realestate: "realestate",
+  property: "realestate",
+  "암호화폐": "crypto",
+  crypto: "crypto",
+  cryptocurrency: "crypto",
+  "가상자산": "crypto",
+  "금융": "finance",
+  finance: "finance",
+  "환율": "forex",
+  forex: "forex",
+  fx: "forex",
+  "테크": "tech",
+  tech: "tech",
+  technology: "tech",
+  "경제": "economy",
+  economy: "economy",
+};
+
+const normalizeLanguage = (lang: string) => (lang || "en").toLowerCase().split("-")[0];
+
+const normalizeCategoryKey = (category: string): CategoryKey => {
+  const normalized = category.trim().toLowerCase();
+  return CATEGORY_ALIASES[normalized] || CATEGORY_ALIASES[category.trim()] || "economy";
+};
+
+const localizeCategory = (category: string, lang: string): string => {
+  const key = normalizeCategoryKey(category);
+  const labels = CATEGORY_LABELS[normalizeLanguage(lang)] || CATEGORY_LABELS.en;
+  return labels[key] || category;
+};
+
+const localizeArticle = (article: NewsArticle, lang: string): NewsArticle => {
+  const normalizedLang = normalizeLanguage(lang);
+  const localizedCategory = localizeCategory(article.category || "경제", normalizedLang);
+  return {
+    ...article,
+    category: localizedCategory,
+    categories: (article.categories || [article.category]).map((category) => localizeCategory(category, normalizedLang)),
+    language: normalizedLang,
+    locale: normalizedLang,
+  };
+};
+
+const getFallbackArticlesByLanguage = (lang: string): NewsArticle[] => {
+  const normalizedLang = normalizeLanguage(lang);
+  const filtered = ALL_FALLBACK_ARTICLES.filter((article) => {
+    const articleLang = normalizeLanguage(article.language || article.locale || "");
+    return articleLang === normalizedLang;
+  });
+  return filtered.map((article) => localizeArticle(article, normalizedLang));
+};
+
+const getNewsErrorMessage = (lang: string, kind: "load_failed" | "update_failed"): string => {
+  const normalizedLang = normalizeLanguage(lang);
+  const messages = {
+    ko: {
+      load_failed: "실시간 뉴스를 불러오지 못했습니다. 기본 뉴스를 표시합니다.",
+      update_failed: "실시간 업데이트 중 오류가 발생했습니다.",
+    },
+    en: {
+      load_failed: "Unable to load live news. Showing fallback news.",
+      update_failed: "An error occurred during live updates.",
+    },
+  };
+  return (messages[normalizedLang as "ko" | "en"] || messages.en)[kind];
+};
+
 // ============================================================
 // 경제 뉴스 키워드 쿼리 목록
 // ============================================================
@@ -899,8 +1104,14 @@ function getNewsImageUrl(title: string, category: string): string {
 // ============================================================
 async function fetchGeminiNews(query: string, _apiKey: string, lang = 'ko'): Promise<NewsArticle[]> {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
+  const normalizedLang = normalizeLanguage(lang);
   try {
-    const res = await fetch(`${backendUrl}/api/news?query=${encodeURIComponent(query)}`);
+    const apiUrl = `${backendUrl}/api/news?query=${encodeURIComponent(query)}&language=${encodeURIComponent(normalizedLang)}`;
+    const res = await fetch(apiUrl, {
+      headers: {
+        "Accept-Language": normalizedLang,
+      },
+    });
     if (!res.ok) {
       const errText = await res.text();
       throw new Error(`Backend API error: ${res.status} - ${errText}`);
@@ -918,7 +1129,7 @@ async function fetchGeminiNews(query: string, _apiKey: string, lang = 'ko'): Pro
         .split(/\n\n+/)
         .map(p => p.trim())
         .filter(p => p.length > 20);
-      const category = String(item.category || classifyCategory(title, body));
+      const category = localizeCategory(String(item.category || classifyCategory(title, body)), normalizedLang);
       const id = `gemini_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
       const publishedAt = String(item.published_at || new Date().toISOString());
       const imageUrl = getNewsImageUrl(title, category);
@@ -929,12 +1140,12 @@ async function fetchGeminiNews(query: string, _apiKey: string, lang = 'ko'): Pro
         keywords: String(item.keywords || ''),
         snippet: paragraphs[0] || '',
         url, image_url: imageUrl, imageUrl,
-        language: 'ko',
+        language: normalizedLang,
         published_at: publishedAt, publishedAt,
         source: String(item.source || 'EconoJabis'),
         categories: [category], category,
         date: publishedAt,
-        relevance_score: null, locale: 'ko',
+        relevance_score: null, locale: normalizedLang,
         isBreaking: false, isFeatured: false,
         summary: paragraphs[0] || '',
         fullBody: body,
@@ -954,7 +1165,7 @@ async function fetchGeminiNews(query: string, _apiKey: string, lang = 'ko'): Pro
 // 메인 훅 - 실제 뉴스 30개로 즉시 로딩, API로 실시간 갱신
 // ============================================================
 export const useTheNewsApi = (language = 'ko') => {
-  const [articles, setArticles] = useState<NewsArticle[]>(ALL_FALLBACK_ARTICLES);
+  const [articles, setArticles] = useState<NewsArticle[]>(() => getFallbackArticlesByLanguage(language));
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastFetched, setLastFetched] = useState<Date | null>(null);
@@ -962,10 +1173,18 @@ export const useTheNewsApi = (language = 'ko') => {
   const articleCacheRef = useRef<Map<string, NewsArticle>>(new Map());
 
   useEffect(() => {
-    for (const a of ALL_FALLBACK_ARTICLES) {
+    const localizedFallbacks = getFallbackArticlesByLanguage(language);
+    articleCacheRef.current = new Map();
+    seenTitles.clear();
+    seenUrls.clear();
+    for (const a of localizedFallbacks) {
       articleCacheRef.current.set(a.id, a);
+      registerArticle(a.title, a.url);
     }
-  }, []);
+    setArticles(localizedFallbacks);
+    setError(null);
+    setLastFetched(null);
+  }, [language]);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
 
@@ -1009,17 +1228,18 @@ export const useTheNewsApi = (language = 'ko') => {
         setError(null);
         console.log('[EconoJabis] Articles set:', allCached.length);
       } else {
-        setArticles(ALL_FALLBACK_ARTICLES);
-        setError('실시간 뉴스를 불러오지 못했습니다. 기본 뉴스를 표시합니다.');
+        const localizedFallbacks = getFallbackArticlesByLanguage(language);
+        setArticles(localizedFallbacks);
+        setError(getNewsErrorMessage(language, "load_failed"));
       }
     } catch (e) {
       console.error('[EconoJabis] fetchNews error:', e);
-      setError('실시간 업데이트 중 오류가 발생했습니다.');
+      setError(getNewsErrorMessage(language, "update_failed"));
     } finally {
       setIsLoading(false);
       fetchingRef.current = false;
     }
-  }, [backendUrl]);
+  }, [backendUrl, language]);
 
   useEffect(() => {
     const timer = setTimeout(fetchNews, 1000);
