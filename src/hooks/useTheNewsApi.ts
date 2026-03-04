@@ -11,7 +11,7 @@ export interface NewsArticle {
   description: string;
   keywords: string;
   snippet: string;
-  url: string;
+  url: string;h
   image_url: string;
   imageUrl: string;
   language: string;
@@ -897,7 +897,7 @@ function getNewsImageUrl(title: string, category: string): string {
 // ============================================================
 // Gemini API 호출 - Google Search Grounding으로 실시간 뉴스
 // ============================================================
-async function fetchGeminiNews(query: string, _apiKey: string): Promise<NewsArticle[]> {
+async function fetchGeminiNews(query: string, _apiKey: string, lang = 'ko'): Promise<NewsArticle[]> {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://econojabis-backend-m2hewckpba-uc.a.run.app';
   try {
     const res = await fetch(`${backendUrl}/api/news?query=${encodeURIComponent(query)}`);
@@ -953,7 +953,7 @@ async function fetchGeminiNews(query: string, _apiKey: string): Promise<NewsArti
 // ============================================================
 // 메인 훅 - 실제 뉴스 30개로 즉시 로딩, API로 실시간 갱신
 // ============================================================
-export const useTheNewsApi = (_language = 'ko') => {
+export const useTheNewsApi = (language = 'ko') => {
   const [articles, setArticles] = useState<NewsArticle[]>(ALL_FALLBACK_ARTICLES);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -980,7 +980,7 @@ export const useTheNewsApi = (_language = 'ko') => {
       const selectedQueries = shuffled.slice(0, 5);
       console.log('[EconoJabis] Selected queries:', selectedQueries);
       const results = await Promise.allSettled(
-        selectedQueries.map(q => fetchGeminiNews(q, backendUrl))
+        selectedQueries.map(q => fetchGeminiNews(q, backendUrl, language))
       );
       const newArticles: NewsArticle[] = [];
       for (const result of results) {
