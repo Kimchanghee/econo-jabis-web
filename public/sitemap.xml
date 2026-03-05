@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://econojabis.com/</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/" />
@@ -20,7 +20,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/about</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/about" />
@@ -38,7 +38,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/contact</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/contact" />
@@ -56,7 +56,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/privacy</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/privacy" />
@@ -74,7 +74,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%EA%B1%B0%EC%8B%9C%EA%B2%BD%EC%A0%9C</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%EA%B1%B0%EC%8B%9C%EA%B2%BD%EC%A0%9C" />
@@ -92,7 +92,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%EA%B2%BD%EC%A0%9C</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%EA%B2%BD%EC%A0%9C" />
@@ -110,7 +110,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%EC%8B%9C%EC%9E%A5</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%EC%8B%9C%EC%9E%A5" />
@@ -128,7 +128,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%EC%A3%BC%EC%8B%9D</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%EC%A3%BC%EC%8B%9D" />
@@ -146,7 +146,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%ED%99%98%EC%9C%A8</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%ED%99%98%EC%9C%A8" />
@@ -164,7 +164,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%EA%B8%88%EC%9C%B5</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%EA%B8%88%EC%9C%B5" />
@@ -182,7 +182,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%EB%B6%80%EB%8F%99%EC%82%B0</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%EB%B6%80%EB%8F%99%EC%82%B0" />
@@ -200,7 +200,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%EC%95%94%ED%98%B8%ED%99%94%ED%8F%90</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%EC%95%94%ED%98%B8%ED%99%94%ED%8F%90" />
@@ -218,7 +218,7 @@
   </url>
   <url>
     <loc>https://econojabis.com/?category=%ED%85%8C%ED%81%AC</loc>
-    <lastmod>2026-03-04</lastmod>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>hourly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/?category=%ED%85%8C%ED%81%AC" />
@@ -233,5 +233,695 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/?category=%ED%85%8C%ED%81%AC&amp;lang=ar" />
     <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/?category=%ED%85%8C%ED%81%AC&amp;lang=hi" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/?category=%ED%85%8C%ED%81%AC" />
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_001</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_001" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_001?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_001?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_001?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_001?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_001?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_001?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_001?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_001?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_001?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_001?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_001" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>코인도 주식처럼 호가창 촘촘하게…&quot;큰손&quot;이 거래 체결 돕는다</image:title>
+      <image:caption>코인도 주식처럼 호가창 촘촘하게…&quot;큰손&quot;이 거래 체결 돕는다 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_002</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_002" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_002?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_002?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_002?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_002?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_002?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_002?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_002?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_002?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_002?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_002?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_002" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>AI·원전·조선 &quot;오일머니 프로젝트&quot;…이란 폭격에 &quot;연쇄 좌초&quot; 공포</image:title>
+      <image:caption>AI·원전·조선 &quot;오일머니 프로젝트&quot;…이란 폭격에 &quot;연쇄 좌초&quot; 공포 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_003</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_003" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_003?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_003?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_003?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_003?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_003?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_003?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_003?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_003?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_003?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_003?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_003" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>포탄 맞은 증시…외국인 5조 투매에 정유·방산·해운株만 살아남아</image:title>
+      <image:caption>포탄 맞은 증시…외국인 5조 투매에 정유·방산·해운株만 살아남아 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_004</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_004" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_004?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_004?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_004?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_004?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_004?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_004?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_004?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_004?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_004?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_004?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_004" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>한은, K자형 성장 우려에 &quot;비둘기적 동결&quot;…국채금리 일제히 하락</image:title>
+      <image:caption>한은, K자형 성장 우려에 &quot;비둘기적 동결&quot;…국채금리 일제히 하락 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_005</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_005" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_005?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_005?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_005?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_005?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_005?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_005?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_005?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_005?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_005?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_005?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_005" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>한은, 기준금리 향후 6개월간 동결 시사…1분기 성장률 1% 내외 전망</image:title>
+      <image:caption>한은, 기준금리 향후 6개월간 동결 시사…1분기 성장률 1% 내외 전망 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_006</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_006" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_006?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_006?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_006?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_006?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_006?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_006?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_006?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_006?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_006?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_006?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_006" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>환율·채권, 중동 전쟁 격화…원달러 환율 1,470원 재진입 가능성</image:title>
+      <image:caption>환율·채권, 중동 전쟁 격화…원달러 환율 1,470원 재진입 가능성 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_007</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_007" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_007?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_007?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_007?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_007?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_007?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_007?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_007?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_007?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_007?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_007?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_007" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>불안한 유가…2월 물가 2.2% 상승, 에너지발 오름세 지속</image:title>
+      <image:caption>불안한 유가…2월 물가 2.2% 상승, 에너지발 오름세 지속 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_008</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_008" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_008?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_008?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_008?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_008?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_008?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_008?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_008?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_008?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_008?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_008?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_008" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>&quot;무탄소 전기만으론 부족하다&quot;…반도체업계의 가스 전쟁</image:title>
+      <image:caption>&quot;무탄소 전기만으론 부족하다&quot;…반도체업계의 가스 전쟁 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_009</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_009" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_009?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_009?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_009?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_009?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_009?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_009?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_009?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_009?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_009?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_009?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_009" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>아파트 공시가 뛴다…강남 세부담 커질 듯</image:title>
+      <image:caption>아파트 공시가 뛴다…강남 세부담 커질 듯 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_010</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_010" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_010?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_010?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_010?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_010?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_010?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_010?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_010?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_010?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_010?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_010?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_010" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>장기전세주택 20년…서민 주거 안전망 역할 &quot;톡톡&quot;</image:title>
+      <image:caption>장기전세주택 20년…서민 주거 안전망 역할 &quot;톡톡&quot; - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_011</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_011" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_011?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_011?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_011?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_011?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_011?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_011?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_011?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_011?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_011?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_011?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_011" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>테헤란로 빌딩 리모델링 연면적 최대 30% 늘린다</image:title>
+      <image:caption>테헤란로 빌딩 리모델링 연면적 최대 30% 늘린다 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_012</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_012" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_012?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_012?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_012?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_012?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_012?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_012?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_012?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_012?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_012?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_012?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_012" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>해수부 장관에 &quot;부산 출신 관료&quot;…HMM 민영화 이끈다</image:title>
+      <image:caption>해수부 장관에 &quot;부산 출신 관료&quot;…HMM 민영화 이끈다 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_013</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_013" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_013?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_013?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_013?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_013?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_013?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_013?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_013?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_013?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_013?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_013?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_013" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>인구감소지역 &quot;외국인 빗장&quot; 푼다…취업비자 간소화</image:title>
+      <image:caption>인구감소지역 &quot;외국인 빗장&quot; 푼다…취업비자 간소화 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_014</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_014" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_014?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_014?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_014?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_014?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_014?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_014?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_014?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_014?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_014?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_014?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_014" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>박홍근 &quot;재정 화수분 아니야…불요불급 예산 과감히 도려내야&quot;</image:title>
+      <image:caption>박홍근 &quot;재정 화수분 아니야…불요불급 예산 과감히 도려내야&quot; - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_015</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_015" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_015?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_015?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_015?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_015?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_015?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_015?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_015?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_015?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_015?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_015?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_015" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>중동 체류 국민 1.7만명…정부, 육로 대피계획 수립</image:title>
+      <image:caption>중동 체류 국민 1.7만명…정부, 육로 대피계획 수립 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_016</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_016" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_016?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_016?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_016?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_016?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_016?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_016?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_016?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_016?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_016?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_016?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_016" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>호르무즈 해협 내 국적 선박 40척…&quot;안전구역으로 이동&quot;</image:title>
+      <image:caption>호르무즈 해협 내 국적 선박 40척…&quot;안전구역으로 이동&quot; - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_017</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_017" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_017?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_017?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_017?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_017?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_017?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_017?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_017?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_017?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_017?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_017?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_017" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>비트코인, 미-이란 전쟁 후 빠른 반등…1억원대 재진입</image:title>
+      <image:caption>비트코인, 미-이란 전쟁 후 빠른 반등…1억원대 재진입 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_018</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_018" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_018?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_018?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_018?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_018?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_018?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_018?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_018?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_018?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_018?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_018?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_018" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>국제유가, 이란 전쟁에 배럴당 90달러 돌파…에너지주 급등</image:title>
+      <image:caption>국제유가, 이란 전쟁에 배럴당 90달러 돌파…에너지주 급등 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_019</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_019" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_019?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_019?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_019?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_019?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_019?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_019?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_019?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_019?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_019?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_019?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_019" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>&quot;전쟁이 증시 상승추세 못 바꿔&quot;…저가 매수 적기 논란</image:title>
+      <image:caption>&quot;전쟁이 증시 상승추세 못 바꿔&quot;…저가 매수 적기 논란 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_020</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_020" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_020?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_020?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_020?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_020?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_020?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_020?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_020?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_020?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_020?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_020?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_020" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>삼성전자, 엔비디아 HBM4 공급 계약 협상 가속…SK하이닉스 독주 견제</image:title>
+      <image:caption>삼성전자, 엔비디아 HBM4 공급 계약 협상 가속…SK하이닉스 독주 견제 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_021</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_021" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_021?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_021?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_021?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_021?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_021?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_021?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_021?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_021?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_021?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_021?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_021" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>현대차·기아, 미국 관세 대응 조지아·앨라배마 생산 확대</image:title>
+      <image:caption>현대차·기아, 미국 관세 대응 조지아·앨라배마 생산 확대 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_022</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_022" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_022?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_022?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_022?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_022?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_022?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_022?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_022?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_022?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_022?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_022?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_022" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>금값, 안전자산 수요에 온스당 2,950달러…사상 최고치 경신</image:title>
+      <image:caption>금값, 안전자산 수요에 온스당 2,950달러…사상 최고치 경신 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_023</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_023" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_023?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_023?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_023?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_023?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_023?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_023?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_023?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_023?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_023?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_023?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_023" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>코스닥 방산株 대거 상한가…LIG넥스원·한화에어로스페이스 급등</image:title>
+      <image:caption>코스닥 방산株 대거 상한가…LIG넥스원·한화에어로스페이스 급등 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_024</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_024" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_024?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_024?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_024?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_024?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_024?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_024?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_024?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_024?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_024?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_024?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_024" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>엔화, 달러당 147엔대…안전자산 수요에 강세 전환</image:title>
+      <image:caption>엔화, 달러당 147엔대…안전자산 수요에 강세 전환 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_025</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_025" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_025?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_025?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_025?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_025?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_025?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_025?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_025?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_025?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_025?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_025?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_025" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>서울 아파트 전세가 3개월 연속 상승…강남 전세 품귀 현상</image:title>
+      <image:caption>서울 아파트 전세가 3개월 연속 상승…강남 전세 품귀 현상 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_026</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_026" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_026?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_026?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_026?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_026?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_026?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_026?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_026?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_026?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_026?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_026?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_026" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>미 증시 급락…S&amp;P500 3% 하락, 방산주 나홀로 강세</image:title>
+      <image:caption>미 증시 급락…S&amp;P500 3% 하락, 방산주 나홀로 강세 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_027</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_027" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_027?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_027?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_027?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_027?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_027?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_027?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_027?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_027?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_027?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_027?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_027" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>트럼프 &quot;이란 핵시설 타격 성공&quot;…이스라엘과 공동 작전</image:title>
+      <image:caption>트럼프 &quot;이란 핵시설 타격 성공&quot;…이스라엘과 공동 작전 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_028</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_028" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_028?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_028?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_028?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_028?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_028?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_028?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_028?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_028?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_028?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_028?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_028" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>이더리움, 전쟁 충격 딛고 3,200달러 회복…디파이 TVL 급증</image:title>
+      <image:caption>이더리움, 전쟁 충격 딛고 3,200달러 회복…디파이 TVL 급증 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_029</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_029" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_029?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_029?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_029?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_029?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_029?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_029?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_029?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_029?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_029?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_029?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_029" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>원화, 중동 전쟁에 약세…원달러 1,490원대 거래</image:title>
+      <image:caption>원화, 중동 전쟁에 약세…원달러 1,490원대 거래 - EconoJabis</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_030</loc>
+    <lastmod>2026-03-05</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://econojabis.com/article/real_030" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://econojabis.com/article/real_030?lang=en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://econojabis.com/article/real_030?lang=es" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://econojabis.com/article/real_030?lang=ja" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://econojabis.com/article/real_030?lang=zh" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://econojabis.com/article/real_030?lang=fr" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://econojabis.com/article/real_030?lang=de" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://econojabis.com/article/real_030?lang=pt" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://econojabis.com/article/real_030?lang=id" />
+    <xhtml:link rel="alternate" hreflang="ar" href="https://econojabis.com/article/real_030?lang=ar" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://econojabis.com/article/real_030?lang=hi" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://econojabis.com/article/real_030" />
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>LG전자, AI 가전 구독 서비스 가입자 500만 돌파…수익성 개선</image:title>
+      <image:caption>LG전자, AI 가전 구독 서비스 가입자 500만 돌파…수익성 개선 - EconoJabis</image:caption>
+    </image:image>
   </url>
 </urlset>

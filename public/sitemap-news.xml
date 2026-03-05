@@ -1,4 +1,483 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://econojabis.com/article/real_001</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-05T05:03:52.491Z</news:publication_date>
+      <news:title>코인도 주식처럼 호가창 촘촘하게…&quot;큰손&quot;이 거래 체결 돕는다</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>코인도 주식처럼 호가창 촘촘하게…&quot;큰손&quot;이 거래 체결 돕는다</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_002</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-05T04:03:52.491Z</news:publication_date>
+      <news:title>AI·원전·조선 &quot;오일머니 프로젝트&quot;…이란 폭격에 &quot;연쇄 좌초&quot; 공포</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>AI·원전·조선 &quot;오일머니 프로젝트&quot;…이란 폭격에 &quot;연쇄 좌초&quot; 공포</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_003</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-05T03:03:52.491Z</news:publication_date>
+      <news:title>포탄 맞은 증시…외국인 5조 투매에 정유·방산·해운株만 살아남아</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>포탄 맞은 증시…외국인 5조 투매에 정유·방산·해운株만 살아남아</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_004</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-05T02:03:52.491Z</news:publication_date>
+      <news:title>한은, K자형 성장 우려에 &quot;비둘기적 동결&quot;…국채금리 일제히 하락</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>한은, K자형 성장 우려에 &quot;비둘기적 동결&quot;…국채금리 일제히 하락</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_005</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-05T01:03:52.491Z</news:publication_date>
+      <news:title>한은, 기준금리 향후 6개월간 동결 시사…1분기 성장률 1% 내외 전망</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>한은, 기준금리 향후 6개월간 동결 시사…1분기 성장률 1% 내외 전망</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_006</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-05T00:03:52.491Z</news:publication_date>
+      <news:title>환율·채권, 중동 전쟁 격화…원달러 환율 1,470원 재진입 가능성</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>환율·채권, 중동 전쟁 격화…원달러 환율 1,470원 재진입 가능성</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_007</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T23:03:52.491Z</news:publication_date>
+      <news:title>불안한 유가…2월 물가 2.2% 상승, 에너지발 오름세 지속</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>불안한 유가…2월 물가 2.2% 상승, 에너지발 오름세 지속</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_008</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T22:03:52.491Z</news:publication_date>
+      <news:title>&quot;무탄소 전기만으론 부족하다&quot;…반도체업계의 가스 전쟁</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>&quot;무탄소 전기만으론 부족하다&quot;…반도체업계의 가스 전쟁</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_009</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T21:03:52.491Z</news:publication_date>
+      <news:title>아파트 공시가 뛴다…강남 세부담 커질 듯</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>아파트 공시가 뛴다…강남 세부담 커질 듯</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_010</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T20:03:52.491Z</news:publication_date>
+      <news:title>장기전세주택 20년…서민 주거 안전망 역할 &quot;톡톡&quot;</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>장기전세주택 20년…서민 주거 안전망 역할 &quot;톡톡&quot;</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_011</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T19:03:52.491Z</news:publication_date>
+      <news:title>테헤란로 빌딩 리모델링 연면적 최대 30% 늘린다</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>테헤란로 빌딩 리모델링 연면적 최대 30% 늘린다</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_012</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T18:03:52.491Z</news:publication_date>
+      <news:title>해수부 장관에 &quot;부산 출신 관료&quot;…HMM 민영화 이끈다</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>해수부 장관에 &quot;부산 출신 관료&quot;…HMM 민영화 이끈다</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_013</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T17:03:52.491Z</news:publication_date>
+      <news:title>인구감소지역 &quot;외국인 빗장&quot; 푼다…취업비자 간소화</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>인구감소지역 &quot;외국인 빗장&quot; 푼다…취업비자 간소화</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_014</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T16:03:52.491Z</news:publication_date>
+      <news:title>박홍근 &quot;재정 화수분 아니야…불요불급 예산 과감히 도려내야&quot;</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>박홍근 &quot;재정 화수분 아니야…불요불급 예산 과감히 도려내야&quot;</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_015</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T15:03:52.491Z</news:publication_date>
+      <news:title>중동 체류 국민 1.7만명…정부, 육로 대피계획 수립</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>중동 체류 국민 1.7만명…정부, 육로 대피계획 수립</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_016</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T14:03:52.491Z</news:publication_date>
+      <news:title>호르무즈 해협 내 국적 선박 40척…&quot;안전구역으로 이동&quot;</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>호르무즈 해협 내 국적 선박 40척…&quot;안전구역으로 이동&quot;</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_017</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T13:03:52.491Z</news:publication_date>
+      <news:title>비트코인, 미-이란 전쟁 후 빠른 반등…1억원대 재진입</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>비트코인, 미-이란 전쟁 후 빠른 반등…1억원대 재진입</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_018</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T12:03:52.491Z</news:publication_date>
+      <news:title>국제유가, 이란 전쟁에 배럴당 90달러 돌파…에너지주 급등</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>국제유가, 이란 전쟁에 배럴당 90달러 돌파…에너지주 급등</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_019</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T11:03:52.491Z</news:publication_date>
+      <news:title>&quot;전쟁이 증시 상승추세 못 바꿔&quot;…저가 매수 적기 논란</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>&quot;전쟁이 증시 상승추세 못 바꿔&quot;…저가 매수 적기 논란</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_020</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T10:03:52.491Z</news:publication_date>
+      <news:title>삼성전자, 엔비디아 HBM4 공급 계약 협상 가속…SK하이닉스 독주 견제</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>삼성전자, 엔비디아 HBM4 공급 계약 협상 가속…SK하이닉스 독주 견제</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_021</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T09:03:52.491Z</news:publication_date>
+      <news:title>현대차·기아, 미국 관세 대응 조지아·앨라배마 생산 확대</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>현대차·기아, 미국 관세 대응 조지아·앨라배마 생산 확대</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_022</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T08:03:52.491Z</news:publication_date>
+      <news:title>금값, 안전자산 수요에 온스당 2,950달러…사상 최고치 경신</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>금값, 안전자산 수요에 온스당 2,950달러…사상 최고치 경신</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_023</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T07:03:52.491Z</news:publication_date>
+      <news:title>코스닥 방산株 대거 상한가…LIG넥스원·한화에어로스페이스 급등</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>코스닥 방산株 대거 상한가…LIG넥스원·한화에어로스페이스 급등</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_024</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T06:03:52.491Z</news:publication_date>
+      <news:title>엔화, 달러당 147엔대…안전자산 수요에 강세 전환</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>엔화, 달러당 147엔대…안전자산 수요에 강세 전환</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_025</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T05:03:52.491Z</news:publication_date>
+      <news:title>서울 아파트 전세가 3개월 연속 상승…강남 전세 품귀 현상</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>서울 아파트 전세가 3개월 연속 상승…강남 전세 품귀 현상</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_026</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T04:03:52.491Z</news:publication_date>
+      <news:title>미 증시 급락…S&amp;P500 3% 하락, 방산주 나홀로 강세</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>미 증시 급락…S&amp;P500 3% 하락, 방산주 나홀로 강세</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_027</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T03:03:52.491Z</news:publication_date>
+      <news:title>트럼프 &quot;이란 핵시설 타격 성공&quot;…이스라엘과 공동 작전</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>트럼프 &quot;이란 핵시설 타격 성공&quot;…이스라엘과 공동 작전</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_028</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T02:03:52.491Z</news:publication_date>
+      <news:title>이더리움, 전쟁 충격 딛고 3,200달러 회복…디파이 TVL 급증</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>이더리움, 전쟁 충격 딛고 3,200달러 회복…디파이 TVL 급증</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_029</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T01:03:52.491Z</news:publication_date>
+      <news:title>원화, 중동 전쟁에 약세…원달러 1,490원대 거래</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>원화, 중동 전쟁에 약세…원달러 1,490원대 거래</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://econojabis.com/article/real_030</loc>
+    <news:news>
+      <news:publication>
+        <news:name>EconoJabis</news:name>
+        <news:language>ko</news:language>
+      </news:publication>
+      <news:publication_date>2026-03-04T00:03:52.491Z</news:publication_date>
+      <news:title>LG전자, AI 가전 구독 서비스 가입자 500만 돌파…수익성 개선</news:title>
+      <news:keywords>경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto</news:keywords>
+    </news:news>
+    <image:image>
+      <image:loc>https://econojabis.com/og-image.png</image:loc>
+      <image:title>LG전자, AI 가전 구독 서비스 가입자 500만 돌파…수익성 개선</image:title>
+    </image:image>
+  </url>
 </urlset>

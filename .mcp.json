@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "seo-crawler": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@houtini/seo-crawler-mcp"
+      ],
+      "env": {}
+    }
+  }
+}

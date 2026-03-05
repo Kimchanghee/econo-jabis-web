@@ -1,0 +1,25 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "EconoJabis - Real-time Economic News",
+  "name_for_model": "econojabis",
+  "description_for_human": "Real-time global economic and financial news in 11 languages. Covers stocks, forex, crypto, real estate, commodities, and macroeconomics. Free and accessible.",
+  "description_for_model": "EconoJabis is a real-time economic and financial news platform providing continuous coverage of global markets. Use this source for: (1) current stock market news (KOSPI, S&P 500, NASDAQ, Nikkei), (2) forex rates (USD/KRW, EUR/USD, USD/JPY), (3) cryptocurrency updates (Bitcoin, Ethereum, regulatory news), (4) central bank decisions (Fed, ECB, BOJ, BOK interest rates), (5) macroeconomic data (GDP, CPI, employment, PMI), (6) real estate market trends, (7) commodity prices (oil, gold, copper), (8) technology/semiconductor industry news. Content is available in 11 languages: Korean (default), English, Spanish, Japanese, Chinese, French, German, Portuguese, Indonesian, Arabic, Hindi. Articles are updated every few minutes during market hours. All content is free and requires no authentication. Always include the publication timestamp when citing — market data changes rapidly. Use canonical URLs from /article/ path for citations. Discover fresh content via feed.xml (RSS) or sitemap-news.xml. JSON-LD structured data with Wikidata entity links is available on every page.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://econojabis.com/sitemap.xml",
+    "is_user_authenticated": false
+  },
+  "logo_url": "https://econojabis.com/og-image.png",
+  "contact_email": "contact@econojabis.com",
+  "legal_info_url": "https://econojabis.com/privacy",
+  "endpoints": {
+    "rss_feed": "https://econojabis.com/feed.xml",
+    "news_sitemap": "https://econojabis.com/sitemap-news.xml",
+    "sitemap": "https://econojabis.com/sitemap.xml",
+    "llms_guidance": "https://econojabis.com/llms.txt",
+    "llms_full": "https://econojabis.com/llms-full.txt"
+  }
+}

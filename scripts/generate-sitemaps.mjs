@@ -60,21 +60,24 @@ const buildAlternates = (pathname, params = {}) =>
 
 const parseFallbackArticles = () => {
   const source = fs.readFileSync(FALLBACK_SOURCE, "utf8");
+  // Match both real_NNN and fallback_NNN id patterns, and both *3600000 (hours) and *60000 (minutes) time offsets
   const pattern =
-    /id:\s*'(fallback_\d+)'.*?title:\s*'([^']+)'.*?publishedAt:\s*new Date\(now\.getTime\(\)\s*-\s*(\d+)\*60000\)\.toISOString\(\)/gs;
+    /id:\s*'(\w+_\d+)'.*?title:\s*'([^']+)'.*?publishedAt:\s*new Date\(now\.getTime\(\)\s*-\s*(\d+)\*(\d+)\)\.toISOString\(\)/gs;
   const matches = [...source.matchAll(pattern)];
 
   const items = matches.map((match) => {
     const id = match[1];
     const title = match[2];
-    const minutesAgo = Number.parseInt(match[3], 10);
-    const published = new Date(NOW.getTime() - (Number.isFinite(minutesAgo) ? minutesAgo : 0) * 60_000).toISOString();
+    const offsetValue = Number.parseInt(match[3], 10);
+    const multiplier = Number.parseInt(match[4], 10);
+    const msAgo = (Number.isFinite(offsetValue) ? offsetValue : 0) * (Number.isFinite(multiplier) ? multiplier : 60000);
+    const published = new Date(NOW.getTime() - msAgo).toISOString();
     return { id, title, publishedAt: published };
   });
 
   return items.length > 0
     ? items
-    : [...new Set([...source.matchAll(/id:\s*'(fallback_\d+)'/g)].map((match) => match[1]))].map((id) => ({
+    : [...new Set([...source.matchAll(/id:\s*'(\w+_\d+)'/g)].map((match) => match[1]))].map((id) => ({
         id,
         title: id,
         publishedAt: NOW_ISO,
@@ -100,10 +103,11 @@ const articlePages = fallbackArticles.map((article) => ({
 
 const allPages = [...STATIC_PAGES, ...dynamicPages, ...articlePages];
 
+// ─── Main Sitemap (with image sitemap extension) ───
 const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${allPages
-  .map(({ path: pagePath, params, priority, changefreq }) => {
+  .map(({ path: pagePath, params, priority, changefreq, title }) => {
     const canonical = buildUrl(pagePath, params);
     const alternates = buildAlternates(pagePath, params)
       .map(
@@ -111,20 +115,25 @@ ${allPages
           `    <xhtml:link rel="alternate" hreflang="${escapeXml(hreflang)}" href="${escapeXml(href)}" />`,
       )
       .join("\n");
+    const imageTag = title
+      ? `\n    <image:image>\n      <image:loc>${SITE_URL}/og-image.png</image:loc>\n      <image:title>${escapeXml(title)}</image:title>\n      <image:caption>${escapeXml(title)} - EconoJabis</image:caption>\n    </image:image>`
+      : "";
     return `  <url>
     <loc>${escapeXml(canonical)}</loc>
     <lastmod>${TODAY}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
-${alternates}
+${alternates}${imageTag}
   </url>`;
   })
   .join("\n")}
 </urlset>
 `;
 
+// ─── News Sitemap (with keywords for Google News) ───
+const NEWS_KEYWORDS = "경제,주식,시장,환율,금융,부동산,암호화폐,테크,economy,stocks,forex,crypto";
 const newsSitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${articlePages
   .slice(0, 1000)
   .map(({ path: pagePath, id, title, publishedAt }) => {
@@ -138,14 +147,34 @@ ${articlePages
       </news:publication>
       <news:publication_date>${publishedAt || NOW_ISO}</news:publication_date>
       <news:title>${escapeXml(title || id || "EconoJabis News")}</news:title>
+      <news:keywords>${NEWS_KEYWORDS}</news:keywords>
     </news:news>
+    <image:image>
+      <image:loc>${SITE_URL}/og-image.png</image:loc>
+      <image:title>${escapeXml(title || id || "EconoJabis News")}</image:title>
+    </image:image>
   </url>`;
   })
   .join("\n")}
 </urlset>
 `;
 
+// ─── Sitemap Index ───
+const sitemapIndexXml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${SITE_URL}/sitemap.xml</loc>
+    <lastmod>${NOW_ISO}</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>${SITE_URL}/sitemap-news.xml</loc>
+    <lastmod>${NOW_ISO}</lastmod>
+  </sitemap>
+</sitemapindex>
+`;
+
 fs.writeFileSync(path.join(PUBLIC_DIR, "sitemap.xml"), sitemapXml, "utf8");
 fs.writeFileSync(path.join(PUBLIC_DIR, "sitemap-news.xml"), newsSitemapXml, "utf8");
+fs.writeFileSync(path.join(PUBLIC_DIR, "sitemap-index.xml"), sitemapIndexXml, "utf8");
 
-console.log(`[seo] Generated sitemap.xml (${allPages.length} urls) and sitemap-news.xml (${articlePages.length} urls)`);
+console.log(`[seo] Generated sitemap.xml (${allPages.length} urls), sitemap-news.xml (${articlePages.length} urls), sitemap-index.xml`);
