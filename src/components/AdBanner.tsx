@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef } from "react";
-import { ADSTERRA_IFRAME_HOST, type AdSlotType, getAdSlotKey } from "../lib/adsterra";
+import { useMemo } from "react";
+import { getAdIframeSrcdoc, type AdSlotType, getAdSlotKey } from "../lib/adsterra";
 
 interface AdBannerProps {
   slotType: AdSlotType;
@@ -8,82 +8,42 @@ interface AdBannerProps {
 }
 
 const getAdSize = (slotType: AdSlotType) => {
-  if (slotType === "sidebar") {
+  if (slotType === "sidebar" || slotType === "in-article") {
     return { width: 300, height: 250 };
   }
   return { width: 728, height: 90 };
 };
 
-let adRenderQueue: Promise<void> = Promise.resolve();
-
-const enqueueAdRender = (job: () => Promise<void>): Promise<void> => {
-  adRenderQueue = adRenderQueue.then(job).catch(() => undefined);
-  return adRenderQueue;
-};
-
 const AdBanner = ({ slotType, className = "", uid }: AdBannerProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const { width, height } = useMemo(() => getAdSize(slotType), [slotType]);
+  const adKey = useMemo(() => getAdSlotKey(slotType), [slotType]);
+  const srcDoc = useMemo(() => getAdIframeSrcdoc(adKey, width, height), [adKey, width, height]);
   const title = useMemo(
     () => (uid ? `ad-${slotType}-${uid}` : `ad-${slotType}`),
     [slotType, uid],
   );
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const adKey = getAdSlotKey(slotType);
-    if (!adKey) return;
-
-    let cancelled = false;
-
-    void enqueueAdRender(
-      () =>
-        new Promise<void>((resolve) => {
-          if (cancelled) {
-            resolve();
-            return;
-          }
-
-          const optionsScript = document.createElement("script");
-          optionsScript.type = "text/javascript";
-          optionsScript.text = `window.atOptions={"key":"${adKey}","format":"iframe","height":${height},"width":${width},"params":{}};`;
-
-          const invokeScript = document.createElement("script");
-          invokeScript.type = "text/javascript";
-          invokeScript.src = `https://${ADSTERRA_IFRAME_HOST}/${adKey}/invoke.js`;
-          invokeScript.async = false;
-          invokeScript.setAttribute("data-cfasync", "false");
-          invokeScript.setAttribute("data-ad-title", title);
-
-          const complete = () => resolve();
-          invokeScript.onload = complete;
-          invokeScript.onerror = complete;
-
-          container.replaceChildren();
-          container.appendChild(optionsScript);
-          container.appendChild(invokeScript);
-
-          window.setTimeout(complete, 3000);
-        }),
-    );
-
-    return () => {
-      cancelled = true;
-      container.replaceChildren();
-    };
-  }, [slotType, width, height, title]);
+  if (!adKey) {
+    return <div className={`adsterra-wrapper w-full ${className}`} style={{ minHeight: `${height}px` }} />;
+  }
 
   return (
     <div
-      className={`adsterra-wrapper w-full ${className}`}
+      className={`adsterra-wrapper w-full flex items-center justify-center overflow-hidden ${className}`}
       style={{ minHeight: `${height}px` }}
     >
-      <div
-        ref={containerRef}
-        data-slot={slotType}
-        className="adsterra-container flex items-center justify-center overflow-hidden"
+      <iframe
+        key={`${slotType}-${uid ?? "default"}-${adKey}`}
+        title={title}
+        srcDoc={srcDoc}
+        width={width}
+        height={height}
+        scrolling="no"
+        frameBorder={0}
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
+        className="adsterra-container border-0"
       />
     </div>
   );

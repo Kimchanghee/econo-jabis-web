@@ -77,7 +77,7 @@ export const getAdSlotKey = (slot: AdSlotType): string => {
   const stored = extractAdKey(safeReadLocalStorage(slotStorageKey[slot]));
   if (isLikelyZoneKey(stored)) return stored;
 
-  if (slot === "sidebar") return ADSTERRA_300_KEY;
+  if (slot === "sidebar" || slot === "in-article") return ADSTERRA_300_KEY;
   return ADSTERRA_728_KEY;
 };
 

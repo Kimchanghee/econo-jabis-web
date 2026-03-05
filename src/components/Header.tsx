@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search, TrendingUp, Menu, X } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "../hooks/useLanguage";
 import LanguageSwitcher from "./LanguageSwitcher";
 
@@ -11,6 +12,8 @@ interface HeaderProps {
 
 const Header = ({ searchQuery, onSearchChange, onCategoryChange }: HeaderProps) => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
@@ -22,15 +25,43 @@ const Header = ({ searchQuery, onSearchChange, onCategoryChange }: HeaderProps) 
   ];
 
   const handleNavClick = (category: string) => {
-    onCategoryChange?.(category);
     setMobileMenuOpen(false);
+
+    if (onCategoryChange && location.pathname === "/") {
+      onCategoryChange(category);
+      return;
+    }
+
+    const params = new URLSearchParams();
+    if (category !== "all") {
+      params.set("category", category);
+    }
+
+    const query = params.toString();
+    navigate(query ? `/?${query}` : "/");
+  };
+
+  const handleLogoClick = () => {
+    setMobileMenuOpen(false);
+
+    if (onCategoryChange && location.pathname === "/") {
+      onCategoryChange("all");
+      return;
+    }
+
+    navigate("/");
   };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-card/95 backdrop-blur-xl shadow-sm">
       <div className="mx-auto max-w-7xl px-4">
         <div className="flex items-center justify-between h-14 gap-3">
-          <div className="flex items-center gap-2 flex-shrink-0 cursor-pointer" onClick={() => handleNavClick("all")}>
+          <button
+            type="button"
+            className="flex items-center gap-2 flex-shrink-0 cursor-pointer"
+            onClick={handleLogoClick}
+            aria-label={t("home")}
+          >
             <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
               <TrendingUp className="h-4 w-4 text-primary-foreground" />
             </div>
@@ -40,7 +71,7 @@ const Header = ({ searchQuery, onSearchChange, onCategoryChange }: HeaderProps) 
                 {t("siteTagline")}
               </span>
             </div>
-          </div>
+          </button>
 
           <nav className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
