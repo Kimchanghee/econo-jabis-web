@@ -73,8 +73,8 @@ const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
       <url>${SITE_URL}/og-image.png</url>
       <title>EconoJabis</title>
       <link>${SITE_URL}</link>
-      <width>1200</width>
-      <height>630</height>
+      <width>144</width>
+      <height>144</height>
     </image>
     <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml" />
 ${articles
@@ -86,6 +86,7 @@ ${articles
       <pubDate>${toRfc822(article.publishedAt)}</pubDate>
       <category>${escapeXml(article.category)}</category>
       <guid isPermaLink="true">${SITE_URL}/article/${encodeURIComponent(article.id)}</guid>
+      <author>contact@econojabis.com (EconoJabis)</author>
       <source url="${SITE_URL}/feed.xml">EconoJabis</source>
     </item>`,
   )

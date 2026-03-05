@@ -1,12 +1,13 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Clock, Share2, Link, Twitter, ChevronRight, BookOpen, Tag } from "lucide-react";
+import { ArrowLeft, Clock, Share2, Link, Twitter, ChevronRight, BookOpen, Tag, Home } from "lucide-react";
 import { useState, useEffect, useMemo, useRef } from "react";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import SEOHead from "../components/SEOHead";
 import AdBanner from "../components/AdBanner";
 import { type NewsArticle } from "../hooks/useTheNewsApi";
 import { useLanguage } from "../hooks/useLanguage";
-import { DEFAULT_LANGUAGE, buildPageUrl } from "../lib/seo";
+import { DEFAULT_LANGUAGE, SITE_URL, buildPageUrl } from "../lib/seo";
 import { translateArticleDetail, translateArticlesPreview } from "../lib/runtimeTranslation";
 import { getAllArticlesFromStore, getArticleFromStore, normalizeArticleId, upsertArticleToStore } from "../lib/articleStore";
 
@@ -42,6 +43,10 @@ const fmtDate = (s: string, language: string) => {
   } catch { return s; }
 };
 
+const fmtIsoDate = (s: string) => {
+  try { return new Date(s).toISOString(); } catch { return s; }
+};
+
 const buildBody = (article: NewsArticle, loadingText: string): string[] => {
   const bp = (article as any).bodyParagraphs as string[] | undefined;
   if (bp && bp.length >= 3) return bp;
@@ -65,12 +70,20 @@ const buildBody = (article: NewsArticle, loadingText: string): string[] => {
   return out;
 };
 
+const countWords = (text: string): number => {
+  if (!text) return 0;
+  // For CJK languages, count characters; for others, count word boundaries
+  const cjk = text.match(/[\u3000-\u9fff\uac00-\ud7af]/g);
+  const words = text.split(/\s+/).filter(Boolean);
+  return (cjk?.length || 0) + words.length;
+};
+
 const RelatedCard = ({ article, onClick, language }: { article: NewsArticle; onClick: () => void; language: string }) => {
   const img = (article as any).imageUrl || (article as any).image || "";
   return (
     <div onClick={onClick} className="flex gap-3 p-3 rounded-xl border border-border hover:bg-primary/5 hover:border-primary/30 cursor-pointer transition-all group">
       {img && (
-        <img src={img} alt={article.title} className="w-20 h-16 object-cover rounded-lg flex-shrink-0 group-hover:opacity-90"
+        <img src={img} alt={article.title} width={80} height={64} loading="lazy" className="w-20 h-16 object-cover rounded-lg flex-shrink-0 group-hover:opacity-90"
           onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
       )}
       <div className="flex-1 min-w-0">
@@ -214,6 +227,7 @@ const ArticleDetail = () => {
         <div className="w-full flex justify-center items-center bg-card border-t border-border py-2 min-h-[94px]">
           <AdBanner slotType="footer" uid="article-not-found-bottom" />
         </div>
+        <Footer />
       </div>
     );
   }
@@ -237,11 +251,16 @@ const ArticleDetail = () => {
     lang: language === DEFAULT_LANGUAGE ? undefined : language,
   });
 
+  const articleSummary = (article as any).summary || article.description || "";
+  const articleFullText = (article as any).fullBody || body.join(" ");
+  const wordCount = countWords(articleFullText);
+  const publishedIso = fmtIsoDate(article.publishedAt || (article as any).date || "");
+
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
         title={article.title}
-        description={(article.description || (article as any).summary || "").slice(0, 160)}
+        description={(article.description || articleSummary).slice(0, 160)}
         canonicalUrl={canonicalUrl}
         language={language}
         ogImage={imageUrl}
@@ -262,6 +281,9 @@ const ArticleDetail = () => {
           source: article.source || "EconoJabis",
           author: article.source || "EconoJabis",
           image: imageUrl,
+          wordCount,
+          summary: articleSummary,
+          sourceUrl: article.url || undefined,
         }}
       />
       <div className="fixed top-0 left-0 z-50 h-0.5 bg-primary/20 w-full pointer-events-none">
@@ -276,21 +298,49 @@ const ArticleDetail = () => {
       <div className="mx-auto max-w-7xl px-4 py-6">
         <div className="flex gap-8 items-start">
 
-          <main className="flex-1 min-w-0 max-w-3xl" ref={articleRef}>
-            <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-5 transition-colors group">
-              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" /> {t("back")}
-            </button>
+          <main className="flex-1 min-w-0 max-w-3xl" ref={articleRef} itemScope itemType="https://schema.org/NewsArticle">
+            {/* Breadcrumb Navigation */}
+            <nav aria-label="Breadcrumb" className="mb-4">
+              <ol className="flex items-center gap-1.5 text-xs text-muted-foreground" itemScope itemType="https://schema.org/BreadcrumbList">
+                <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                  <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} className="inline-flex items-center gap-1 hover:text-foreground transition-colors" itemProp="item">
+                    <Home className="h-3 w-3" />
+                    <span itemProp="name">{t("home")}</span>
+                  </a>
+                  <meta itemProp="position" content="1" />
+                </li>
+                <ChevronRight className="h-3 w-3" />
+                <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                  <a href={`/?category=${encodeURIComponent(article.category || "")}`} onClick={(e) => { e.preventDefault(); navigate("/?category=" + encodeURIComponent(article.category || "")); }} className="hover:text-foreground transition-colors" itemProp="item">
+                    <span itemProp="name">{article.category}</span>
+                  </a>
+                  <meta itemProp="position" content="2" />
+                </li>
+                <ChevronRight className="h-3 w-3" />
+                <li itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem" className="text-foreground font-medium truncate max-w-[200px]">
+                  <span itemProp="name">{article.title}</span>
+                  <meta itemProp="position" content="3" />
+                </li>
+              </ol>
+            </nav>
 
             <div className="border-b-2 border-primary pb-4 mb-4">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-primary text-primary-foreground uppercase tracking-wide">{article.category}</span>
+                <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-primary text-primary-foreground uppercase tracking-wide" itemProp="articleSection">{article.category}</span>
                 {article.isBreaking && <span className="text-xs font-bold px-2.5 py-1 rounded-sm bg-red-500 text-white animate-pulse">{t("breaking")}</span>}
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight text-foreground mb-3">{article.title}</h1>
+              <h1 className="text-2xl sm:text-3xl font-extrabold leading-tight text-foreground mb-3" itemProp="headline">{article.title}</h1>
               <div className="flex items-center justify-between flex-wrap gap-2 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>{fmtDate(article.publishedAt || (article as any).date || "", language)}</span>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-3.5 w-3.5" />
+                    <time dateTime={publishedIso} itemProp="datePublished" content={publishedIso}>
+                      {fmtDate(article.publishedAt || (article as any).date || "", language)}
+                    </time>
+                  </div>
+                  <cite className="text-xs font-medium text-primary not-italic" itemProp="author" itemScope itemType="https://schema.org/Organization">
+                    <span itemProp="name">{article.source || "EconoJabis"}</span>
+                  </cite>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <button onClick={tweetShare} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-500 text-white text-xs font-semibold hover:bg-sky-600 transition-colors">
@@ -301,12 +351,20 @@ const ArticleDetail = () => {
                   </button>
                 </div>
               </div>
+              <meta itemProp="dateModified" content={publishedIso} />
             </div>
+
+            {/* Article Summary Box - AI/AEO friendly */}
+            {articleSummary && (
+              <div className="article-summary mb-5 p-4 rounded-xl bg-primary/5 border border-primary/20" itemProp="abstract">
+                <p className="text-sm leading-relaxed text-foreground/80 font-medium">{articleSummary}</p>
+              </div>
+            )}
 
             {imageUrl && (
               <div className="mb-5 rounded-xl bg-muted overflow-hidden">
-                <img src={imageUrl} alt={article.title} className="w-full object-cover max-h-[300px] pointer-events-none select-none"
-                  onError={() => { if (!imgError) { setImgError(true); setImageUrl("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&auto=format&fit=crop"); }}} />
+                <img src={imageUrl} alt={article.title} width={1200} height={630} fetchPriority="high" className="w-full object-cover max-h-[300px] pointer-events-none select-none" itemProp="image"
+                  onError={() => { if (!imgError) { setImgError(true); setImageUrl(""); }}} />
               </div>
             )}
 
@@ -314,7 +372,7 @@ const ArticleDetail = () => {
               <AdBanner slotType="in-article" uid="article-after-image" />
             </div>
 
-            <article className="text-[15px] leading-[1.9] text-foreground/90">
+            <article className="text-[15px] leading-[1.9] text-foreground/90" itemProp="articleBody">
               {body.map((para, i) => (
                 <div key={i}>
                   <p className="mb-4">{para}</p>
@@ -369,7 +427,7 @@ const ArticleDetail = () => {
             </div>
 
             {related.length > 0 && (
-              <section className="mt-4 pt-5 border-t-2 border-primary/30">
+              <nav aria-label="Related articles" className="mt-4 pt-5 border-t-2 border-primary/30">
                 <h2 className="text-lg font-extrabold mb-4 text-foreground flex items-center gap-2">
                   <span className="w-1 h-5 bg-primary rounded inline-block" /> {t("relatedArticles")}
                 </h2>
@@ -378,7 +436,7 @@ const ArticleDetail = () => {
                     <RelatedCard key={rel.id} article={rel} language={language} onClick={() => openArticle(rel)} />
                   ))}
                 </div>
-              </section>
+              </nav>
             )}
 
             <div className="mt-5 pt-4">
@@ -386,7 +444,7 @@ const ArticleDetail = () => {
             </div>
 
             {more.length > 0 && (
-              <section className="mt-5 pt-5 border-t border-border">
+              <nav aria-label="More articles" className="mt-5 pt-5 border-t border-border">
                 <h2 className="text-base font-extrabold mb-4 text-foreground flex items-center gap-2">
                   <span className="text-orange-500">{t("readAlso")}</span>
                 </h2>
@@ -395,7 +453,7 @@ const ArticleDetail = () => {
                     <RelatedCard key={rel.id} article={rel} language={language} onClick={() => openArticle(rel)} />
                   ))}
                 </div>
-              </section>
+              </nav>
             )}
 
             <div className="mt-10 p-6 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 text-center">
@@ -462,6 +520,7 @@ const ArticleDetail = () => {
           </aside>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

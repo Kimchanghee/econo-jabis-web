@@ -103,6 +103,7 @@ const Index = () => {
         language={language}
         keywords={trendingKeywords.slice(0, 10)}
         noindex={searchQuery.trim().length > 0}
+        categorySlug={selectedCategory !== "all" ? selectedCategory : undefined}
       />
       <Header searchQuery={searchQuery} onSearchChange={setSearchQuery} onCategoryChange={setSelectedCategory} />
       <div className="w-full flex justify-center items-center bg-muted/30 border-b border-border py-2" style={{ minHeight: 94 }}>
@@ -110,6 +111,7 @@ const Index = () => {
       </div>
       <MarketTicker />
       <main className="mx-auto max-w-7xl px-4 py-6">
+        <h1 className="sr-only">{t("globalEconomyMarketNews")}</h1>
         <div className="flex flex-col lg:flex-row gap-6 items-start">
           <div className="flex-1 min-w-0 space-y-6">
             <FeaturedNews articles={filteredArticles} />

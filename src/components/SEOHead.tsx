@@ -48,7 +48,7 @@ const CATEGORY_ENTITIES: Record<string, Array<{ name: string; sameAs: string }>>
   "주식": [
     { name: "Stock market", sameAs: "https://www.wikidata.org/wiki/Q11691" },
     { name: "Stock exchange", sameAs: "https://www.wikidata.org/wiki/Q11661" },
-    { name: "Financial market", sameAs: "https://www.wikidata.org/wiki/Q11691" },
+    { name: "Financial market", sameAs: "https://www.wikidata.org/wiki/Q183368" },
   ],
   "암호화폐": [
     { name: "Cryptocurrency", sameAs: "https://www.wikidata.org/wiki/Q13479982" },
@@ -444,7 +444,7 @@ const SEOHead = ({
         ? CATEGORY_ENTITIES[categorySlug].map(({ name, sameAs }) => ({ "@type": "Thing", name, sameAs }))
         : [
             { "@type": "Thing", name: "Global economy", sameAs: "https://www.wikidata.org/wiki/Q159810" },
-            { "@type": "Thing", name: "Financial market", sameAs: "https://www.wikidata.org/wiki/Q11691" },
+            { "@type": "Thing", name: "Financial market", sameAs: "https://www.wikidata.org/wiki/Q183368" },
             { "@type": "Thing", name: "Stock market", sameAs: "https://www.wikidata.org/wiki/Q11691" },
             { "@type": "Thing", name: "Foreign exchange market", sameAs: "https://www.wikidata.org/wiki/Q132390" },
             { "@type": "Thing", name: "Cryptocurrency", sameAs: "https://www.wikidata.org/wiki/Q13479982" },
@@ -490,7 +490,7 @@ const SEOHead = ({
           acceptedAnswer: {
             "@type": "Answer",
             text: a,
-            dateCreated: new Date().toISOString().split("T")[0],
+            dateCreated: "2024-01-01",
             inLanguage: "en",
           },
         })),

@@ -50,7 +50,7 @@
     <link rel="manifest" href="/manifest.json" />
     <link rel="alternate" type="application/rss+xml" title="EconoJabis RSS Feed" href="https://econojabis.com/feed.xml" />
     <link rel="author" href="https://econojabis.com/about" />
-    <link rel="preconnect" href="https://econojabis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <meta name="format-detection" content="telephone=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -64,6 +64,15 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <div style="max-width:800px;margin:40px auto;padding:20px;font-family:system-ui,sans-serif">
+        <h1>EconoJabis — Real-time Economic News</h1>
+        <p>EconoJabis provides real-time global economic and financial news covering stocks, forex, crypto, real estate, commodities, and macroeconomics in 11 languages. JavaScript is required for the full interactive experience.</p>
+        <p>Coverage: Macroeconomics, Stocks (KOSPI, S&amp;P 500, NASDAQ), Foreign Exchange (USD/KRW, EUR/USD), Finance, Real Estate, Cryptocurrency (Bitcoin, Ethereum), Technology (Semiconductors, AI).</p>
+        <p>Available in: Korean, English, Spanish, Japanese, Chinese, French, German, Portuguese, Indonesian, Arabic, Hindi.</p>
+        <p><a href="https://econojabis.com/feed.xml">RSS Feed</a> | <a href="https://econojabis.com/sitemap-news.xml">News Sitemap</a> | <a href="https://econojabis.com/about">About</a></p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

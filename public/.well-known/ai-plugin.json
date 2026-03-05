@@ -8,9 +8,8 @@
     "type": "none"
   },
   "api": {
-    "type": "openapi",
-    "url": "https://econojabis.com/sitemap.xml",
-    "is_user_authenticated": false
+    "type": "none",
+    "has_user_authentication": false
   },
   "logo_url": "https://econojabis.com/og-image.png",
   "contact_email": "contact@econojabis.com",

@@ -5,7 +5,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#1a365d",
+  "theme_color": "#0f172a",
   "orientation": "portrait-primary",
   "lang": "ko",
   "icons": [
@@ -13,6 +13,12 @@
       "src": "/favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "categories": ["news", "finance", "business"]
